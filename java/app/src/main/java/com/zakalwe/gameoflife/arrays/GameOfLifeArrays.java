@@ -30,18 +30,17 @@ public class GameOfLifeArrays {
             for (int y = 0; y < a[x].length; y++) {
                 final int numNeighbours = countNeighbours(x, y);
 
-                // if a cell has less than 2 neighbours then it starves to death
-                if (numNeighbours < 2) {
-                    b[x][y] = false;
-                } 
-                // if a cell has more than 5 neighbours it starves to death
-                else if (numNeighbours > 3) {
-                    b[x][y] = false;
+                // 1. Any live cell with two or three live neighbours survives.
+                if (a[x][y] == true) {
+                    if (numNeighbours == 2 || numNeighbours == 3) {
+                        b[x][y] = true;
+                    }
                 }
-                // otherwise it is alive
-                else {
+                // 2. Any dead cell with three live neighbours becomes a live cell.
+                else if (numNeighbours == 3) {
                     b[x][y] = true;
                 }
+                // 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
             }
         }
 
