@@ -37,5 +37,8 @@ public final class App {
 
         gameOfLifeArrays.progress();
         gameOfLifeArrays.printA();
+
+        gameOfLifeArrays.progress();
+        gameOfLifeArrays.printA();
     }
 }
