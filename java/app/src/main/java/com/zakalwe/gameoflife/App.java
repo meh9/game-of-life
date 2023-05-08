@@ -17,7 +17,16 @@ public final class App {
      * @param args arguments
      */
     public static final void main(String[] args) {
-        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(10, 10);
+        final int xmax = 10;
+        final int ymax = 10;
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
+
+        gameOfLifeArrays.setCell(0, 0, true);
+        gameOfLifeArrays.setCell(0, 5, true);
+        gameOfLifeArrays.setCell(5, 0, true);
+        gameOfLifeArrays.setCell(0, 1, true);
+        gameOfLifeArrays.setCell(0, ymax-1, true);
+        gameOfLifeArrays.setCell(xmax-1, 0, true);
 
         gameOfLifeArrays.setCell(5, 5, true);
         gameOfLifeArrays.setCell(5, 6, true);

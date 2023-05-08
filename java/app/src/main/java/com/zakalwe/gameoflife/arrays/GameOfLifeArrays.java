@@ -25,9 +25,9 @@ public class GameOfLifeArrays {
         // TODO: would it be faster to loop through and reset all elements to false? probably not for large arrays?
         b = new boolean[a.length][a[0].length];
 
-        // TODO: fix wrap around!
-        for (int x = 1; x < a.length-1; x++) {
-            for (int y = 1; y < a[x].length-1; y++) {
+        // loop through every single element in the board
+        for (int x = 0; x < a.length; x++) {
+            for (int y = 0; y < a[x].length; y++) {
                 final int numNeighbours = countNeighbours(x, y);
 
                 // if a cell has less than 2 neighbours then it starves to death
@@ -51,18 +51,35 @@ public class GameOfLifeArrays {
         b = tmp;
     }
 
-
+    /**
+     * Check how many live neighbours we have for a given cell
+     * @param x x coord for the cell
+     * @param y y coord for the cell
+     * @return the number of neighbour cells that are alive
+     */
     private int countNeighbours(int x, int y) {
         int count = 0;
-        count += a[x-1][y-1] ? 1 : 0;
-        count += a[x  ][y-1] ? 1 : 0;
-        count += a[x+1][y-1] ? 1 : 0;
-        count += a[x-1][y  ] ? 1 : 0;
+
+        // check if we need to wrap around
+        // if x==0 then we can't decrement further, so wrap around to other extreme of array
+        final int left = x == 0 ? a.length-1 : x-1;
+        // if x==a.length-1 we can't increment, so wrap around to 0
+        final int right = x == a.length-1 ? 0 : x+1;
+        // if y==0 we can't decrement further, so wrap around to other extreme of array
+        final int top = y == 0 ? a[0].length-1 : y-1;
+        // if y==a[0].length-1 we can't increment, so wrap around to 0
+        final int bottom = y == a[0].length-1 ? 0 : y+1;
+
+        // check all the neighbours
+        count += a[left][top] ? 1 : 0;
+        count += a[x  ][top] ? 1 : 0;
+        count += a[right][top] ? 1 : 0;
+        count += a[left][y  ] ? 1 : 0;
         // we don't do a[x][y] because it's the cell we're testing
-        count += a[x+1][y  ] ? 1 : 0;
-        count += a[x-1][y+1] ? 1 : 0;
-        count += a[x  ][y+1] ? 1 : 0;
-        count += a[x+1][y+1] ? 1 : 0;
+        count += a[right][y  ] ? 1 : 0;
+        count += a[left][bottom] ? 1 : 0;
+        count += a[x  ][bottom] ? 1 : 0;
+        count += a[right][bottom] ? 1 : 0;
         return count;
     }
 
