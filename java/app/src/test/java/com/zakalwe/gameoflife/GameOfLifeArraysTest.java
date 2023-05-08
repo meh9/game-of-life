@@ -20,50 +20,42 @@ public class GameOfLifeArraysTest {
         final int ymax = 6;
         final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
 
+        // set a 2x2 square of live cells
         gameOfLifeArrays.setCell(1, 1, true);
         gameOfLifeArrays.setCell(2, 1, true);
         gameOfLifeArrays.setCell(1, 2, true);
         gameOfLifeArrays.setCell(2, 2, true);
         gameOfLifeArrays.print();
-
         assertEquals(gameOfLifeArrays.count(), 4);
 
         gameOfLifeArrays.progress();
         gameOfLifeArrays.print();
-
         assertEquals(gameOfLifeArrays.count(), 4);
 
+        // check row above square
         assertFalse(gameOfLifeArrays.getCell(0, 0));
         assertFalse(gameOfLifeArrays.getCell(1, 0));
         assertFalse(gameOfLifeArrays.getCell(2, 0));
         assertFalse(gameOfLifeArrays.getCell(3, 0));
 
+        // check row below square
         assertFalse(gameOfLifeArrays.getCell(0, 3));
         assertFalse(gameOfLifeArrays.getCell(1, 3));
         assertFalse(gameOfLifeArrays.getCell(2, 3));
         assertFalse(gameOfLifeArrays.getCell(3, 3));
 
+        // check left and right of square
         assertFalse(gameOfLifeArrays.getCell(0, 1));
         assertFalse(gameOfLifeArrays.getCell(0, 2));
         assertFalse(gameOfLifeArrays.getCell(3, 1));
         assertFalse(gameOfLifeArrays.getCell(3, 2));
 
-        // gameOfLifeArrays.setCell(0, ymax-1, true);
-        // gameOfLifeArrays.setCell(xmax-1, 0, true);
-
-        // gameOfLifeArrays.setCell(5, 5, true);
-        // gameOfLifeArrays.setCell(5, 6, true);
-        // gameOfLifeArrays.setCell(6, 5, true);
-        // gameOfLifeArrays.setCell(6, 6, true);
-        // gameOfLifeArrays.setCell(7, 5, true);
-        // gameOfLifeArrays.printA();
-
-        // gameOfLifeArrays.progress();
-        // gameOfLifeArrays.printA();
-
-        // gameOfLifeArrays.progress();
-        // gameOfLifeArrays.printA();
-
-        //assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+        // 2x2 square of live cells is stable and should never change
+        for (int i = 0; i < 101; i++){ 
+            gameOfLifeArrays.progress();
+            assertEquals(gameOfLifeArrays.count(), 4);
+        }
+        gameOfLifeArrays.print();
+        assertEquals(gameOfLifeArrays.count(), 4);
     }
 }
