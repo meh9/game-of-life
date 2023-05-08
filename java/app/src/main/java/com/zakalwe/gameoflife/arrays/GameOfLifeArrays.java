@@ -9,7 +9,7 @@ public class GameOfLifeArrays {
 
     private boolean[][] a;
     private boolean[][] b;
-
+    private int iteration = 0;
     
     /** Initialise arrays 
      * @param x width of the board
@@ -48,6 +48,7 @@ public class GameOfLifeArrays {
         final boolean[][] tmp = a;
         a = b;
         b = tmp;
+        iteration++;
     }
 
     /**
@@ -94,13 +95,14 @@ public class GameOfLifeArrays {
 
     /** Print the A array to the console */
     public void printA() {
+        System.out.println("Iteration: " + iteration + ":");
         System.out.println("========================================");
         for (int x = 0; x < a.length; x++) {
             for (int y = 0; y < a[x].length; y++) {
-                System.out.print(a[x][y] ? "X" : " ");
+                System.out.print(a[x][y] ? "■" : "□");
             }
             System.out.println();
         }
-        System.out.println("========================================");
+        System.out.println("========================================\n");
     }
 }
