@@ -4,11 +4,66 @@
 package com.zakalwe.gameoflife;
 
 import org.testng.annotations.*;
+import com.zakalwe.gameoflife.arrays.GameOfLifeArrays;
 import static org.testng.Assert.*;
 
 public class GameOfLifeArraysTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
+
+    // Rules:
+    // 1. Any live cell with two or three live neighbours survives.
+    // 2. Any dead cell with three live neighbours becomes a live cell.
+    // 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
+    
+
+    @Test public void testTwoOrThreeSurvives() {
+        final int xmax = 6;
+        final int ymax = 6;
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
+
+        gameOfLifeArrays.setCell(1, 1, true);
+        gameOfLifeArrays.setCell(2, 1, true);
+        gameOfLifeArrays.setCell(1, 2, true);
+        gameOfLifeArrays.setCell(2, 2, true);
+        gameOfLifeArrays.print();
+
+        assertEquals(gameOfLifeArrays.count(), 4);
+
+        gameOfLifeArrays.progress();
+        gameOfLifeArrays.print();
+
+        assertEquals(gameOfLifeArrays.count(), 4);
+
+        assertFalse(gameOfLifeArrays.getCell(0, 0));
+        assertFalse(gameOfLifeArrays.getCell(1, 0));
+        assertFalse(gameOfLifeArrays.getCell(2, 0));
+        assertFalse(gameOfLifeArrays.getCell(3, 0));
+
+        assertFalse(gameOfLifeArrays.getCell(0, 3));
+        assertFalse(gameOfLifeArrays.getCell(1, 3));
+        assertFalse(gameOfLifeArrays.getCell(2, 3));
+        assertFalse(gameOfLifeArrays.getCell(3, 3));
+
+        assertFalse(gameOfLifeArrays.getCell(0, 1));
+        assertFalse(gameOfLifeArrays.getCell(0, 2));
+        assertFalse(gameOfLifeArrays.getCell(3, 1));
+        assertFalse(gameOfLifeArrays.getCell(3, 2));
+
+        // gameOfLifeArrays.setCell(0, ymax-1, true);
+        // gameOfLifeArrays.setCell(xmax-1, 0, true);
+
+        // gameOfLifeArrays.setCell(5, 5, true);
+        // gameOfLifeArrays.setCell(5, 6, true);
+        // gameOfLifeArrays.setCell(6, 5, true);
+        // gameOfLifeArrays.setCell(6, 6, true);
+        // gameOfLifeArrays.setCell(7, 5, true);
+        // gameOfLifeArrays.printA();
+
+        // gameOfLifeArrays.progress();
+        // gameOfLifeArrays.printA();
+
+        // gameOfLifeArrays.progress();
+        // gameOfLifeArrays.printA();
+
         //assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
     }
 }

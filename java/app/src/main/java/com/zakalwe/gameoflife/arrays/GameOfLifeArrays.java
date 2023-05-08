@@ -1,7 +1,5 @@
 package com.zakalwe.gameoflife.arrays;
 
-// TODO: add test class
-
 /**
  * The actual Conway's Game of Life implementation.
  */
@@ -93,16 +91,43 @@ public class GameOfLifeArrays {
         a[x][y] = alive;
     }
 
+    /**
+     * Return the status of the given cell
+     * @param x x coordinate of the cell
+     * @param y y coordinate of the cell
+     * @return the status of the cell
+     */
+    public boolean getCell(final int x, final int y) {
+        return a[x][y];
+    }
+
+    /**
+     * Count the number of cells that are alive.
+     * @return the number of cells that are alive
+     */
+    public Object count() {
+        int count = 0;
+
+        // loop through every single element in the board
+        for (int x = 0; x < a.length; x++) {
+            for (int y = 0; y < a[x].length; y++) {
+                if (a[x][y]) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     /** Print the A array to the console */
-    public void printA() {
+    public void print() {
         System.out.println("Iteration: " + iteration + ":");
-        System.out.println("========================================");
         for (int x = 0; x < a.length; x++) {
             for (int y = 0; y < a[x].length; y++) {
                 System.out.print(a[x][y] ? "■" : "□");
             }
             System.out.println();
         }
-        System.out.println("========================================\n");
+        System.out.println();
     }
 }
