@@ -2,6 +2,8 @@ package com.zakalwe.gameoflife.arrays;
 
 /**
  * The actual Conway's Game of Life implementation.
+ * 
+ * This implementation uses a fixed sized (double array) universe where cells wrap around the edges.
  */
 public class GameOfLifeArrays {
 
@@ -20,7 +22,7 @@ public class GameOfLifeArrays {
 
     /** Progresses the game one turn. */
     public void progress() {
-        // TODO: would it be faster to loop through and reset all elements to false? probably not for large arrays?
+        // would it be faster to loop through and reset all elements to false? probably not for large arrays?
         b = new boolean[a.length][a[0].length];
 
         // loop through every single element in the board
@@ -120,15 +122,23 @@ public class GameOfLifeArrays {
         return count;
     }
 
-    /** Print the A array to the console */
-    public void print() {
-        System.out.println("Iteration: " + iteration + ":");
+    /**
+     * Get which iteration we are on.
+     * @return which iteration we are on
+     */
+    public int getIteration() {
+        return iteration;
+    }
+
+    public String toString() {
+        // initialise SB to x*y+y chars
+        final StringBuilder sb = new StringBuilder(a.length*a[0].length + a.length);
         for (int y = 0; y < a.length; y++) {
             for (int x = 0; x < a[y].length; x++) {
-                System.out.print(a[y][x] ? "■" : "□");
+                sb.append(a[y][x] ? "■" : "□");
             }
-            System.out.println();
+            sb.append("\n");
         }
-        System.out.println();
+        return sb.toString();
     }
 }

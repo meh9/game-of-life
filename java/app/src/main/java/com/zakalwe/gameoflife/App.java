@@ -33,12 +33,12 @@ public final class App {
         gameOfLifeArrays.setCell(6, 5, true);
         gameOfLifeArrays.setCell(6, 6, true);
         gameOfLifeArrays.setCell(7, 5, true);
-        gameOfLifeArrays.print();
+        System.out.println("Iteration: " + gameOfLifeArrays.getIteration() + ":\n" + gameOfLifeArrays + "\n");
 
         gameOfLifeArrays.progress();
-        gameOfLifeArrays.print();
+        System.out.println("Iteration: " + gameOfLifeArrays.getIteration() + ":\n" + gameOfLifeArrays + "\n");
 
         gameOfLifeArrays.progress();
-        gameOfLifeArrays.print();
+        System.out.println("Iteration: " + gameOfLifeArrays.getIteration() + ":\n" + gameOfLifeArrays + "\n");
     }
 }
