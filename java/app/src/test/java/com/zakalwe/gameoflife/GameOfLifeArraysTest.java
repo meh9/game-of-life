@@ -13,11 +13,73 @@ public class GameOfLifeArraysTest {
     // 1. Any live cell with two or three live neighbours survives.
     // 2. Any dead cell with three live neighbours becomes a live cell.
     // 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
-    
 
-    @Test public void testTwoOrThreeSurvives() {
+    /** Test that dead cells with 3 neighbours becomes live. */
+    @Test public void deadWithThreeNeighboursComeAlive() {
+        System.out.println("deadWithThreeNeighboursComeAlive():");
         final int xmax = 6;
-        final int ymax = 6;
+        final int ymax = 7;
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
+
+        // set a line of 3 live cells
+        gameOfLifeArrays.setCell(1, 1, true);
+        gameOfLifeArrays.setCell(2, 1, true);
+        gameOfLifeArrays.setCell(3, 1, true);
+
+        // set a line of 2 live cells
+        gameOfLifeArrays.setCell(1, 4, true);
+        gameOfLifeArrays.setCell(2, 4, true);
+
+        gameOfLifeArrays.print();
+        assertEquals(gameOfLifeArrays.count(), 5);
+
+        // line of 3 spawns 1 above and 1 below, middle stays alive because it has 2 neighbours, left and right dies because only a 1 neighbour
+        // line of 2 only has 1 neighbour each and both die
+        gameOfLifeArrays.progress();
+        gameOfLifeArrays.print();
+        assertEquals(gameOfLifeArrays.count(), 3);
+
+        // check new vertical line of 3 is alive
+        assertTrue(gameOfLifeArrays.getCell(2, 0), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(2, 1), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(2, 2), "should be alive");
+
+        // check "corners" did not come alive
+        assertFalse(gameOfLifeArrays.getCell(1, 0), "should be dead");
+        assertFalse(gameOfLifeArrays.getCell(3, 0), "should be dead");
+        assertFalse(gameOfLifeArrays.getCell(1, 2), "should be dead");
+        assertFalse(gameOfLifeArrays.getCell(3, 2), "should be dead");
+
+        // check the line of 2 died
+        assertFalse(gameOfLifeArrays.getCell(1, 4), "should be dead");
+        assertFalse(gameOfLifeArrays.getCell(2, 4), "should be dead");
+
+        // next iteration the line should flip horizontal again
+        gameOfLifeArrays.progress();
+        gameOfLifeArrays.print();
+        assertEquals(gameOfLifeArrays.count(), 3, "should be a a line of 3");
+        assertTrue(gameOfLifeArrays.getCell(1, 1), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(2, 1), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(3, 1), "should be alive");
+
+        // the line should keep flipping infinitely, flip an odd number of times and it should change orientation
+        for (int i = 0; i < 101; i++) {
+            gameOfLifeArrays.progress();
+        }
+        gameOfLifeArrays.print();
+        // check line is vertical
+        assertTrue(gameOfLifeArrays.getCell(2, 0), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(2, 1), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(2, 2), "should be alive");
+        assertEquals(gameOfLifeArrays.count(), 3, "should be a a line of 3");
+    }
+
+
+    /** Test that a 2x2 square of cells is stable - each cell has 3 neighbours. */
+    @Test public void aliveWithThreeNeighboursSurvive() {
+        System.out.println("aliveWithThreeNeighboursSurvive():");
+        final int xmax = 6;
+        final int ymax = 4;
         final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
 
         // set a 2x2 square of live cells
