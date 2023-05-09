@@ -14,7 +14,33 @@ public class GameOfLifeArraysTest {
     // 2. Any dead cell with three live neighbours becomes a live cell.
     // 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
-    // TODO: add wrap-around test
+    /** Test a simple glider that wraps around the universe. */
+    @Test public void gliderWraparound() {
+        System.out.println("gliderWraparound():");
+        final int xmax = 15;
+        final int ymax = 12;
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(xmax, ymax);
+
+        // create the glider
+        gameOfLifeArrays.setCell(1, 0, true);
+        gameOfLifeArrays.setCell(2, 1, true);
+        gameOfLifeArrays.setCell(0, 2, true);
+        gameOfLifeArrays.setCell(1, 2, true);
+        gameOfLifeArrays.setCell(2, 2, true);
+        System.out.println("Iteration: " + gameOfLifeArrays.getIteration() + ":\n" + gameOfLifeArrays + "\n");
+        assertEquals(gameOfLifeArrays.count(), 5);
+
+        for (int i = 0; i < 10000; i++) {
+            gameOfLifeArrays.progress();
+            assertEquals(gameOfLifeArrays.count(), 5);
+        }
+        System.out.println("Iteration: " + gameOfLifeArrays.getIteration() + ":\n" + gameOfLifeArrays + "\n");
+        assertTrue(gameOfLifeArrays.getCell(11, 4), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(12, 5), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(10, 6), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(11, 6), "should be alive");
+        assertTrue(gameOfLifeArrays.getCell(12, 6), "should be alive");
+    }
 
     /** Test that dead cells with 3 neighbours becomes live. */
     @Test public void deadWithThreeNeighboursComeAlive() {
