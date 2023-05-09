@@ -131,11 +131,11 @@ public class GameOfLifeArrays {
     }
 
     public String toString() {
-        // initialise SB to x*y+y chars
-        final StringBuilder sb = new StringBuilder(a.length*a[0].length + a.length);
+        // initialise SB to x*y*2+y chars to prevent needing to increase the size
+        final StringBuilder sb = new StringBuilder(a.length*a[0].length*2 + a.length);
         for (int y = 0; y < a.length; y++) {
             for (int x = 0; x < a[y].length; x++) {
-                sb.append(a[y][x] ? "■" : "□");
+                sb.append(a[y][x] ? "■" : "□").append(" ");
             }
             sb.append("\n");
         }
