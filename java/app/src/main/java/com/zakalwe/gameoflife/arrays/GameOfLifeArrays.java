@@ -45,9 +45,8 @@ public class GameOfLifeArrays {
         }
 
         // swap the arrays
-        final boolean[][] tmp = a;
         a = b;
-        b = tmp;
+        b = null;
         iteration++;
     }
 
