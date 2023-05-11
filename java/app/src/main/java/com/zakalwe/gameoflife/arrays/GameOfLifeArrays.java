@@ -17,7 +17,6 @@ public class GameOfLifeArrays {
      */
     public GameOfLifeArrays(final int rows, final int cols) {
         a = new boolean[rows][cols];
-        b = new boolean[rows][cols];
     }
 
     /** Progresses the game one turn. */
