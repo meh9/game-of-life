@@ -12,12 +12,12 @@ public class GameOfLifeArrays {
     private int iteration = 0;
     
     /** Initialise arrays 
-     * @param row height of the board
-     * @param col width of the board
+     * @param rows height of the board
+     * @param cols width of the board
      */
-    public GameOfLifeArrays(final int row, final int col) {
-        a = new boolean[row][col];
-        b = new boolean[row][col];
+    public GameOfLifeArrays(final int rows, final int cols) {
+        a = new boolean[rows][cols];
+        b = new boolean[rows][cols];
     }
 
     /** Progresses the game one turn. */
