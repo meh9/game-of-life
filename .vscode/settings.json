@@ -12,5 +12,6 @@
         "--strict"
     ],
     "python.linting.mypyEnabled": true,
-    "python.linting.pydocstyleEnabled": true
+    "python.linting.pydocstyleEnabled": true,
+    "editor.formatOnSave": true
 }
