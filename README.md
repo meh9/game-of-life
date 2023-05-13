@@ -22,20 +22,21 @@ Further simplified Rules that are easier to program:
 ## Approaches
 
 ### Parallel arrays
-1. 2x [x][y] arrays created at init, A and B
-1. Set each individual live cell in A[x][y]
-1. Algorithm loops through each element A[x][y]
-1. Test the 8 adjacent elements of A[x][y], save the result in B[x][y]
-    1. When testing, overflow on edges so if testing element at right edge (x.max), overflow and test from left edge (x.min)
-1. Swap A and B
-1. Print A
+1. `A[rows][columns]` array created at init
+1. Set each individual live cell in `A`
+1. Create parallel `B` array set to same size but all cells are dead
+1. Algorithm loops through each element `A[row][col]`
+    1. Test the 8 adjacent elements of `A[row][col]`, save the result in `B[row][col]`
+    1. When testing, overflow on edges so if testing element at edges `cols.max` or `rows.max`, overflow and test from opposite edge. Same for `columns.min` and `rows.min`
+1. Assign `B` to `A`
+1. Print `A`
 
 Negatives:
-1. need a lot of memory, which limits max size
-1. we test each element so O(x*y), also limits max size
+1. need `rows*columns*2` of memory, which limits max size
+1. we test each element so `O(rows*columns)`, also limits max size
 
 Positives:
-1. it's pretty fast for small sized boards
+1. it's fast for small sized boards
 1. no hashtable lookups
 1. simple to understand
 
