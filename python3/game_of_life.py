@@ -38,15 +38,15 @@ class GameOfLifeArrays:
         ]
 
         # loop through every cell on the board
-        for row in range(len(self.a_array)):
-            for col in range(len(self.a_array[row])):
-                num_neighbours: int = self.count_neighbours(row, col)
+        for row_index, row_list in enumerate(self.a_array):
+            for col_index, live in enumerate(row_list):
+                num_neighbours: int = self.count_neighbours(row_index, col_index)
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in next gen.
                 if num_neighbours is 3:
-                    self._b[row][col] = True
+                    self._b[row_index][col_index] = True
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
-                elif self.a_array[row][col] is True and num_neighbours == 2:
-                    self._b[row][col] = True
+                elif live is True and num_neighbours == 2:
+                    self._b[row_index][col_index] = True
                 # 3. All other cells are dead in the next generation.
                 # do nothing
 
