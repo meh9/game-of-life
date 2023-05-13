@@ -9,7 +9,6 @@ package com.zakalwe.gameoflife.arrays;
 public class GameOfLifeArrays {
 
     private boolean[][] a;
-    private boolean[][] b;
     private int iteration = 0;
 
     /**
@@ -26,7 +25,7 @@ public class GameOfLifeArrays {
     public void progress() {
         // would it be faster to loop through and reset all elements to false? probably
         // not for large arrays?
-        b = new boolean[a.length][a[0].length];
+        final boolean[][] b = new boolean[a.length][a[0].length];
 
         // loop through every single element in the board
         for (int row = 0; row < a.length; row++) {
@@ -51,7 +50,6 @@ public class GameOfLifeArrays {
 
         // swap the arrays
         a = b;
-        b = null;
         iteration++;
     }
 

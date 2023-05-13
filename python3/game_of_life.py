@@ -26,33 +26,31 @@ class GameOfLifeArrays:
         self.a_array: list[list[bool]] = [
             [False for _ in range(cols)] for _ in range(rows)
         ]
-        self._b: list[list[bool]] = []
         self.iteration = 0
 
     def progress(self) -> None:
         """Progress the game another generation."""
-        # initialise the b array
-        self._b = [
+        # initialise a new array next_gen[[]] to be all False
+        next_gen: list[list[bool]] = [
             [False for _ in range(len(self.a_array[0]))]
             for _ in range(len(self.a_array))
         ]
 
-        # loop through every cell on the board
+        # loop through every cell on the board and update the _b array with the next gen.
         for row_index, row_list in enumerate(self.a_array):
             for col_index, live in enumerate(row_list):
                 num_neighbours: int = self.count_neighbours(row_index, col_index)
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in next gen.
                 if num_neighbours is 3:
-                    self._b[row_index][col_index] = True
+                    next_gen[row_index][col_index] = True
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 elif live is True and num_neighbours == 2:
-                    self._b[row_index][col_index] = True
+                    next_gen[row_index][col_index] = True
                 # 3. All other cells are dead in the next generation.
                 # do nothing
 
         # swap the arrays
-        self.a_array = self._b
-        self._b = []
+        self.a_array = next_gen
         self.iteration += 1
 
     def count_neighbours(self, row: int, col: int) -> int:
