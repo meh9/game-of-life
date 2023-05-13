@@ -115,7 +115,7 @@ public class GameOfLifeArrays {
      * 
      * @return the number of cells that are alive
      */
-    public Object count() {
+    public int count() {
         int count = 0;
 
         // loop through every single element in the board
