@@ -3,15 +3,18 @@ package com.zakalwe.gameoflife.arrays;
 /**
  * The actual Conway's Game of Life implementation.
  * 
- * This implementation uses a fixed sized (double array) universe where cells wrap around the edges.
+ * This implementation uses a fixed sized (double array) universe where cells
+ * wrap around the edges.
  */
 public class GameOfLifeArrays {
 
     private boolean[][] a;
     private boolean[][] b;
     private int iteration = 0;
-    
-    /** Initialise arrays 
+
+    /**
+     * Initialise arrays
+     * 
      * @param rows height of the board
      * @param cols width of the board
      */
@@ -21,7 +24,8 @@ public class GameOfLifeArrays {
 
     /** Progresses the game one turn. */
     public void progress() {
-        // would it be faster to loop through and reset all elements to false? probably not for large arrays?
+        // would it be faster to loop through and reset all elements to false? probably
+        // not for large arrays?
         b = new boolean[a.length][a[0].length];
 
         // loop through every single element in the board
@@ -29,7 +33,8 @@ public class GameOfLifeArrays {
             for (int col = 0; col < a[row].length; col++) {
                 final int numNeighbours = countNeighbours(row, col);
 
-                // 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the next generation.
+                // 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the next
+                // generation.
                 if (numNeighbours == 3) {
                     b[row][col] = true;
                 }
@@ -52,6 +57,7 @@ public class GameOfLifeArrays {
 
     /**
      * Check how many live neighbours we have for a given cell
+     * 
      * @param row y coord for the cell
      * @param col x coord for the cell
      * @return the number of neighbour cells that are alive
@@ -61,32 +67,34 @@ public class GameOfLifeArrays {
 
         // check if we need to wrap around
         // if y==0 we can't decrement further, so wrap around to other extreme of array
-        final int top = row == 0 ? a.length-1 : row-1;
+        final int top = row == 0 ? a.length - 1 : row - 1;
         // if y==a.length-1 we can't increment, so wrap around to 0
-        final int bottom = row == a.length-1 ? 0 : row+1;
+        final int bottom = row == a.length - 1 ? 0 : row + 1;
 
-        // if x==0 then we can't decrement further, so wrap around to other extreme of array
-        final int left = col == 0 ? a[0].length-1 : col-1;
+        // if x==0 then we can't decrement further, so wrap around to other extreme of
+        // array
+        final int left = col == 0 ? a[0].length - 1 : col - 1;
         // if x==a[0].length-1 we can't increment, so wrap around to 0
-        final int right = col == a[0].length-1 ? 0 : col+1;
+        final int right = col == a[0].length - 1 ? 0 : col + 1;
 
         // check all the neighbours
-        count += a[top   ][left ] ? 1 : 0;
-        count += a[top   ][col  ] ? 1 : 0;
-        count += a[top   ][right] ? 1 : 0;
-        count += a[row   ][left ] ? 1 : 0;
+        count += a[top][left] ? 1 : 0;
+        count += a[top][col] ? 1 : 0;
+        count += a[top][right] ? 1 : 0;
+        count += a[row][left] ? 1 : 0;
         // we don't do a[y][x] because it's the cell we're testing
-        count += a[row   ][right] ? 1 : 0;
-        count += a[bottom][left ] ? 1 : 0;
-        count += a[bottom][col  ] ? 1 : 0;
+        count += a[row][right] ? 1 : 0;
+        count += a[bottom][left] ? 1 : 0;
+        count += a[bottom][col] ? 1 : 0;
         count += a[bottom][right] ? 1 : 0;
         return count;
     }
 
     /**
      * Set a cell as dead or alive in the A array.
-     * @param row y coordinate of the cell
-     * @param col x coordinate of cell
+     * 
+     * @param row   y coordinate of the cell
+     * @param col   x coordinate of cell
      * @param alive status to set
      */
     public void setCell(final int row, final int col, final boolean alive) {
@@ -95,6 +103,7 @@ public class GameOfLifeArrays {
 
     /**
      * Return the status of the given cell
+     * 
      * @param row y coordinate of the cell
      * @param col x coordinate of the cell
      * @return the status of the cell
@@ -105,6 +114,7 @@ public class GameOfLifeArrays {
 
     /**
      * Count the number of cells that are alive.
+     * 
      * @return the number of cells that are alive
      */
     public Object count() {
@@ -123,6 +133,7 @@ public class GameOfLifeArrays {
 
     /**
      * Get which iteration we are on.
+     * 
      * @return which iteration we are on
      */
     public int getIteration() {
@@ -131,7 +142,7 @@ public class GameOfLifeArrays {
 
     public String toString() {
         // initialise SB to x*y*2+y chars to prevent needing to increase the size
-        final StringBuilder sb = new StringBuilder(a.length*a[0].length*2 + a.length);
+        final StringBuilder sb = new StringBuilder(a.length * a[0].length * 2 + a.length);
         for (int row = 0; row < a.length; row++) {
             for (int col = 0; col < a[row].length; col++) {
                 sb.append(a[row][col] ? "■" : "□").append(" ");
