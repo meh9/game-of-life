@@ -143,7 +143,7 @@ public class GameOfLifeArrays {
         final StringBuilder sb = new StringBuilder(a.length * a[0].length * 2 + a.length);
         for (int row = 0; row < a.length; row++) {
             for (int col = 0; col < a[row].length; col++) {
-                sb.append(a[row][col] ? "■" : "□").append(" ");
+                sb.append(a[row][col] ? "■ " : "□ ");
             }
             sb.append("\n");
         }

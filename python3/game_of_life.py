@@ -82,7 +82,7 @@ class GameOfLifeArrays:
 
     def __str__(self) -> str:
         """Return the a array as a formatted string."""
-        # concise double map version
+        # concise but unreadable double map version
         # return "\n".join(list(map(lambda r: "".join(list(map(lambda c: "■ " if c else "□ ", r))),
         #   self.a)))
         # expanded double for loop version
