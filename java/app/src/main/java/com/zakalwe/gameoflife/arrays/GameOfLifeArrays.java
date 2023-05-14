@@ -1,12 +1,14 @@
 package com.zakalwe.gameoflife.arrays;
 
+import com.zakalwe.gameoflife.GameOfLife;
+
 /**
  * The actual Conway's Game of Life implementation.
  * 
  * This implementation uses a fixed sized (double array) universe where cells
  * wrap around the edges.
  */
-public class GameOfLifeArrays {
+public class GameOfLifeArrays implements GameOfLife {
 
     private boolean[][] a;
     private int iteration = 0;
@@ -115,7 +117,8 @@ public class GameOfLifeArrays {
      * 
      * @return the number of cells that are alive
      */
-    public int count() {
+    @Override
+    public int countLiveCells() {
         int count = 0;
 
         // loop through every single element in the board
@@ -148,5 +151,10 @@ public class GameOfLifeArrays {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public int countAllCells() {
+        return a.length * a[0].length;
     }
 }

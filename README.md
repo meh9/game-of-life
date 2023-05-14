@@ -41,7 +41,7 @@ Positives:
 1. simple to understand
 
 
-# TreeMap simple implementation that might work???
+### TreeMap simple implementation that might work???
 1. Create new TreeMap<int[], Cell>, A. 
     1. The key is the int[row,col] of the Cell. 
     1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
