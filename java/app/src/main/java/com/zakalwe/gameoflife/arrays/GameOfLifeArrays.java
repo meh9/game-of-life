@@ -24,6 +24,7 @@ public class GameOfLifeArrays implements GameOfLife {
     }
 
     /** Progresses the game one turn. */
+    @Override
     public void progress() {
         // would it be faster to loop through and reset all elements to false? probably
         // not for large arrays?
@@ -97,6 +98,7 @@ public class GameOfLifeArrays implements GameOfLife {
      * @param col   x coordinate of cell
      * @param alive status to set
      */
+    @Override
     public void setCell(final int row, final int col, final boolean alive) {
         a[row][col] = alive;
     }
@@ -108,6 +110,7 @@ public class GameOfLifeArrays implements GameOfLife {
      * @param col x coordinate of the cell
      * @return the status of the cell
      */
+    @Override
     public boolean getCell(final int row, final int col) {
         return a[row][col];
     }
@@ -137,10 +140,12 @@ public class GameOfLifeArrays implements GameOfLife {
      * 
      * @return which generation we are on
      */
+    @Override
     public int getGeneration() {
         return generation;
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Generation: ").append(generation);

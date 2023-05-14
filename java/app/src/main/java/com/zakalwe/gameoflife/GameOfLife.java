@@ -44,6 +44,7 @@ public interface GameOfLife {
      */
     public int getGeneration();
 
+    @Override
     public String toString();
 
 }

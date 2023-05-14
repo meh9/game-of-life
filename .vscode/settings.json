@@ -13,5 +13,17 @@
     ],
     "python.linting.mypyEnabled": true,
     "python.linting.pydocstyleEnabled": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "java.saveActions.organizeImports": true,
+    "java.cleanup.actionsOnSave": [
+        "addOverride",
+        "addDeprecated",
+        "stringConcatToTextBlock",
+        "invertEquals",
+        "addFinalModifier",
+        "instanceofPatternMatch",
+        "lambdaExpression",
+        "switchExpression",
+        "tryWithResource"
+    ]
 }
