@@ -41,7 +41,33 @@ Positives:
 1. simple to understand
 
 
-## LinkedList and hashtable lookups
+# TreeMap simple implementation that might work???
+1. Create new TreeMap<int[], Cell>, A. 
+    1. The key is the int[row,col] of the Cell. 
+    1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
+    1. TODO: Need to check what natural ordering is of int[row,col] - might have to provide our own Comparator. When we iterate over the keys they need to come out in row order left to right.
+1. Create new live Cells and put/replace in TreeMap at their row,col coordinate. No need to check if it exists already.
+    1. Check in TreeMap if each neighbour exists. For each that does not exist, add a new dead Cell.
+1. Now we have all live and dead Cells that need to be considered when progressing a generation.
+1. Create new TreeMap B for next generation.
+1. Iterate through all Cells in A
+    1. Check each cell - both live and dead - if it will be alive in next gen by doing lookups for all 8 of its neighbours in A. Use predefined `int[row,col]` for N, NE, E, SE, S, SW, W, NW neighbours to avoid garbage collection? Maybe test this for speed.
+    1. Because we have also checked all dead neighbours of all live cells, we have checked all cells in the universe that could possibly become live.
+    1. If it will be alive, create a new Cell in B, with all it's dead neighbours as above.
+    1. If it will be dead, do not add to B.
+1. At this point, next generation is ready in B, and has only the live Cells and their immediate dead neighbours.
+1. Assign B to A.
+
+Negatives:
+1. does a lot of TreeMap lookups
+
+Positives:
+1. able to create much larger universes compared to arrays - as long as the universe is sparsely populated
+1. no edge to the universe except for Integer.MAX for keys which gliders etc will eventually hit - could try to deal with this by using BigInteger?
+1. not too hard to understand
+
+
+## Old and irrelevant: LinkedList and hashtable lookups
 ```
 Cell
  - int x
