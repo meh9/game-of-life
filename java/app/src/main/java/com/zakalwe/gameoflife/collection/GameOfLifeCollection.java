@@ -1,22 +1,27 @@
 package com.zakalwe.gameoflife.collection;
 
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.zakalwe.gameoflife.GameOfLife;
+
 /**
  * The actual Conway's Game of Life implementation.
  * 
  * The intent it that this implementation will use collections in order to not
  * have a finite universe and other associated limitations.
  */
-public class GameOfLifeCollection {
+public class GameOfLifeCollection implements GameOfLife {
 
-    private int iteration = 0;
+    private final int generation = 0;
+    private final Map<RowCol, Boolean> a = new TreeMap<>();
 
-    /**
-     * Default constructor
-     */
+    /** Default constructor */
     public GameOfLifeCollection() {
     }
 
     /** Progresses the game one turn. */
+    @Override
     public void progress() {
         // TODO: implement
         /*
@@ -44,8 +49,9 @@ public class GameOfLifeCollection {
      * @param col   x coordinate of cell
      * @param alive status to set
      */
+    @Override
     public void setCell(final int row, final int col, final boolean alive) {
-        // TODO: implement
+        a.put(new RowCol(row, col), alive);
     }
 
     /**
@@ -55,9 +61,9 @@ public class GameOfLifeCollection {
      * @param col x coordinate of the cell
      * @return the status of the cell
      */
+    @Override
     public boolean getCell(final int row, final int col) {
-        // TODO: implement
-        return false;
+        return a.get(new RowCol(row, col));
     }
 
     /**
@@ -65,8 +71,9 @@ public class GameOfLifeCollection {
      * 
      * @return the number of cells that are alive
      */
-    public Object count() {
-        int count = 0;
+    @Override
+    public int countLiveCells() {
+        final int count = -1;
 
         // TODO: implement
         return count;
@@ -77,12 +84,40 @@ public class GameOfLifeCollection {
      * 
      * @return which iteration we are on
      */
-    public int getIteration() {
-        return iteration;
+    @Override
+    public int getGeneration() {
+        return generation;
     }
 
+    @Override
     public String toString() {
-        // TODO: implement
-        return null;
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Generation: ").append(generation);
+        sb.append(", Live cells: ").append(countLiveCells());
+        sb.append(", All cells: ").append(countAllCells()); // .append("\n");
+        // for (int row = 0; row < a.length; row++) {
+        // for (int col = 0; col < a[row].length; col++) {
+        // sb.append(a[row][col] ? "■ " : "□ ");
+        // }
+        // sb.append("\n");
+        // }
+        return sb.toString();
+    }
+
+    @Override
+    public int countAllCells() {
+        return a.size();
+    }
+
+    /* package-private */ record RowCol(int row, int col) implements Comparable<RowCol> {
+
+        @Override
+        public int compareTo(final RowCol o) {
+            final int rowDiff = row - o.row;
+            if (rowDiff == 0) {
+                return col - o.col;
+            }
+            return rowDiff;
+        }
     }
 }

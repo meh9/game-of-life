@@ -1,6 +1,6 @@
 package com.zakalwe.gameoflife;
 
-import com.zakalwe.gameoflife.arrays.GameOfLifeArrays;
+import com.zakalwe.gameoflife.collection.GameOfLifeCollection;
 
 /**
  * Main class to run Conway's Game of Life.
@@ -17,10 +17,10 @@ public final class App {
      * 
      * @param args arguments
      */
-    public static final void main(String[] args) {
+    public static final void main(final String[] args) {
         final int rows = 10;
         final int cols = 10;
-        final GameOfLife gameOfLife = new GameOfLifeArrays(rows, cols);
+        final GameOfLife gameOfLife = new GameOfLifeCollection();
 
         gameOfLife.setCell(0, 0, true);
         gameOfLife.setCell(5, 0, true);

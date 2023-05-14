@@ -3,9 +3,14 @@
  */
 package com.zakalwe.gameoflife;
 
-import org.testng.annotations.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import org.testng.annotations.Test;
+
 import com.zakalwe.gameoflife.arrays.GameOfLifeArrays;
-import static org.testng.Assert.*;
+import com.zakalwe.gameoflife.collection.GameOfLifeCollection;
 
 public class GameOfLifeTests {
 
@@ -21,8 +26,11 @@ public class GameOfLifeTests {
         System.out.println("gliderWraparound():");
         final int rows = 12;
         final int cols = 15;
-        final GameOfLife gameOfLife = new GameOfLifeArrays(rows, cols);
-        gliderWraparoundTest(gameOfLife);
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(rows, cols);
+        gliderWraparoundTest(gameOfLifeArrays);
+
+        final GameOfLifeCollection gameOfLifeCollection = new GameOfLifeCollection();
+        gliderWraparoundTest(gameOfLifeCollection);
     }
 
     private void gliderWraparoundTest(final GameOfLife gameOfLife) {
@@ -53,8 +61,11 @@ public class GameOfLifeTests {
         System.out.println("deadWithThreeNeighboursComeAlive():");
         final int rows = 7;
         final int cols = 6;
-        final GameOfLife gameOfLife = new GameOfLifeArrays(rows, cols);
-        deadWithThreeNeighboursComeAliveTest(gameOfLife);
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(rows, cols);
+        deadWithThreeNeighboursComeAliveTest(gameOfLifeArrays);
+
+        final GameOfLifeCollection gameOfLifeCollection = new GameOfLifeCollection();
+        deadWithThreeNeighboursComeAliveTest(gameOfLifeCollection);
     }
 
     private void deadWithThreeNeighboursComeAliveTest(final GameOfLife gameOfLife) {
@@ -119,8 +130,11 @@ public class GameOfLifeTests {
         System.out.println("aliveWithThreeNeighboursSurvive():");
         final int rows = 4;
         final int cols = 6;
-        final GameOfLifeArrays gameOfLife = new GameOfLifeArrays(rows, cols);
-        aliveWithThreeNeighboursSurviveTest(gameOfLife);
+        final GameOfLifeArrays gameOfLifeArrays = new GameOfLifeArrays(rows, cols);
+        aliveWithThreeNeighboursSurviveTest(gameOfLifeArrays);
+
+        final GameOfLifeCollection gameOfLifeCollection = new GameOfLifeCollection();
+        aliveWithThreeNeighboursSurviveTest(gameOfLifeCollection);
     }
 
     private void aliveWithThreeNeighboursSurviveTest(final GameOfLife gameOfLife) {
