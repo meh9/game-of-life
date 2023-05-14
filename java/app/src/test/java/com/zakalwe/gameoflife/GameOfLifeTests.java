@@ -7,7 +7,7 @@ import org.testng.annotations.*;
 import com.zakalwe.gameoflife.arrays.GameOfLifeArrays;
 import static org.testng.Assert.*;
 
-public class GameOfLifeArraysTest {
+public class GameOfLifeTests {
 
     // Rules:
     // 1. Any live cell with two or three live neighbours survives.
@@ -32,14 +32,14 @@ public class GameOfLifeArraysTest {
         gameOfLife.setCell(2, 0, true);
         gameOfLife.setCell(2, 1, true);
         gameOfLife.setCell(2, 2, true);
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 5);
 
         for (int i = 0; i < 10000; i++) {
             gameOfLife.progress();
             assertEquals(gameOfLife.countLiveCells(), 5);
         }
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertTrue(gameOfLife.getCell(4, 11), "should be alive");
         assertTrue(gameOfLife.getCell(5, 12), "should be alive");
         assertTrue(gameOfLife.getCell(6, 10), "should be alive");
@@ -67,14 +67,14 @@ public class GameOfLifeArraysTest {
         gameOfLife.setCell(4, 1, true);
         gameOfLife.setCell(4, 2, true);
 
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 5);
 
         // line of 3 spawns 1 above and 1 below, middle stays alive because it has 2
         // neighbours, left and right dies because only a 1 neighbour
         // line of 2 only has 1 neighbour each and both die
         gameOfLife.progress();
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 3);
 
         // check new vertical line of 3 is alive
@@ -94,7 +94,7 @@ public class GameOfLifeArraysTest {
 
         // next iteration the line should flip horizontal again
         gameOfLife.progress();
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 3, "should be a a line of 3");
         assertTrue(gameOfLife.getCell(1, 1), "should be alive");
         assertTrue(gameOfLife.getCell(1, 2), "should be alive");
@@ -105,7 +105,7 @@ public class GameOfLifeArraysTest {
         for (int i = 0; i < 101; i++) {
             gameOfLife.progress();
         }
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         // check line is vertical
         assertTrue(gameOfLife.getCell(0, 2), "should be alive");
         assertTrue(gameOfLife.getCell(1, 2), "should be alive");
@@ -129,11 +129,11 @@ public class GameOfLifeArraysTest {
         gameOfLife.setCell(1, 2, true);
         gameOfLife.setCell(2, 1, true);
         gameOfLife.setCell(2, 2, true);
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 4);
 
         gameOfLife.progress();
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 4);
 
         // check row above square
@@ -159,7 +159,7 @@ public class GameOfLifeArraysTest {
             gameOfLife.progress();
             assertEquals(gameOfLife.countLiveCells(), 4);
         }
-        System.out.println("Iteration: " + gameOfLife.getIteration() + ":\n" + gameOfLife + "\n");
+        System.out.println(gameOfLife + "\n");
         assertEquals(gameOfLife.countLiveCells(), 4);
     }
 }

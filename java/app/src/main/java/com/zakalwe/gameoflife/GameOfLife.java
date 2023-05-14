@@ -42,7 +42,7 @@ public interface GameOfLife {
      * 
      * @return which iteration we are on
      */
-    public int getIteration();
+    public int getGeneration();
 
     public String toString();
 

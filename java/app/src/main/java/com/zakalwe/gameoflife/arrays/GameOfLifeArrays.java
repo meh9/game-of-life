@@ -11,7 +11,7 @@ import com.zakalwe.gameoflife.GameOfLife;
 public class GameOfLifeArrays implements GameOfLife {
 
     private boolean[][] a;
-    private int iteration = 0;
+    private int generation = 0;
 
     /**
      * Initialise arrays
@@ -52,7 +52,7 @@ public class GameOfLifeArrays implements GameOfLife {
 
         // swap the arrays
         a = b;
-        iteration++;
+        generation++;
     }
 
     /**
@@ -133,17 +133,19 @@ public class GameOfLifeArrays implements GameOfLife {
     }
 
     /**
-     * Get which iteration we are on.
+     * Get which generation we are on.
      * 
-     * @return which iteration we are on
+     * @return which generation we are on
      */
-    public int getIteration() {
-        return iteration;
+    public int getGeneration() {
+        return generation;
     }
 
     public String toString() {
-        // initialise SB to x*y*2+y chars to prevent needing to increase the size
-        final StringBuilder sb = new StringBuilder(a.length * a[0].length * 2 + a.length);
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Generation: ").append(generation);
+        sb.append(", Live cells: ").append(countLiveCells());
+        sb.append(", All cells: ").append(countAllCells()).append("\n");
         for (int row = 0; row < a.length; row++) {
             for (int col = 0; col < a[row].length; col++) {
                 sb.append(a[row][col] ? "■ " : "□ ");
