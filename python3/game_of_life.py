@@ -44,9 +44,9 @@ class GameOfLifeSortedDict:
         self.a_map: SortedDict[[int, int], bool] = SortedDict()  # type: ignore
         self.iteration = 0
         # TODO: fix these to be Integer.MIN/MAX later
-        self.min_row = 0
+        self.min_row = -1
         self.max_row = 10
-        self.min_col = 0
+        self.min_col = -1
         self.max_col = 10
 
     def __str__(self) -> str:
@@ -64,9 +64,34 @@ class GameOfLifeSortedDict:
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
-        self.a_map[(row, col)] = live
+        # if we are adding a live cell, also add dead neighbours if they don't already exist
+        if live:
+            self.a_map[(row, col)] = live
+            # add all the dead neighbours if there is not a cell in the map already
+            for neighbour in compute_neighbours(row, col):
+                if neighbour not in self.a_map:
+                    self.a_map[neighbour] = False
+        elif (row, col) not in self.a_map:
+            self.a_map[(row, col)] = False
         # TODO: add tracking of min/max row/col
-        # TODO: add all neighbour cells
+
+
+def compute_neighbours(row: int, col: int) -> list[tuple[int, int]]:
+    """Compute the coordinates of all the neighbours of the given cell."""
+    top: int = row - 1
+    bottom: int = row + 1
+    left: int = col - 1
+    right: int = col + 1
+    return [
+        (top, left),
+        (top, col),
+        (top, right),
+        (row, right),
+        (bottom, right),
+        (bottom, col),
+        (bottom, left),
+        (row, left),
+    ]
 
 
 class GameOfLifeArrays:
