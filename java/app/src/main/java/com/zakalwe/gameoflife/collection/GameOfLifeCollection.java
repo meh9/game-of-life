@@ -1,6 +1,7 @@
 package com.zakalwe.gameoflife.collection;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.zakalwe.gameoflife.GameOfLife;
@@ -12,6 +13,12 @@ import com.zakalwe.gameoflife.GameOfLife;
  * have a finite universe and other associated limitations.
  */
 public class GameOfLifeCollection implements GameOfLife {
+
+    private enum Neighbours {
+        TWO,
+        THREE,
+        NOT_TWO_OR_THREE
+    }
 
     private int generation = 0;
     private Map<RowCol, Boolean> a = new TreeMap<>();
@@ -27,29 +34,60 @@ public class GameOfLifeCollection implements GameOfLife {
     /** Progresses the game one turn. */
     @Override
     public void progress() {
-        // TODO: implement
-        /*
-         * final int numNeighbours = countNeighbours(row, col);
-         * // 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the next
-         * // generation.
-         * if (numNeighbours == 3) {
-         * b[row][col] = true;
-         * }
-         * // 2. A live cell with exactly 2 neighbours is alive in the next generation.
-         * else if (a[row][col] == true && numNeighbours == 2) {
-         * b[row][col] = true;
-         * }
-         * // 3. All other cells are dead in the next generation.
-         * else {
-         * continue; // just being explicit
-         * }
-         */
-        a = new TreeMap<>();
         minRow = Integer.MAX_VALUE;
         maxRow = Integer.MIN_VALUE;
         minCol = Integer.MAX_VALUE;
         maxCol = Integer.MIN_VALUE;
+        final Map<RowCol, Boolean> b = new TreeMap<>();
+
+        for (final Entry<RowCol, Boolean> entry : a.entrySet()) {
+            final RowCol rowCol = entry.getKey();
+            final Boolean alive = entry.getValue();
+            final Neighbours neighbours = countNeighbours(rowCol);
+
+            switch (neighbours) {
+                // 2. A live cell with exactly 2 neighbours is alive in the next generation.
+                case TWO:
+                    if (alive) {
+                        setCell(rowCol, true, b);
+                    }
+                    break;
+
+                // 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the next
+                // generation.
+                case THREE:
+                    setCell(rowCol, true, b);
+                    break;
+
+                // 3. All other cells are dead in the next generation.
+                default:
+                    // do nothing
+            }
+        }
+
+        // finalise the generation
+        a = b;
         generation++;
+    }
+
+    private Neighbours countNeighbours(final RowCol rowCol) {
+        int count = 0;
+        final RowCol[] keys = rowCol.computeNeighbours();
+        for (int i = 0; i < keys.length; i++) {
+            if (getCell(keys[i])) {
+                count++;
+                // short circuit when over 4
+                if (count >= 4) {
+                    return Neighbours.NOT_TWO_OR_THREE;
+                }
+            }
+        }
+
+        return switch (count) {
+            case 2 -> Neighbours.TWO;
+            case 3 -> Neighbours.THREE;
+            default -> Neighbours.NOT_TWO_OR_THREE;
+        };
     }
 
     /**
@@ -61,20 +99,20 @@ public class GameOfLifeCollection implements GameOfLife {
      */
     @Override
     public void setCell(final int row, final int col, final boolean alive) {
-        setCell(new RowCol(row, col), alive);
+        setCell(new RowCol(row, col), alive, a);
     }
 
-    private void setCell(final RowCol rowCol, final boolean alive) {
+    private void setCell(final RowCol rowCol, final boolean alive, final Map<RowCol, Boolean> m) {
         if (alive) {
             // add the actual live cell
-            a.put(rowCol, alive);
+            m.put(rowCol, alive);
             // add all the neighbouring dead cells if the do not exist already
-            for (final RowCol rc : rowCol.computeNeighbours(rowCol.row, rowCol.col)) {
-                setCell(rc, false);
+            for (final RowCol rc : rowCol.computeNeighbours()) {
+                setCell(rc, false, m);
             }
         } else {
             // only add dead cells if there is no cell at that coord already, dead or alive
-            a.putIfAbsent(rowCol, false);
+            m.putIfAbsent(rowCol, false);
         }
         // make sure we track min/max bounds
         minRow = rowCol.row < minRow ? rowCol.row : minRow;
@@ -92,7 +130,17 @@ public class GameOfLifeCollection implements GameOfLife {
      */
     @Override
     public boolean getCell(final int row, final int col) {
-        return a.get(new RowCol(row, col));
+        return getCell(new RowCol(row, col));
+    }
+
+    private boolean getCell(final RowCol rowCol) {
+        final Boolean b = a.get(rowCol);
+        // if there is no cell then the cell is dead - this is a common occurrence
+        if (b == null) {
+            return false;
+        } else {
+            return b;
+        }
     }
 
     /**
@@ -127,7 +175,8 @@ public class GameOfLifeCollection implements GameOfLife {
         sb.append("Generation: ").append(generation);
         sb.append(", Live cells: ").append(countLiveCells());
         sb.append(", All cells: ").append(countAllCells());
-        sb.append(", Min/Max bounds: ").append((maxRow - minRow) * (maxCol - minCol)).append("\n");
+        sb.append(", 2D array equiv. elements: ").append((maxRow - minRow + 1) * (maxCol - minCol + 1)).append("\n");
+
         for (int row = minRow; row <= maxRow; row++) {
             for (int col = minCol; col <= maxCol; col++) {
                 final Boolean b = a.get(new RowCol(row, col));
@@ -158,7 +207,7 @@ public class GameOfLifeCollection implements GameOfLife {
             return rowDiff;
         }
 
-        private RowCol[] computeNeighbours(final int row, final int col) {
+        private RowCol[] computeNeighbours() {
             final RowCol[] r = new RowCol[8];
             final int top = row - 1;
             final int bottom = row + 1;
