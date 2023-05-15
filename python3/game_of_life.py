@@ -1,25 +1,76 @@
 """Simple Conway's Game of Life implementation."""
 
+from sortedcontainers import SortedDict  # type: ignore
+
 
 def main() -> None:
     """Run through a simple glider progression."""
-    gol = GameOfLifeArrays(12, 15)
-    gol.a_array[0][1] = True
-    gol.a_array[1][2] = True
-    gol.a_array[2][0] = True
-    gol.a_array[2][1] = True
-    gol.a_array[2][2] = True
+    # TODO: set up pytest
+    # gol = GameOfLifeArrays(12, 15)
+    # gol.a_array[0][1] = True
+    # gol.a_array[1][2] = True
+    # gol.a_array[2][0] = True
+    # gol.a_array[2][1] = True
+    # gol.a_array[2][2] = True
+    # print(gol)
+    # gol.progress()
+    # print(gol)
+    # for _ in range(10000):
+    #     gol.progress()
+    # print(gol)
+    # print("done")
+    gol = GameOfLifeSortedDict()
+    gol.set_cell(0, 1, True)
+    gol.set_cell(1, 2, True)
+    gol.set_cell(2, 0, True)
+    gol.set_cell(2, 1, True)
+    gol.set_cell(2, 2, True)
     print(gol)
-    gol.progress()
-    print(gol)
-    for _ in range(10000):
-        gol.progress()
-    print(gol)
+    # gol.progress()
+    # print(gol)
+    # for _ in range(10000):
+    #     gol.progress()
+    # print(gol)
     print("done")
 
 
+# TODO: sort out inheritance?
+# TODO: split into their own modules/source files?
+class GameOfLifeSortedDict:
+    """Implements Game of Life using SortedDict (Red/Black "treemap" implementation)."""
+
+    def __init__(self) -> None:
+        """Initialise the map."""
+        self.a_map: SortedDict[[int, int], bool] = SortedDict()  # type: ignore
+        self.iteration = 0
+        # TODO: fix these to be Integer.MIN/MAX later
+        self.min_row = 0
+        self.max_row = 10
+        self.min_col = 0
+        self.max_col = 10
+
+    def __str__(self) -> str:
+        """Iterate over all the cells and return a human readable string."""
+        str_list: list[str] = ["Iteration: " + str(self.iteration)]
+        for row in range(self.min_row, self.max_row):
+            row_list: list[str] = []
+            for col in range(self.min_col, self.max_col):
+                if (row, col) in self.a_map:
+                    row_list.append("■ " if self.a_map.get((row, col)) else "□ ")  # type: ignore
+                else:
+                    row_list.append("  ")
+            str_list.append("".join(row_list))
+        return "\n".join(str_list)
+
+    def set_cell(self, row: int, col: int, live: bool) -> None:
+        """Set a cell in the map to the given live value."""
+        self.a_map[(row, col)] = live
+        # TODO: add tracking of min/max row/col
+        # TODO: add all neighbour cells
+
+
 class GameOfLifeArrays:
-    """Implements Game of Life using two arrays fixed size arrays, with universe wrap around."""
+    """Implements Game of Life using two fixed size arrays, with universe wrap around."""
 
     def __init__(self, rows: int, cols: int) -> None:
         """Initialise the two parallel arrays."""
@@ -41,7 +92,7 @@ class GameOfLifeArrays:
             for col_index, live in enumerate(row_list):
                 num_neighbours: int = self.count_neighbours(row_index, col_index)
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in next gen.
-                if num_neighbours is 3:
+                if num_neighbours == 3:
                     next_gen[row_index][col_index] = True
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 elif live is True and num_neighbours == 2:
@@ -86,13 +137,13 @@ class GameOfLifeArrays:
         # return "\n".join(list(map(lambda r: "".join(list(map(lambda c: "■ " if c else "□ ", r))),
         #   self.a)))
         # expanded double for loop version
-        col_list: list[str] = ["Iteration: " + str(self.iteration)]
+        str_list: list[str] = ["Iteration: " + str(self.iteration)]
         for row in self.a_array:
             row_list: list[str] = []
             for cell in row:
                 row_list.append("■ " if cell else "□ ")
-            col_list.append("".join(row_list))
-        return "\n".join(col_list)
+            str_list.append("".join(row_list))
+        return "\n".join(str_list)
 
 
 if __name__ == "__main__":

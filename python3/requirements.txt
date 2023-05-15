@@ -13,6 +13,7 @@ platformdirs==3.5.1
 pydocstyle==6.3.0
 pylint==2.17.4
 snowballstemmer==2.2.0
+sortedcontainers==2.4.0
 tomlkit==0.11.8
 typing_extensions==4.5.0
 wrapt==1.15.0
