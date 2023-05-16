@@ -9,8 +9,7 @@
     "python.analysis.typeCheckingMode": "strict",
     "python.linting.pylintEnabled": true,
     "python.linting.mypyArgs": [
-        "--strict",
-        "--no-warn-unused-ignores"
+        "--strict"
     ],
     "python.linting.mypyEnabled": true,
     "python.linting.pydocstyleEnabled": true,
