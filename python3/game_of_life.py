@@ -32,7 +32,7 @@ def main() -> None:
     # for _ in range(10000):
     #     gol.progress()
     # print(gol)
-    print("done")
+    # print("done")
 
 
 # TODO: sort out inheritance?
@@ -44,18 +44,17 @@ class GameOfLifeSortedDict:
         """Initialise the map."""
         self.a_map: SortedDict[[int, int], bool] = SortedDict()  # type: ignore
         self.iteration = 0
-        # TODO: fix these to be Integer.MIN/MAX later
-        self.min_row = -1
-        self.max_row = 10
-        self.min_col = -1
-        self.max_col = 10
+        self.min_row = 0
+        self.max_row = 0
+        self.min_col = 0
+        self.max_col = 0
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
         str_list: list[str] = ["Iteration: " + str(self.iteration)]
-        for row in range(self.min_row, self.max_row):
+        for row in range(self.min_row, self.max_row + 1):  # add 1 to include last
             row_list: list[str] = []
-            for col in range(self.min_col, self.max_col):
+            for col in range(self.min_col, self.max_col + 1):  # add 1 to include last
                 if (row, col) in self.a_map:
                     row_list.append("■ " if self.a_map.get((row, col)) else "□ ")  # type: ignore
                 else:
@@ -65,20 +64,27 @@ class GameOfLifeSortedDict:
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
+        # track the min/max of cols
+        if len(self.a_map) == 0:  # just set them first time around
+            self.min_row = row
+            self.max_row = row
+            self.min_col = col
+            self.max_col = col
+        else:
+            self.min_row = row if row < self.min_row else self.min_row
+            self.max_row = row if row > self.max_row else self.max_row
+            self.min_col = col if col < self.min_col else self.min_col
+            self.max_col = col if col > self.max_col else self.max_col
         # if we are adding a live cell, also add dead neighbours if they don't already exist
         if live:
             self.a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
             for neighbour in compute_neighbours(row, col):
                 if neighbour not in self.a_map:
-                    self.a_map[neighbour] = False
+                    # recurse to set min/max
+                    self.set_cell(neighbour[0], neighbour[1], False)
         elif (row, col) not in self.a_map:
             self.a_map[(row, col)] = False
-        # tracking of min/max row/col
-        self.min_row = row if row < self.min_row else self.min_row
-        self.max_row = row if row > self.max_row else self.max_row
-        self.min_col = col if col < self.min_col else self.min_col
-        self.max_col = col if col > self.max_col else self.max_col
 
 
 def compute_neighbours(row: int, col: int) -> list[tuple[int, int]]:
