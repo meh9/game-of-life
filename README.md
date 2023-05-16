@@ -41,11 +41,11 @@ Positives:
 1. simple to understand
 
 
-### TreeMap simple implementation that might work???
+### TreeMap simple implementation
 1. Create new TreeMap<int[], Cell>, A. 
     1. The key is the int[row,col] of the Cell. 
     1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
-    1. TODO: Need to check what natural ordering is of int[row,col] - might have to provide our own Comparator. When we iterate over the keys they need to come out in row order left to right.
+    1. Need to check what natural ordering is of int[row,col] - might have to provide our own Comparator. When we iterate over the keys they need to come out in row order left to right.
 1. Create new live Cells and put/replace in TreeMap at their row,col coordinate. No need to check if it exists already.
     1. Check in TreeMap if each neighbour exists. For each that does not exist, add a new dead Cell.
 1. Now we have all live and dead Cells that need to be considered when progressing a generation.
