@@ -1,6 +1,9 @@
 """Simple Conway's Game of Life implementation."""
 
+from time import sleep
 from sortedcontainers import SortedDict  # type: ignore
+
+Coordinate = tuple[int, int]
 
 
 def main() -> None:
@@ -15,7 +18,7 @@ def main() -> None:
     # print(gol)
     # gol.progress()
     # print(gol)
-    # for _ in range(10000):
+    # for _ in range(10001):
     #     gol.progress()
     # print(gol)
     # print("done")
@@ -27,12 +30,15 @@ def main() -> None:
     gol.set_cell(2, 1, True)
     gol.set_cell(2, 2, True)
     print(gol)
-    # gol.progress()
-    # print(gol)
-    # for _ in range(10000):
-    #     gol.progress()
-    # print(gol)
-    # print("done")
+    gol.progress()
+    print(gol)
+    for _ in range(10001):
+        gol.progress()
+    print(gol)
+    for _ in range(5):
+        gol.progress()
+        print(gol)
+        sleep(0.5)
 
 
 # TODO: sort out inheritance?
@@ -42,8 +48,8 @@ class GameOfLifeSortedDict:
 
     def __init__(self) -> None:
         """Initialise the map."""
-        self.a_map: SortedDict[[int, int], bool] = SortedDict()  # type: ignore
-        self.iteration = 0
+        self.a_map: dict[Coordinate, bool] = SortedDict()
+        self.generation = 0
         self.min_row = 0
         self.max_row = 0
         self.min_col = 0
@@ -51,16 +57,42 @@ class GameOfLifeSortedDict:
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
-        str_list: list[str] = ["Iteration: " + str(self.iteration)]
+        str_list: list[str] = ["Generation: " + str(self.generation)]
         for row in range(self.min_row, self.max_row + 1):  # add 1 to include last
             row_list: list[str] = []
             for col in range(self.min_col, self.max_col + 1):  # add 1 to include last
                 if (row, col) in self.a_map:
-                    row_list.append("■ " if self.a_map.get((row, col)) else "□ ")  # type: ignore
+                    row_list.append("■ " if self.a_map.get((row, col)) else "□ ")
                 else:
                     row_list.append("  ")
             str_list.append("".join(row_list))
         return "\n".join(str_list)
+
+    def progress(self) -> None:
+        """Progress another generation."""
+        self.min_row = 0
+        self.max_row = 0
+        self.min_col = 0
+        self.max_col = 0
+        b_map: dict[Coordinate, bool] = self.a_map
+        self.a_map = SortedDict()
+        # loop over every tracked cell
+        for item in b_map.items():
+            coords: Coordinate = item[0]
+            live: bool = item[1]
+            match self.live_neighbours(b_map, coords):
+                # 2. A live cell with exactly 2 neighbours is alive in the next generation.
+                case 2:
+                    if live:
+                        self.set_cell(coords[0], coords[1], live)
+                # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the
+                # next generation.
+                case 3:
+                    self.set_cell(coords[0], coords[1], True)
+                # 3. All other cells are dead in the next generation.
+                case _:
+                    pass
+        self.generation += 1
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
@@ -79,30 +111,47 @@ class GameOfLifeSortedDict:
         if live:
             self.a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in compute_neighbours(row, col):
+            for neighbour in self.compute_neighbours(row, col):
                 if neighbour not in self.a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
         elif (row, col) not in self.a_map:
             self.a_map[(row, col)] = False
 
+    @classmethod
+    def live_neighbours(
+        cls, b_map: dict[Coordinate, bool], coords: Coordinate  # type: ignore
+    ) -> int:
+        """
+        Count the number of live neighbours the cell at the given coords has.
 
-def compute_neighbours(row: int, col: int) -> list[tuple[int, int]]:
-    """Compute the coordinates of all the neighbours of the given cell."""
-    top: int = row - 1
-    bottom: int = row + 1
-    left: int = col - 1
-    right: int = col + 1
-    return [
-        (top, left),
-        (top, col),
-        (top, right),
-        (row, right),
-        (bottom, right),
-        (bottom, col),
-        (bottom, left),
-        (row, left),
-    ]
+        As a shortcut will only return up to the number 4, as we don't need to know any more for
+        Game of Life.
+        """
+        live: int = 0
+        for cell_coord in cls.compute_neighbours(coords[0], coords[1]):
+            value = b_map.get(cell_coord)  # type: ignore
+            if value is not None and value:
+                live += 1
+        return live
+
+    @classmethod
+    def compute_neighbours(cls, row: int, col: int) -> list[Coordinate]:
+        """Compute the coordinates of all the neighbours of the given cell."""
+        top: int = row - 1
+        bottom: int = row + 1
+        left: int = col - 1
+        right: int = col + 1
+        return [
+            (top, left),
+            (top, col),
+            (top, right),
+            (row, right),
+            (bottom, right),
+            (bottom, col),
+            (bottom, left),
+            (row, left),
+        ]
 
 
 class GameOfLifeArrays:
@@ -113,7 +162,7 @@ class GameOfLifeArrays:
         self.a_array: list[list[bool]] = [
             [False for _ in range(cols)] for _ in range(rows)
         ]
-        self.iteration = 0
+        self.generation = 0
 
     def progress(self) -> None:
         """Progress the game another generation."""
@@ -138,7 +187,7 @@ class GameOfLifeArrays:
 
         # swap the arrays
         self.a_array = next_gen
-        self.iteration += 1
+        self.generation += 1
 
     def count_neighbours(self, row: int, col: int) -> int:
         """Count how many of the 8 neighbours of this cell are alive."""
@@ -173,7 +222,7 @@ class GameOfLifeArrays:
         # return "\n".join(list(map(lambda r: "".join(list(map(lambda c: "■ " if c else "□ ", r))),
         #   self.a)))
         # expanded double for loop version
-        str_list: list[str] = ["Iteration: " + str(self.iteration)]
+        str_list: list[str] = ["Generation: " + str(self.generation)]
         for row in self.a_array:
             row_list: list[str] = []
             for cell in row:
