@@ -19,6 +19,7 @@ def main() -> None:
     #     gol.progress()
     # print(gol)
     # print("done")
+
     gol = GameOfLifeSortedDict()
     gol.set_cell(0, 1, True)
     gol.set_cell(1, 2, True)
@@ -73,7 +74,11 @@ class GameOfLifeSortedDict:
                     self.a_map[neighbour] = False
         elif (row, col) not in self.a_map:
             self.a_map[(row, col)] = False
-        # TODO: add tracking of min/max row/col
+        # tracking of min/max row/col
+        self.min_row = row if row < self.min_row else self.min_row
+        self.max_row = row if row > self.max_row else self.max_row
+        self.min_col = col if col < self.min_col else self.min_col
+        self.max_col = col if col > self.max_col else self.max_col
 
 
 def compute_neighbours(row: int, col: int) -> list[tuple[int, int]]:
