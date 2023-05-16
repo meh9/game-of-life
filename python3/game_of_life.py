@@ -126,12 +126,15 @@ class GameOfLifeSortedDict:
         As a shortcut will only return up to the number 4, as we don't need to know any more for
         Game of Life.
         """
-        live: int = 0
+        live_count: int = 0
         for cell_coord in cls.compute_neighbours(coords[0], coords[1]):
-            value = b_map.get(cell_coord)
-            if value is not None and value:
-                live += 1
-        return live
+            live = b_map.get(cell_coord)
+            if live is not None and live:
+                live_count += 1
+            # if there's more than 3 we're done
+            if live_count > 3:
+                return live_count
+        return live_count
 
     @classmethod
     def compute_neighbours(cls, row: int, col: int) -> list[Coordinate]:
