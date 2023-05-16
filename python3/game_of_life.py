@@ -119,9 +119,7 @@ class GameOfLifeSortedDict:
             self.a_map[(row, col)] = False
 
     @classmethod
-    def live_neighbours(
-        cls, b_map: dict[Coordinate, bool], coords: Coordinate  # type: ignore
-    ) -> int:
+    def live_neighbours(cls, b_map: dict[Coordinate, bool], coords: Coordinate) -> int:
         """
         Count the number of live neighbours the cell at the given coords has.
 
@@ -130,7 +128,7 @@ class GameOfLifeSortedDict:
         """
         live: int = 0
         for cell_coord in cls.compute_neighbours(coords[0], coords[1]):
-            value = b_map.get(cell_coord)  # type: ignore
+            value = b_map.get(cell_coord)
             if value is not None and value:
                 live += 1
         return live
