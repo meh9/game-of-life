@@ -16,4 +16,5 @@ Collecting a few things TODO in here in no particular order:
 ## Manual steps:
 1. `mypy --strict *.py`
 1. `black *.py`
+1. `pytest -v test_game_of_life.py`
 1. pylint? pydocstyle?
