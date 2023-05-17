@@ -97,7 +97,7 @@ class GameOfLifeSortedDict(GameOfLife):
         for item in b_map.items():
             coords: Coordinate = item[0]
             live: bool = item[1]
-            match self._live_neighbours(b_map, coords):
+            match GameOfLifeSortedDict._live_neighbours(b_map, coords):
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
                     if live:
@@ -128,7 +128,7 @@ class GameOfLifeSortedDict(GameOfLife):
         if live:
             self._a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in self._compute_neighbours(row, col):
+            for neighbour in GameOfLifeSortedDict._compute_neighbours(row, col):
                 if neighbour not in self._a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
