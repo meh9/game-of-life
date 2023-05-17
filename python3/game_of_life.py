@@ -49,11 +49,11 @@ class GameOfLifeSortedDict:
     def __init__(self) -> None:
         """Initialise the map."""
         self.a_map: dict[Coordinate, bool] = SortedDict()
-        self.generation = 0
-        self.min_row = 0
-        self.max_row = 0
-        self.min_col = 0
-        self.max_col = 0
+        self.generation: int = 0
+        self.min_row: int = 0
+        self.max_row: int = 0
+        self.min_col: int = 0
+        self.max_col: int = 0
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
@@ -128,7 +128,7 @@ class GameOfLifeSortedDict:
         """
         live_count: int = 0
         for cell_coord in cls.compute_neighbours(coords[0], coords[1]):
-            live = b_map.get(cell_coord)
+            live: bool | None = b_map.get(cell_coord)
             if live is not None and live:
                 live_count += 1
             # if there's more than 3 we're done
