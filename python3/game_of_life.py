@@ -9,7 +9,6 @@ Coordinate = tuple[int, int]
 
 def main() -> None:
     """Run through a simple glider progression."""
-    # TODO: set up pytest
     gol: GameOfLife = GameOfLifeArrays(12, 15)
     gol.set_cell(0, 1, True)
     gol.set_cell(1, 2, True)
@@ -59,6 +58,14 @@ class GameOfLife(ABC):
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the universe to the given live value."""
 
+    @abstractmethod
+    def count_live_cells(self) -> int:
+        """Count the total number of live cells in the GoL universe."""
+
+    @abstractmethod
+    def get_cell(self, row: int, col: int) -> bool:
+        """Return the live status of the given cell."""
+
 
 # TODO: split into their own modules/source files?
 class GameOfLifeSortedDict(GameOfLife):
@@ -98,7 +105,7 @@ class GameOfLifeSortedDict(GameOfLife):
         for item in b_map.items():
             coords: Coordinate = item[0]
             live: bool = item[1]
-            match self.live_neighbours(b_map, coords):
+            match self._live_neighbours(b_map, coords):
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
                     if live:
@@ -129,15 +136,30 @@ class GameOfLifeSortedDict(GameOfLife):
         if live:
             self._a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in self.compute_neighbours(row, col):
+            for neighbour in self._compute_neighbours(row, col):
                 if neighbour not in self._a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
         elif (row, col) not in self._a_map:
             self._a_map[(row, col)] = False
 
+    def count_live_cells(self) -> int:
+        """Count the total number of live cells in the GoL universe."""
+        count: int = 0
+        for live in self._a_map.values():
+            if live:
+                count += 1
+        return count
+
+    def get_cell(self, row: int, col: int) -> bool:
+        """Return the live status of the given cell."""
+        live: bool | None = self._a_map.get((row, col))
+        if live is None:
+            return False
+        return live
+
     @staticmethod
-    def live_neighbours(b_map: dict[Coordinate, bool], coords: Coordinate) -> int:
+    def _live_neighbours(b_map: dict[Coordinate, bool], coords: Coordinate) -> int:
         """
         Count the number of live neighbours the cell at the given coords has.
 
@@ -145,7 +167,9 @@ class GameOfLifeSortedDict(GameOfLife):
         Game of Life.
         """
         live_count: int = 0
-        for cell_coord in GameOfLifeSortedDict.compute_neighbours(coords[0], coords[1]):
+        for cell_coord in GameOfLifeSortedDict._compute_neighbours(
+            coords[0], coords[1]
+        ):
             live: bool | None = b_map.get(cell_coord)
             if live is not None and live:
                 live_count += 1
@@ -155,7 +179,7 @@ class GameOfLifeSortedDict(GameOfLife):
         return live_count
 
     @staticmethod
-    def compute_neighbours(row: int, col: int) -> list[Coordinate]:
+    def _compute_neighbours(row: int, col: int) -> list[Coordinate]:
         """Compute the coordinates of all the neighbours of the given cell."""
         top: int = row - 1
         bottom: int = row + 1
@@ -194,7 +218,7 @@ class GameOfLifeArrays(GameOfLife):
         # loop through every cell on the board and update the _b array with the next gen.
         for row_index, row_list in enumerate(self._a_array):
             for col_index, live in enumerate(row_list):
-                num_neighbours: int = self.count_neighbours(row_index, col_index)
+                num_neighbours: int = self._count_neighbours(row_index, col_index)
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in next gen.
                 if num_neighbours == 3:
                     next_gen[row_index][col_index] = True
@@ -212,7 +236,20 @@ class GameOfLifeArrays(GameOfLife):
         """Set a cell in the array to the given live value."""
         self._a_array[row][col] = live
 
-    def count_neighbours(self, row: int, col: int) -> int:
+    def count_live_cells(self) -> int:
+        """Count the total number of live cells in the GoL universe."""
+        count: int = 0
+        for row in self._a_array:
+            for live in row:
+                if live:
+                    count += 1
+        return count
+
+    def get_cell(self, row: int, col: int) -> bool:
+        """Return the live status of the given cell."""
+        return self._a_array[row][col]
+
+    def _count_neighbours(self, row: int, col: int) -> int:
         """Count how many of the 8 neighbours of this cell are alive."""
         count = 0
 
