@@ -1,6 +1,6 @@
 """Tests for all the Conway's Game of Life implementations."""
 
-from game_of_life import GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
+from game_of_life import add_glider, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
 class TestGameOfLifeArrays:
@@ -37,12 +37,3 @@ class TestGameOfLifeSortedDict:
         assert gol.get_cell(2502, 2500) is True
         assert gol.get_cell(2502, 2501) is True
         assert gol.get_cell(2502, 2502) is True
-
-
-def add_glider(gol: GameOfLife) -> None:
-    """Add a simple glider."""
-    gol.set_cell(0, 1, True)
-    gol.set_cell(1, 2, True)
-    gol.set_cell(2, 0, True)
-    gol.set_cell(2, 1, True)
-    gol.set_cell(2, 2, True)

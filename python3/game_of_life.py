@@ -10,11 +10,7 @@ Coordinate = tuple[int, int]
 def main() -> None:
     """Run through a simple glider progression."""
     gol: GameOfLife = GameOfLifeArrays(12, 15)
-    gol.set_cell(0, 1, True)
-    gol.set_cell(1, 2, True)
-    gol.set_cell(2, 0, True)
-    gol.set_cell(2, 1, True)
-    gol.set_cell(2, 2, True)
+    add_glider(gol)
     print(gol)
     gol.progress()
     print(gol)
@@ -24,11 +20,7 @@ def main() -> None:
     print("done")
 
     gol = GameOfLifeSortedDict()
-    gol.set_cell(0, 1, True)
-    gol.set_cell(1, 2, True)
-    gol.set_cell(2, 0, True)
-    gol.set_cell(2, 1, True)
-    gol.set_cell(2, 2, True)
+    add_glider(gol)
     print(gol)
     gol.progress()
     print(gol)
@@ -289,6 +281,15 @@ class GameOfLifeArrays(GameOfLife):
                 row_list.append("■ " if cell else "□ ")
             str_list.append("".join(row_list))
         return "\n".join(str_list)
+
+
+def add_glider(gol: GameOfLife) -> None:
+    """Add a simple glider."""
+    gol.set_cell(0, 1, True)
+    gol.set_cell(1, 2, True)
+    gol.set_cell(2, 0, True)
+    gol.set_cell(2, 1, True)
+    gol.set_cell(2, 2, True)
 
 
 if __name__ == "__main__":
