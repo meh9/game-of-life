@@ -30,5 +30,6 @@
     "python.linting.pycodestyleCategorySeverity.E": "Warning",
     "python.linting.pylintCategorySeverity.error": "Warning",
     "python.analysis.autoImportCompletions": true,
-    "python.linting.pylintCategorySeverity.fatal": "Warning"
+    "python.linting.pylintCategorySeverity.fatal": "Warning",
+    "python.analysis.stubPath": "python3/typings"
 }
