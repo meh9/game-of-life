@@ -1,13 +1,12 @@
 """Simple Conway's Game of Life implementation."""
 
-from time import sleep
 from gameoflife import GameOfLife, GameOfLifeArrays  # , GameOfLifeSortedDict
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
 
 def main() -> None:
-    """Run through a simple glider progression."""
+    """Run through a simple glider progression. TODO: update this."""
     gol: GameOfLife = GameOfLifeArrays(12, 15)
     add_glider(gol)
 
@@ -19,11 +18,18 @@ def main() -> None:
     with term.fullscreen(), term.cbreak(), term.hidden_cursor():
         # TODO: get height/width so we can check in the run loop if they've changed
         while run:
+            # reset cursor and clear the screen
             print(term.home + term.clear, end="")
+            # print out the minimal game UI
             start_row, max_rows = print_ui(term)
+            # progress the game a generation
             gol.progress()
+            # set the cursor to the start of the game area
             with term.location(0, start_row):
+                # then print the game cells, taking care not to print over the bottom text
                 print_game(gol, max_rows)
+
+            # handle any potential keystrokes
             key: Keystroke | None = None  # the None is probably a terrible idea...
             if automatic:
                 key = term.inkey(timeout=sleep_time)
@@ -46,13 +52,21 @@ def main() -> None:
 
 
 def print_game(gol: GameOfLife, max_rows: int) -> None:
-    """TODO: implement and documen."""
+    """TODO: implement and document."""
     print(gol)
 
 
 def print_ui(term: Terminal) -> tuple[int, int]:
     """TODO: implement and document."""
-    return 5, term.height
+    print(term.center(term.bold("■ Conways's Game of Life □")))
+    print(term.center(term.bold("==========================")))
+    print(term.move_xy(0, term.height - 5))
+    print(term.bold("Controls:"))
+    print("==========================")
+    print("Quit:             q or ESC")
+    print("Autorun On/Off:   a")
+    print("Speed up/down:    +/-")
+    return 2, term.height  # TODO: calculate this properly
 
     """
     gol: GameOfLife = GameOfLifeArrays(12, 15)
