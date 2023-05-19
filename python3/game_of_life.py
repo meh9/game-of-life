@@ -1,6 +1,6 @@
 """Simple Conway's Game of Life implementation."""
 
-# from time import sleep
+from time import sleep
 from gameoflife import GameOfLife, GameOfLifeArrays  # , GameOfLifeSortedDict
 from blessed import Terminal
 from blessed.keyboard import Keystroke
@@ -29,14 +29,20 @@ def main() -> None:
                 key = term.inkey(timeout=sleep_time)
             else:
                 key = term.inkey()
-            match key:
-                case "a":
-                    automatic = not automatic
-                case "q" | "Q":
-                    run = False
-                case _:
-                    # TODO: don't do this forever
-                    print("Key: " + key)
+            if key.is_sequence:
+                match key.code:
+                    case term.KEY_ESCAPE:
+                        run = False
+                    case _:
+                        pass  # do nothing with unrecognised keys
+            else:
+                match key:
+                    case "a":
+                        automatic = not automatic
+                    case "q":
+                        run = False
+                    case _:
+                        pass  # do nothing with unrecognised keys
 
 
 def print_game(gol: GameOfLife, max_rows: int) -> None:
