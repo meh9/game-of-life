@@ -1,6 +1,6 @@
 # Conway's Game of Life implementations
 
-Just playing around getting back into programming, different languages, build tools, etc.
+## Just playing around, this is in no way complete and likely never will be. :)
 
 Original Rules:
 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -65,74 +65,3 @@ Positives:
 1. able to create much larger universes compared to arrays - as long as the universe is sparsely populated
 1. no edge to the universe except for Integer.MAX for keys which gliders etc will eventually hit - could try to deal with this by using BigInteger?
 1. not too hard to understand
-
-
-## Old and irrelevant: LinkedList and hashtable lookups
-```
-Cell
- - int x
- - int y
- - bool live
- - int[8][2] neighbourCoords
-```
-
-Use 2x hashtable<(x,y) -> Cell> to track Cells, A and B.
-
-1. For each new live Cell:
-    1. Add to A (do we need to check if there already is a live Cell at those coords in A?)
-    1. Check neighbour coords in A, add Dead cell if no cell present
-
-Main loop:
-
-1. Clear B
-1. Iterate over A.values
-    1. Check all neighbour cells in A
-    1. If no live neighbours do nothing (this will garbage collect all dead cells)
-    1. Else determine next state dead or alive
-    1. If next state is dead add dead to B (Any point in checking if it already exists or is that premature opt?)
-    1. Else add new live cell to B and add all dead neighbours that do not already exist in B (ensuring we don't overwrite a live cell)
-1. Swap A and B
-1. Print A
-1. Loop from top
-
-Negatives:
-1. needs a lot of hashtable lookups when checking neighbours
-1. a little bit more complex to understand than parallel arrays
-
-Positives:
-1. sparse board means we are only limited by number of live cells (and their immediate neighbours), which is usually far fewer than empty cells
-
-
-### Old stuff from here that's too complex!
-```
-Cell
- - int x
- - int y
- - bool live
- - Cell prevLL
- - Cell nextLL
- - Cell N
- - Cell NE
- - Cell E
- - Cell SE
- - Cell S
- - Cell SW
- - Cell W
- - Cell NW
-```
-
-1. Create LinkedList<Cell> and sorted hashtable<(x,y) -> Cell>
-```
-// new Cell
-Cell c = hashtable.get(x,y)
-if c == null
-    c = new Cell(x,y, live, allNeighbours(x,y), LL.last())
-    LL.add(c)
-    hashtable.put(x,y, c)
-```
-1. For each live cell, add to hashtable as (x,y) -> LL_entry
-1. For each live cell, also add each adjacent dead cell to LL and hashtable - do not replace live cells, need to do lookups first
-
-Main loop:
-1. Iterate through all cells
-1. TODO: complicated! finish thinking this through some day
