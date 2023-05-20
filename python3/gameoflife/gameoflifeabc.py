@@ -23,5 +23,5 @@ class GameOfLife(ABC):
         """Count the total number of live cells in the GoL universe."""
 
     @abstractmethod
-    def get_cell(self, row: int, col: int) -> bool:
+    def get_cell(self, row: int, col: int) -> bool | None:
         """Return the live status of the given cell."""

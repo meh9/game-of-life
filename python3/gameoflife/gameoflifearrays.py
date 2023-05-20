@@ -51,9 +51,17 @@ class GameOfLifeArrays(GameOfLife):
                     count += 1
         return count
 
-    def get_cell(self, row: int, col: int) -> bool:
+    def get_cell(self, row: int, col: int) -> bool | None:
         """Return the live status of the given cell."""
-        return self._a_array[row][col]
+        if (
+            row >= 0
+            and row < len(self._a_array)
+            and col >= 0
+            and col < len(self._a_array[0])
+        ):
+            return self._a_array[row][col]
+        else:
+            return None
 
     def _count_neighbours(self, row: int, col: int) -> int:
         """Count how many of the 8 neighbours of this cell are alive."""

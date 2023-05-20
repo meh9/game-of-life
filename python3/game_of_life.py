@@ -10,9 +10,11 @@ def main() -> None:
     gol: GameOfLife = GameOfLifeArrays(12, 15)
     add_glider(gol)
 
-    run: bool = True
-    automatic: bool = False
-    sleep_time: float = 0.5
+    run: bool = True  # keep looping as long as this is true
+    automatic: bool = False  # loop automatically and continuously when true
+    sleep_time: float = 0.5  # seconds to sleep between loops in automatic
+    origin_row: int = 0  # top row of the game view of the universe
+    origin_col: int = 0  # left most cell of the game view of the universe
 
     term = Terminal()
     with term.fullscreen(), term.cbreak(), term.hidden_cursor():
@@ -28,7 +30,7 @@ def main() -> None:
             # set the cursor to the start of the game area
             with term.location(0, start_row):
                 # then print the game cells, taking care not to print over the bottom text
-                print_game(gol, max_rows)
+                print_game(gol, max_rows, term.width, origin_row, origin_col)
 
             # handle any potential keystrokes
             key: Keystroke | None = None  # the None is probably a terrible idea...
@@ -48,7 +50,7 @@ def main() -> None:
                         automatic = not automatic
                     case "q":
                         run = False
-                    case "+" | "=":
+                    case "+" | "=":  # also accept "=" so we don't have use shift all the time
                         sleep_time = sleep_time / 2
                     case "-":
                         sleep_time = sleep_time * 2
@@ -56,16 +58,31 @@ def main() -> None:
                         pass  # do nothing with unrecognised keys
 
 
-def print_game(gol: GameOfLife, max_rows: int) -> None:
+def print_game(
+    gol: GameOfLife, max_rows: int, max_cols: int, origin_row: int, origin_col: int
+) -> None:
     """TODO: implement and document."""
-    print(gol)
+    row_list: list[str] = []
+    for view_row in range(max_rows):
+        # step of 2 since we have a space between each cell
+        for view_col in range(0, max_cols, 2):
+            cell: bool | None = gol.get_cell(
+                origin_row + view_row, origin_col + view_col
+            )
+            if cell is None:
+                pass
+            else:
+                row_list.append("■" if cell else "□")
+        print(" ".join(row_list))
+        row_list = []
+    # print(gol)
 
 
 def print_ui(term: Terminal) -> tuple[int, int]:
     """TODO: implement and document."""
     with term.location(0, 0):
-        print(term.center(term.bold("■ Conways's Game of Life □")), end="")
-        print(term.center(term.bold("==========================")), end="")
+        print(term.center(term.bold("■ Conways's Game of Life □")))
+        print(term.center(term.bold("==========================")))
         # the number of lines to be printed below +1
         print(term.move_xy(0, term.height - (5 + 1)))
         print(term.bold("Controls:"))
@@ -73,6 +90,7 @@ def print_ui(term: Terminal) -> tuple[int, int]:
         print("Quit:             q or ESC")
         print("Autorun On/Off:   a")
         print("Speed up/down:    +/-", end="")
+        # TODO: movement keys, new game (popup modal? select variant), add/remove cells
         # TODO: calculate max_rows properly - should it just be the num lines we print above?
         return 2, term.height - 8
 

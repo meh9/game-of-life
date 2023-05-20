@@ -89,8 +89,12 @@ class GameOfLifeSortedDict(GameOfLife):
                 count += 1
         return count
 
-    def get_cell(self, row: int, col: int) -> bool:
-        """Return the live status of the given cell."""
+    def get_cell(self, row: int, col: int) -> bool | None:
+        """
+        Return the live status of the given cell.
+
+        This implementation never returns None since the universe is "infinite".
+        """
         live: bool | None = self._a_map.get((row, col))
         if live is None:
             return False
