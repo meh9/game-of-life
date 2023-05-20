@@ -1,5 +1,6 @@
 """Simple Conway's Game of Life implementation."""
 
+from math import floor
 from gameoflife import GameOfLife, GameOfLifeArrays  # , GameOfLifeSortedDict
 from blessed import Terminal
 from blessed.keyboard import Keystroke
@@ -75,15 +76,16 @@ def print_game(
 ) -> None:
     """TODO: implement and document."""
     row_list: list[str] = []
+    # because we separate all cells by a space we can only do half the number of cols
+    max_cols = floor(max_cols / 2)
     for view_row in range(max_rows):
         for view_col in range(max_cols):
             cell: bool | None = gol.get_cell(
                 origin_row + view_row, origin_col + view_col
             )
             if cell is None:
-                # TODO: well this didn't work :/
-                # row_list.append(".")
-                pass
+                # TODO: probably want to replace this with a space eventually?
+                row_list.append(".")
             else:
                 row_list.append("■" if cell else "□")
         print(" ".join(row_list))
