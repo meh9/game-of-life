@@ -19,6 +19,7 @@ def main() -> None:
         # TODO: get height/width so we can check in the run loop if they've changed
         while run:
             # reset cursor and clear the screen
+            # TODO: maybe we shouldn't, and just repaint things that change?
             print(term.home + term.clear, end="")
             # print out the minimal game UI
             start_row, max_rows = print_ui(term)
@@ -47,6 +48,10 @@ def main() -> None:
                         automatic = not automatic
                     case "q":
                         run = False
+                    case "+" | "=":
+                        sleep_time = sleep_time / 2
+                    case "-":
+                        sleep_time = sleep_time * 2
                     case _:
                         pass  # do nothing with unrecognised keys
 
@@ -58,15 +63,18 @@ def print_game(gol: GameOfLife, max_rows: int) -> None:
 
 def print_ui(term: Terminal) -> tuple[int, int]:
     """TODO: implement and document."""
-    print(term.center(term.bold("■ Conways's Game of Life □")))
-    print(term.center(term.bold("==========================")))
-    print(term.move_xy(0, term.height - 5))
-    print(term.bold("Controls:"))
-    print("==========================")
-    print("Quit:             q or ESC")
-    print("Autorun On/Off:   a")
-    print("Speed up/down:    +/-")
-    return 2, term.height  # TODO: calculate this properly
+    with term.location(0, 0):
+        print(term.center(term.bold("■ Conways's Game of Life □")), end="")
+        print(term.center(term.bold("==========================")), end="")
+        # the number of lines to be printed below +1
+        print(term.move_xy(0, term.height - (5 + 1)))
+        print(term.bold("Controls:"))
+        print("==========================")
+        print("Quit:             q or ESC")
+        print("Autorun On/Off:   a")
+        print("Speed up/down:    +/-", end="")
+        # TODO: calculate max_rows properly - should it just be the num lines we print above?
+        return 2, term.height - 8
 
     """
     gol: GameOfLife = GameOfLifeArrays(12, 15)
