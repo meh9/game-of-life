@@ -31,7 +31,7 @@ class GameOfLifeSortedDict(GameOfLife):
             str_list.append("".join(row_list))
         return "\n".join(str_list)
 
-    def progress(self) -> None:
+    def progress(self) -> int:
         """Progress another generation."""
         self._min_row = 0
         self._max_row = 0
@@ -39,6 +39,7 @@ class GameOfLifeSortedDict(GameOfLife):
         self._max_col = 0
         b_map: dict[Coordinate, bool] = self._a_map
         self._a_map = SortedDict()
+        count: int = 0
         # loop over every tracked cell
         for item in b_map.items():
             coords: Coordinate = item[0]
@@ -48,14 +49,17 @@ class GameOfLifeSortedDict(GameOfLife):
                 case 2:
                     if live:
                         self.set_cell(coords[0], coords[1], live)
+                        count += 1
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the
                 # next generation.
                 case 3:
                     self.set_cell(coords[0], coords[1], True)
+                    count += 1
                 # 3. All other cells are dead in the next generation.
                 case _:
                     pass
         self._generation += 1
+        return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
@@ -137,3 +141,8 @@ class GameOfLifeSortedDict(GameOfLife):
             (bottom, left),
             (row, left),
         ]
+
+    @property
+    def generation(self) -> int:
+        """Return the current generation of the game."""
+        return self._generation

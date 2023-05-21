@@ -6,6 +6,9 @@ from blessed import Terminal
 from blessed.keyboard import Keystroke
 
 
+FOOTER_ROWS: int = 7
+
+
 def main() -> None:
     """Run through a simple glider progression. TODO: update this."""
     gol: GameOfLife = GameOfLifeArrays(12, 15)
@@ -18,6 +21,7 @@ def main() -> None:
     origin_col: int = 0  # left most cell of the game view of the universe
     term_width: int = 0
     term_height: int = 0
+    live_count: int = 0
 
     term = Terminal()
     with term.fullscreen(), term.cbreak(), term.hidden_cursor():
@@ -32,17 +36,18 @@ def main() -> None:
                 print(term.home + term.clear, end="")
                 # print out the minimal game UI
                 start_row, max_rows = print_ui(term)
+                print_stats(term, gol.generation, gol.count_live_cells(), sleep_time)
 
-            # set the cursor to the start of the game area
-            with term.location(0, start_row):
-                # then print the game cells, taking care not to print over the bottom text
-                print_game(gol, max_rows, term.width, origin_row, origin_col)
+            # print the game cells, taking care not to print over the bottom text
+            print_game(
+                term, gol, start_row, max_rows, term.width, origin_row, origin_col
+            )
 
             # handle any potential keystrokes
             key: Keystroke | None = None  # the None is probably a terrible idea...
             if automatic:
                 # progress the game a generation
-                gol.progress()
+                live_count = gol.progress()
                 key = term.inkey(timeout=sleep_time)
             else:
                 key = term.inkey()
@@ -64,7 +69,7 @@ def main() -> None:
                 match key:
                     case " ":
                         # progress the game a generation
-                        gol.progress()
+                        live_count = gol.progress()
                     case "a":
                         automatic = not automatic
                     case "q":
@@ -75,46 +80,72 @@ def main() -> None:
                         sleep_time = sleep_time * 2
                     case _:
                         pass  # do nothing with unrecognised keys
+            print_stats(term, gol.generation, live_count, sleep_time)
+
+
+def print_stats(
+    term: Terminal, generation: int, live_cells: int, sleep_time: float
+) -> None:
+    """TODO: implement and document."""
+    with term.location(0, term.height - FOOTER_ROWS):
+        print(term.bold("Statistics") + term.move_down)
+        print("Generation:   " + str(generation))
+        print("Live cells:   " + str(live_cells))
+        print("Frame delay:  " + str(sleep_time) + " seconds", end="")
+        # future stats
+        # print("")
+        # print("", end="")
 
 
 def print_game(
-    gol: GameOfLife, max_rows: int, max_cols: int, origin_row: int, origin_col: int
+    term: Terminal,
+    gol: GameOfLife,
+    start_row: int,
+    max_rows: int,
+    max_cols: int,
+    origin_row: int,
+    origin_col: int,
 ) -> None:
     """TODO: implement and document."""
-    row_list: list[str] = []
-    # because we separate all cells by a space we can only do half the number of cols
-    max_cols = floor(max_cols / 2)
-    for view_row in range(max_rows):
-        for view_col in range(max_cols):
-            cell: bool | None = gol.get_cell(
-                origin_row + view_row, origin_col + view_col
-            )
-            if cell is None:
-                # TODO: probably want to replace this with a space eventually?
-                row_list.append(".")
-            else:
-                row_list.append("■" if cell else "□")
-        print(" ".join(row_list))
-        row_list = []
+    with term.location(0, start_row):
+        row_list: list[str] = []
+        # because we separate all cells by a space we can only do half the number of cols
+        max_cols = floor(max_cols / 2)
+        for view_row in range(max_rows):
+            for view_col in range(max_cols):
+                cell: bool | None = gol.get_cell(
+                    origin_row + view_row, origin_col + view_col
+                )
+                if cell is None:
+                    # TODO: probably want to replace this with a space eventually?
+                    row_list.append(".")
+                else:
+                    row_list.append("■" if cell else "□")
+            print(" ".join(row_list))
+            row_list = []
 
 
 def print_ui(term: Terminal) -> tuple[int, int]:
     """TODO: implement and document."""
     with term.location(0, 0):
+        header_row_count: int = (
+            2  # set this to the number of rows being printed in the header below
+        )
         print(term.center(term.bold("■ Conways's Game of Life □")))
         print(term.center(term.bold("==========================")))
-        # the number of lines to be printed below +1
-        print(term.move_xy(0, term.height - (7 + 1)))
-        print(term.bold("Controls:"))
-        print("==========================")
-        print("Quit:             q or ESC")
-        print("Step forward:     <spacebar>")
-        print("Autorun On/Off:   a")
-        print("Speed up/down:    +/-")
-        print("Move the view:    ⇦⇧⇩⇨", end="")
+
+        print(term.move_xy(0, term.height - (FOOTER_ROWS + 1)))
+        print(term.center(term.bold("Controls                   ")))
+        print("=" * term.width)
+        print(term.center("Quit:            q or ESC  "))
+        print(term.center("Step forward:    <spacebar>"))
+        print(term.center("Autorun On/Off:  a         "))
+        print(term.center("Speed up/down:   +/-       "))
+        print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
+
         # TODO: new game (popup modal? select variant), add/remove cells
         # TODO: calculate max_rows properly - should it just be the num lines we print above?
-        return 2, term.height - 9
+        return 2, term.height - FOOTER_ROWS - header_row_count
 
     """
     gol: GameOfLife = GameOfLifeArrays(12, 15)

@@ -13,13 +13,14 @@ class GameOfLifeArrays(GameOfLife):
         ]
         self._generation = 0
 
-    def progress(self) -> None:
+    def progress(self) -> int:
         """Progress the game another generation."""
         # initialise a new array next_gen[[]] to be all False
         next_gen: list[list[bool]] = [
             [False for _ in range(len(self._a_array[0]))]
             for _ in range(len(self._a_array))
         ]
+        count: int = 0
 
         # loop through every cell on the board and update the _b array with the next gen.
         for row_index, row_list in enumerate(self._a_array):
@@ -28,15 +29,18 @@ class GameOfLifeArrays(GameOfLife):
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in next gen.
                 if num_neighbours == 3:
                     next_gen[row_index][col_index] = True
+                    count += 1
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 elif live is True and num_neighbours == 2:
                     next_gen[row_index][col_index] = True
+                    count += 1
                 # 3. All other cells are dead in the next generation.
                 # do nothing
 
         # swap the arrays
         self._a_array = next_gen
         self._generation += 1
+        return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the array to the given live value."""
@@ -103,3 +107,8 @@ class GameOfLifeArrays(GameOfLife):
                 row_list.append("■ " if cell else "□ ")
             str_list.append("".join(row_list))
         return "\n".join(str_list)
+
+    @property
+    def generation(self) -> int:
+        """Return the current generation of the game."""
+        return self._generation

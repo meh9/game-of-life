@@ -11,8 +11,8 @@ class GameOfLife(ABC):
         """Produce a human readable string to represent the state of the GoL universe."""
 
     @abstractmethod
-    def progress(self) -> None:
-        """Progress another generation."""
+    def progress(self) -> int:
+        """Progress another generation, return the number of live cells in the new generation."""
 
     @abstractmethod
     def set_cell(self, row: int, col: int, live: bool) -> None:
@@ -25,3 +25,8 @@ class GameOfLife(ABC):
     @abstractmethod
     def get_cell(self, row: int, col: int) -> bool | None:
         """Return the live status of the given cell."""
+
+    @property
+    @abstractmethod
+    def generation(self) -> int:
+        """Return the current generation of the game."""
