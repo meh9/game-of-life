@@ -16,16 +16,22 @@ def main() -> None:
     sleep_time: float = 0.5  # seconds to sleep between loops in automatic
     origin_row: int = 0  # top row of the game view of the universe
     origin_col: int = 0  # left most cell of the game view of the universe
+    term_width: int = 0
+    term_height: int = 0
 
     term = Terminal()
     with term.fullscreen(), term.cbreak(), term.hidden_cursor():
-        # TODO: get height/width so we can check in the run loop if they've changed
+        start_row: int = 0
+        max_rows: int = 0
         while run:
-            # reset cursor and clear the screen
-            # TODO: maybe we shouldn't, and just repaint things that change?
-            print(term.home + term.clear, end="")
-            # print out the minimal game UI
-            start_row, max_rows = print_ui(term)
+            # check if we need to clear screen and refresh - will always happen first runthrough
+            if term_width != term.width or term_height != term.height:
+                term_width = term.width
+                term_height = term.height
+                # reset cursor and clear the screen
+                print(term.home + term.clear, end="")
+                # print out the minimal game UI
+                start_row, max_rows = print_ui(term)
 
             # set the cursor to the start of the game area
             with term.location(0, start_row):
