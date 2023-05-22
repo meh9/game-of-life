@@ -128,9 +128,8 @@ def print_game(
 def print_ui(term: Terminal) -> tuple[int, int]:
     """TODO: implement and document."""
     with term.location(0, 0):
-        header_row_count: int = (
-            2  # set this to the number of rows being printed in the header below
-        )
+        # set this to the number of rows being printed in the header below
+        header_row_count: int = 2
         print(term.center(term.bold("■ Conways's Game of Life □")))
         print(term.center(term.bold("==========================")))
 
@@ -144,7 +143,6 @@ def print_ui(term: Terminal) -> tuple[int, int]:
         print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
 
         # TODO: new game (popup modal? select variant), add/remove cells
-        # TODO: calculate max_rows properly - should it just be the num lines we print above?
         return 2, term.height - FOOTER_ROWS - header_row_count
 
     """
