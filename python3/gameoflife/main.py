@@ -48,6 +48,7 @@ class MainGame:
                 self.print_game(term, gol, start_row, max_rows)
 
                 # handle any potential keystrokes
+                # TODO: extract keyboard input into it's on method - how to know when to progress the game?
                 key: Keystroke | None = None  # the None is probably a terrible idea...
                 if self.automatic:
                     # progress the game a generation
@@ -87,24 +88,24 @@ class MainGame:
                 self.print_stats(term, gol)
 
     def print_stats(self, term: Terminal, gol: GameOfLife) -> None:
-        """TODO: implement and document."""
+        """Extract and print the statistics about the game from the game instance."""
         with term.location(0, term.height - MainGame.FOOTER_ROWS):
             print(term.bold("Statistics") + term.move_down)
             print("Generation:   " + str(gol.generation))
             print("Live cells:   " + str(self.live_count))
             print("Frame delay:  " + str(self.sleep_time) + " seconds", end="")
-            # future stats
+            # future stats, max total of 5
             # print("")
             # print("", end="")
 
     def print_game(
         self, term: Terminal, gol: GameOfLife, start_row: int, max_rows: int
     ) -> None:
-        """TODO: implement and document."""
+        """Print the actual game board with cells from the GameOfLife instance."""
         with term.location(0, start_row):
             row_list: list[str] = []
             # because we separate all cells by a space we can only do half the number of cols
-            max_cols = floor(term.width / 2)
+            max_cols: int = floor(term.width / 2)
             for view_row in range(max_rows):
                 for view_col in range(max_cols):
                     cell: bool | None = gol.get_cell(
@@ -120,13 +121,20 @@ class MainGame:
 
     @staticmethod
     def print_ui(term: Terminal) -> tuple[int, int]:
-        """TODO: implement and document."""
+        """
+        Print the main game UI.
+
+        Returns a tuple with the 1st value being the row index to start printing the game board on,
+        and the 2nd value being the maximum number of rows that the game board can print.
+        """
         with term.location(0, 0):
+            # header section
             # set this to the number of rows being printed in the header below
             header_row_count: int = 2
             print(term.center(term.bold("■ Conways's Game of Life □")))
             print(term.center(term.bold("==========================")))
 
+            # footer section
             print(term.move_xy(0, term.height - (MainGame.FOOTER_ROWS + 1)))
             print(term.center(term.bold("Controls                   ")))
             print("=" * term.width)
