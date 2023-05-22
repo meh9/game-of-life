@@ -4,7 +4,7 @@ from math import floor
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from gameoflife import GameOfLife, GameOfLifeArrays
+from gameoflife import GameOfLife, GameOfLifeSortedDict
 
 
 class MainGame:
@@ -25,7 +25,8 @@ class MainGame:
 
     def main(self) -> None:
         """Run the main game loop."""
-        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        # gol: GameOfLife = GameOfLifeArrays(12, 15)
+        gol: GameOfLife = GameOfLifeSortedDict()
         MainGame.add_glider(gol)
         self.live_count = gol.count_live_cells()
 
@@ -109,7 +110,8 @@ class MainGame:
             print(term.bold("Statistics") + term.move_down)
             print("Generation:   " + str(gol.generation))
             print("Live cells:   " + str(self.live_count))
-            print("Frame delay:  " + str(self.sleep_time) + " seconds", end="")
+            # intentional space on the end of "seconds " below
+            print("Frame delay:  " + str(self.sleep_time) + " seconds ", end="")
             # future stats, max total of 5
             # print("")
             # print("", end="")
