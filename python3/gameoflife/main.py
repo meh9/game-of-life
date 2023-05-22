@@ -35,12 +35,14 @@ class MainGame:
 
         # centre the initial board
         # TODO: do a better job of putting the initial board in the centre
-        # TODO: one way to do that is actually to put the initial cells in the centre as opposed to the board
+        # one way is actually to put the initial cells in the centre as opposed to the board
+        # for now, place 0,0 of the game board in the centre of the view
         self.origin_row = 0 - floor(
             (term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
         )
         self.origin_col = 0 - floor(term.width / 2 / 2)
 
+        # run the game
         with term.fullscreen(), term.cbreak(), term.hidden_cursor():
             start_row: int = 0
             max_rows: int = 0
@@ -77,10 +79,9 @@ class MainGame:
 
         Return if the game should be progressed a generation due to user input.
         """
-        if wait_for_key:
-            key: Keystroke = term.inkey()
-        else:
-            key = term.inkey(timeout=self.sleep_time)
+        key: Keystroke = (
+            term.inkey() if wait_for_key else term.inkey(timeout=self.sleep_time)
+        )
 
         # process any potential key
         if key.is_sequence:
@@ -117,7 +118,7 @@ class MainGame:
     def print_stats(self, term: Terminal, gol: GameOfLife) -> None:
         """Extract and print the statistics about the game from the game instance."""
         with term.location(0, term.height - MainGame.FOOTER_ROWS):
-            print(term.bold("Statistics") + term.move_down)
+            print(term.bold("Statistics/Info") + term.move_down)
             print("Generation:   " + str(gol.generation))
             print("Live cells:   " + str(self.live_count))
             # intentional space on the end of "seconds " below
@@ -156,19 +157,24 @@ class MainGame:
         """
         with term.location(0, 0):
             # header section
-            # set this to the number of rows being printed in the header below
+            # TODO: make the game name and ==== move when progressing the game
+            # 1. could move both together side to side and then bounce and come back
+            # 2. could move name one direction and ==== the other, then bounce and come back
+            # 3. could
             print(term.center(term.bold("■ Conways's Game of Life □")))
             print(term.center(term.bold("==========================")))
+            # don't forget to update MainGame.HEADER_ROWS if making changes here!!!
 
             # footer section
             print(term.move_xy(0, term.height - (MainGame.FOOTER_ROWS + 1)))
             print(term.center(term.bold("Controls                   ")))
             print("=" * term.width)
-            print(term.center("Quit:            q or ESC  "))
+            print(term.center("(ノಠ益ಠ)ノ彡┻━┻  q or ESC  "))  # intentional misalignment
             print(term.center("Step forward:    <spacebar>"))
             print(term.center("Autorun On/Off:  a         "))
             print(term.center("Speed up/down:   +/-       "))
             print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
+            # don't forget to update MainGame.FOOTER_ROWS if making changes here!!!
 
             # TODO: new game (popup modal? select variant), add/remove cells
             return 2, term.height - MainGame.FOOTER_ROWS - MainGame.HEADER_ROWS
