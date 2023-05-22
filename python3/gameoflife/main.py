@@ -4,12 +4,13 @@ from math import floor
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from gameoflife import GameOfLife, GameOfLifeSortedDict
+from gameoflife import GameOfLife, GameOfLifeArrays  # , GameOfLifeSortedDict
 
 
 class MainGame:
     """Manage the game."""
 
+    HEADER_ROWS: int = 2
     FOOTER_ROWS: int = 7
 
     def __init__(self) -> None:
@@ -25,12 +26,21 @@ class MainGame:
 
     def main(self) -> None:
         """Run the main game loop."""
-        # gol: GameOfLife = GameOfLifeArrays(12, 15)
-        gol: GameOfLife = GameOfLifeSortedDict()
+        term = Terminal()
+        # TODO: if initialising an Array type, initialise to the exact term.width/height
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        # gol: GameOfLife = GameOfLifeSortedDict()
         MainGame.add_glider(gol)
         self.live_count = gol.count_live_cells()
 
-        term = Terminal()
+        # centre the initial board
+        # TODO: do a better job of putting the initial board in the centre
+        # TODO: one way to do that is actually to put the initial cells in the centre as opposed to the board
+        self.origin_row = 0 - floor(
+            (term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
+        )
+        self.origin_col = 0 - floor(term.width / 2 / 2)
+
         with term.fullscreen(), term.cbreak(), term.hidden_cursor():
             start_row: int = 0
             max_rows: int = 0
@@ -130,7 +140,6 @@ class MainGame:
                         self.origin_row + view_row, self.origin_col + view_col
                     )
                     if cell is None:
-                        # TODO: probably want to replace this with a space eventually?
                         row_list.append(".")
                     else:
                         row_list.append("■" if cell else "□")
@@ -148,7 +157,6 @@ class MainGame:
         with term.location(0, 0):
             # header section
             # set this to the number of rows being printed in the header below
-            header_row_count: int = 2
             print(term.center(term.bold("■ Conways's Game of Life □")))
             print(term.center(term.bold("==========================")))
 
@@ -163,7 +171,7 @@ class MainGame:
             print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
 
             # TODO: new game (popup modal? select variant), add/remove cells
-            return 2, term.height - MainGame.FOOTER_ROWS - header_row_count
+            return 2, term.height - MainGame.FOOTER_ROWS - MainGame.HEADER_ROWS
 
     @staticmethod
     def add_glider(gol: GameOfLife) -> None:
