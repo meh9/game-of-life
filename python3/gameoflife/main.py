@@ -48,44 +48,60 @@ class MainGame:
                 self.print_game(term, gol, start_row, max_rows)
 
                 # handle any potential keystrokes
-                # TODO: extract keyboard input into it's on method - how to know when to progress the game?
-                key: Keystroke | None = None  # the None is probably a terrible idea...
                 if self.automatic:
                     # progress the game a generation
                     self.live_count = gol.progress()
-                    key = term.inkey(timeout=self.sleep_time)
+                    self.process_keystroke(term, False)
                 else:
-                    key = term.inkey()
-                if key.is_sequence:
-                    match key.code:
-                        case term.KEY_ESCAPE:
-                            self.run = False
-                        case term.KEY_UP:
-                            self.origin_row -= 1
-                        case term.KEY_DOWN:
-                            self.origin_row += 1
-                        case term.KEY_LEFT:
-                            self.origin_col -= 1
-                        case term.KEY_RIGHT:
-                            self.origin_col += 1
-                        case _:
-                            pass  # do nothing with unrecognised keys
-                else:
-                    match key:
-                        case " ":
-                            # progress the game a generation
-                            self.live_count = gol.progress()
-                        case "a":
-                            self.automatic = not self.automatic
-                        case "q":
-                            self.run = False
-                        case "+" | "=":  # also accept "=" so we don't have use shift all the time
-                            self.sleep_time = self.sleep_time / 2
-                        case "-":
-                            self.sleep_time = self.sleep_time * 2
-                        case _:
-                            pass  # do nothing with unrecognised keys
+                    # only progress the game if the user asked for it
+                    if self.process_keystroke(term, True):
+                        self.live_count = gol.progress()
+
+                # update the stats to reflect any changes
                 self.print_stats(term, gol)
+
+    def process_keystroke(self, term: Terminal, wait_for_key: bool) -> bool:
+        """
+        Wait for a keystroke (with optional timeout) and process it.
+
+        Return if the game should be progressed a generation due to user input.
+        """
+        if wait_for_key:
+            key: Keystroke = term.inkey()
+        else:
+            key = term.inkey(timeout=self.sleep_time)
+
+        # process any potential key
+        if key.is_sequence:
+            match key.code:
+                case term.KEY_ESCAPE:
+                    self.run = False
+                case term.KEY_UP:
+                    self.origin_row -= 1
+                case term.KEY_DOWN:
+                    self.origin_row += 1
+                case term.KEY_LEFT:
+                    self.origin_col -= 1
+                case term.KEY_RIGHT:
+                    self.origin_col += 1
+                case _:
+                    pass  # do nothing with unrecognised keys
+        else:
+            match key:
+                case " ":
+                    # progress the game a generation
+                    return True
+                case "a":
+                    self.automatic = not self.automatic
+                case "q":
+                    self.run = False
+                case "+" | "=":  # also accept "=" so we don't have use shift all the time
+                    self.sleep_time = self.sleep_time / 2
+                case "-":
+                    self.sleep_time = self.sleep_time * 2
+                case _:
+                    pass  # do nothing with unrecognised keys
+        return False
 
     def print_stats(self, term: Terminal, gol: GameOfLife) -> None:
         """Extract and print the statistics about the game from the game instance."""
