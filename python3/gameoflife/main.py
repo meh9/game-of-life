@@ -23,11 +23,12 @@ class MainGame:
         self.term_height: int = 0
         self.live_count: int = 0
 
-        self.gol: GameOfLife = GameOfLifeArrays(12, 15)
-        MainGame.add_glider(self.gol)
-
     def main(self) -> None:
         """Run the main game loop."""
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        MainGame.add_glider(gol)
+        self.live_count = gol.count_live_cells()
+
         term = Terminal()
         with term.fullscreen(), term.cbreak(), term.hidden_cursor():
             start_row: int = 0
@@ -41,29 +42,16 @@ class MainGame:
                     print(term.home + term.clear, end="")
                     # print out the minimal game UI
                     start_row, max_rows = MainGame.print_ui(term)
-                    MainGame.print_stats(
-                        term,
-                        self.gol.generation,
-                        self.gol.count_live_cells(),
-                        self.sleep_time,
-                    )
+                    self.print_stats(term, gol)
 
                 # print the game cells, taking care not to print over the bottom text
-                MainGame.print_game(
-                    term,
-                    self.gol,
-                    start_row,
-                    max_rows,
-                    term.width,
-                    self.origin_row,
-                    self.origin_col,
-                )
+                self.print_game(term, gol, start_row, max_rows)
 
                 # handle any potential keystrokes
                 key: Keystroke | None = None  # the None is probably a terrible idea...
                 if self.automatic:
                     # progress the game a generation
-                    self.live_count = self.gol.progress()
+                    self.live_count = gol.progress()
                     key = term.inkey(timeout=self.sleep_time)
                 else:
                     key = term.inkey()
@@ -85,7 +73,7 @@ class MainGame:
                     match key:
                         case " ":
                             # progress the game a generation
-                            self.live_count = self.gol.progress()
+                            self.live_count = gol.progress()
                         case "a":
                             self.automatic = not self.automatic
                         case "q":
@@ -96,43 +84,31 @@ class MainGame:
                             self.sleep_time = self.sleep_time * 2
                         case _:
                             pass  # do nothing with unrecognised keys
-                MainGame.print_stats(
-                    term, self.gol.generation, self.live_count, self.sleep_time
-                )
+                self.print_stats(term, gol)
 
-    @staticmethod
-    def print_stats(
-        term: Terminal, generation: int, live_cells: int, sleep_time: float
-    ) -> None:
+    def print_stats(self, term: Terminal, gol: GameOfLife) -> None:
         """TODO: implement and document."""
         with term.location(0, term.height - MainGame.FOOTER_ROWS):
             print(term.bold("Statistics") + term.move_down)
-            print("Generation:   " + str(generation))
-            print("Live cells:   " + str(live_cells))
-            print("Frame delay:  " + str(sleep_time) + " seconds", end="")
+            print("Generation:   " + str(gol.generation))
+            print("Live cells:   " + str(self.live_count))
+            print("Frame delay:  " + str(self.sleep_time) + " seconds", end="")
             # future stats
             # print("")
             # print("", end="")
 
-    @staticmethod
     def print_game(
-        term: Terminal,
-        gol: GameOfLife,
-        start_row: int,
-        max_rows: int,
-        max_cols: int,
-        origin_row: int,
-        origin_col: int,
+        self, term: Terminal, gol: GameOfLife, start_row: int, max_rows: int
     ) -> None:
         """TODO: implement and document."""
         with term.location(0, start_row):
             row_list: list[str] = []
             # because we separate all cells by a space we can only do half the number of cols
-            max_cols = floor(max_cols / 2)
+            max_cols = floor(term.width / 2)
             for view_row in range(max_rows):
                 for view_col in range(max_cols):
                     cell: bool | None = gol.get_cell(
-                        origin_row + view_row, origin_col + view_col
+                        self.origin_row + view_row, self.origin_col + view_col
                     )
                     if cell is None:
                         # TODO: probably want to replace this with a space eventually?
