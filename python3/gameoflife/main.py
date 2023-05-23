@@ -23,6 +23,8 @@ class MainGame:
         self.term_width: int = 0
         self.term_height: int = 0
         self.live_count: int = 0
+        self.header_location: int = 0
+        self.header_direction_left: bool = False
 
     def main(self) -> None:
         """Run the main game loop."""
@@ -55,7 +57,8 @@ class MainGame:
                     print(term.home + term.clear, end="")
                     # print out the minimal game UI
                     start_row, max_rows = MainGame.print_ui(term)
-                    self.print_stats(term, gol)
+                    self.header_location = floor(term.width / 2)
+                    self.print_ui_update(term, gol, False)
 
                 # print the game cells, taking care not to print over the bottom text
                 self.print_game(term, gol, start_row, max_rows)
@@ -64,24 +67,24 @@ class MainGame:
                 if self.automatic:
                     # progress the game a generation
                     self.live_count = gol.progress()
+                    # update the UI to reflect any changes
+                    self.print_ui_update(term, gol, True)
                     self.process_keystroke(term, False)
                 else:
                     # only progress the game if the user asked for it
                     if self.process_keystroke(term, True):
                         self.live_count = gol.progress()
+                        # update the UI to reflect any changes
+                        self.print_ui_update(term, gol, True)
 
-                # update the stats to reflect any changes
-                self.print_stats(term, gol)
-
-    def process_keystroke(self, term: Terminal, wait_for_key: bool) -> bool:
+    def process_keystroke(self, term: Terminal, block: bool) -> bool:
         """
         Wait for a keystroke (with optional timeout) and process it.
 
         Return if the game should be progressed a generation due to user input.
         """
-        key: Keystroke = (
-            term.inkey() if wait_for_key else term.inkey(timeout=self.sleep_time)
-        )
+        # either block waiting for a keystroke or wait for sleep_time seconds
+        key: Keystroke = term.inkey() if block else term.inkey(timeout=self.sleep_time)
 
         # process any potential key
         if key.is_sequence:
@@ -115,8 +118,42 @@ class MainGame:
                     pass  # do nothing with unrecognised keys
         return False
 
-    def print_stats(self, term: Terminal, gol: GameOfLife) -> None:
-        """Extract and print the statistics about the game from the game instance."""
+    # layout model for top moving text
+    # |---------------------------------|  term.width = 50
+    #                  h                   initial header_location = term.width / 2 = 25
+    #           |----name----|             len(name) = 8
+    #           p......h......             print location = header_location - (len(name) / 2) = 21
+    # p......h......                       print location = header_location - (len(name) / 2) = 0
+    # p......h......                       header_location = 0 + (len(name) / 2) = 4
+    #                      p......h......  print location = term.width - len(name) = 42
+    #                      p......h......  print location = header_location - (len(name) / 2) = 42
+    #                      p......h......  header_location = term.width - (len(name) / 2) = 46
+
+    def print_ui_update(self, term: Terminal, gol: GameOfLife, progress: bool) -> None:
+        """Update things in the UI that needs updating; game name location, stats, etc."""
+        # calculate moving header sectiong
+        name: str = " ■ Conways's Game of Life □ "
+        line: str = " ========================== "
+        # TODO: this is pretty complicated, would be nice to do something simpler!
+        half_width: int = floor(len(name) / 2)
+        if progress:
+            if self.header_direction_left:
+                self.header_location -= 1
+                if self.header_location - half_width < 0:
+                    self.header_direction_left = False
+                    self.header_location += 2
+            else:
+                self.header_location += 1
+                if self.header_location >= term.width - half_width:
+                    self.header_direction_left = True
+                    self.header_location -= 2
+
+        with term.location(0, 0):
+            # header section
+            print(term.move_x(self.header_location - half_width) + term.bold(name))
+            print(term.move_x(self.header_location - half_width) + term.bold(line))
+            # don't forget to update MainGame.HEADER_ROWS if making changes here!!!
+
         with term.location(0, term.height - MainGame.FOOTER_ROWS):
             print(term.bold("Statistics/Info") + term.move_down)
             print("Generation:   " + str(gol.generation))
@@ -156,15 +193,6 @@ class MainGame:
         and the 2nd value being the maximum number of rows that the game board can print.
         """
         with term.location(0, 0):
-            # header section
-            # TODO: make the game name and ==== move when progressing the game
-            # 1. could move both together side to side and then bounce and come back
-            # 2. could move name one direction and ==== the other, then bounce and come back
-            # 3. could
-            print(term.center(term.bold("■ Conways's Game of Life □")))
-            print(term.center(term.bold("==========================")))
-            # don't forget to update MainGame.HEADER_ROWS if making changes here!!!
-
             # footer section
             print(term.move_xy(0, term.height - (MainGame.FOOTER_ROWS + 1)))
             print(term.center(term.bold("Controls                   ")))
