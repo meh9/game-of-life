@@ -1,6 +1,7 @@
 """The main game control and run loop."""
 
 from math import floor
+from time import perf_counter_ns
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
@@ -25,12 +26,13 @@ class MainGame:
         self.live_count: int = 0
         self.header_location: int = 0
         self.header_direction_left: bool = False
+        self.last_gen_time: int = 0
 
     def main(self) -> None:
         """Run the main game loop."""
         term = Terminal()
         # TODO: if initialising an Array type, initialise to the exact term.width/height
-        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        gol: GameOfLife = GameOfLifeArrays(15, 20)
         # gol: GameOfLife = GameOfLifeSortedDict()
         MainGame.add_glider(gol)
         self.live_count = gol.count_live_cells()
@@ -68,14 +70,18 @@ class MainGame:
                 # handle any potential keystrokes
                 if self.automatic:
                     # progress the game a generation
+                    start: int = perf_counter_ns()
                     self.live_count = gol.progress()
+                    self.last_gen_time = perf_counter_ns() - start
                     # update the UI to reflect any changes
                     self.print_ui_update(term, gol, True)
                     self.process_keystroke(term, False)
                 else:
                     # only progress the game if the user asked for it
                     if self.process_keystroke(term, True):
+                        start = perf_counter_ns()
                         self.live_count = gol.progress()
+                        self.last_gen_time = perf_counter_ns() - start
                         # update the UI to reflect any changes
                         self.print_ui_update(term, gol, True)
 
@@ -158,13 +164,12 @@ class MainGame:
 
         with term.location(0, term.height - MainGame.FOOTER_ROWS):
             print(term.bold("Statistics/Info") + term.move_down)
-            print("Generation:   " + str(gol.generation))
-            print("Live cells:   " + str(self.live_count))
+            print("Generation:    " + str(gol.generation))
+            print("Live cells:    " + str(self.live_count))
             # intentional space on the end of "seconds " below
-            print("Frame delay:  " + str(self.sleep_time) + " seconds ", end="")
+            print("Frame delay:   " + str(self.sleep_time) + " seconds ")
+            print("Progress time: " + str(self.last_gen_time) + " ns ", end="")
             # future stats, max total of 5
-            # TODO: print how long time each game loop takes
-            # print("")
             # print("", end="")
 
     def print_game(
