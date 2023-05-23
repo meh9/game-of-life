@@ -42,6 +42,7 @@ class MainGame:
         self.origin_row = 0 - floor(
             (term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
         )
+        # divide in half again because we only print every other col
         self.origin_col = 0 - floor(term.width / 2 / 2)
 
         # run the game
