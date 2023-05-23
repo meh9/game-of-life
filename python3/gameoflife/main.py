@@ -50,6 +50,7 @@ class MainGame:
             max_rows: int = 0
             while self.run:
                 # check if we need to clear screen and refresh - will always happen first runthrough
+                # TODO: register a handler to refresh the screen on resize
                 if self.term_width != term.width or self.term_height != term.height:
                     self.term_width = term.width
                     self.term_height = term.height
@@ -161,6 +162,7 @@ class MainGame:
             # intentional space on the end of "seconds " below
             print("Frame delay:  " + str(self.sleep_time) + " seconds ", end="")
             # future stats, max total of 5
+            # TODO: print how long time each game loop takes
             # print("")
             # print("", end="")
 
