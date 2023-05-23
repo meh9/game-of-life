@@ -12,7 +12,7 @@ class MainGame:
     """Manage the game."""
 
     HEADER_ROWS: int = 2
-    FOOTER_ROWS: int = 7
+    FOOTER_ROWS: int = 8
 
     def __init__(self) -> None:
         """Initialise the game."""
@@ -27,6 +27,7 @@ class MainGame:
         self.header_location: int = 0
         self.header_direction_left: bool = False
         self.last_gen_time: int = 0
+        self.edit_mode = False
 
     def main(self) -> None:
         """Run the main game loop."""
@@ -48,7 +49,7 @@ class MainGame:
         self.origin_col = 0 - floor(term.width / 2 / 2)
 
         # run the game
-        with term.fullscreen(), term.cbreak(), term.hidden_cursor():
+        with term.fullscreen(), term.cbreak():  # , term.hidden_cursor():
             start_row: int = 0
             max_rows: int = 0
             while self.run:
@@ -60,7 +61,7 @@ class MainGame:
                     # reset cursor and clear the screen
                     print(term.home + term.clear, end="")
                     # print out the minimal game UI
-                    start_row, max_rows = MainGame.print_ui(term)
+                    start_row, max_rows = self.print_ui(term)
                     self.header_location = floor(term.width / 2)
                     self.print_ui_update(term, gol, False)
 
@@ -100,33 +101,64 @@ class MainGame:
                 case term.KEY_ESCAPE:
                     self.run = False
                 case term.KEY_UP:
-                    self.origin_row -= 1
+                    if self.edit_mode:
+                        print(term.move_up(1), end="")
+                    else:
+                        self.origin_row -= 1
                 case term.KEY_DOWN:
-                    self.origin_row += 1
+                    if self.edit_mode:
+                        print(term.move_down(1), end="")
+                    else:
+                        self.origin_row += 1
                 case term.KEY_LEFT:
-                    self.origin_col -= 1
+                    if self.edit_mode:
+                        print(term.move_left(1), end="")
+                    else:
+                        self.origin_col -= 1
                 case term.KEY_RIGHT:
-                    self.origin_col += 1
+                    if self.edit_mode:
+                        print(term.move_right(1), end="")
+                    else:
+                        self.origin_col += 1
                 case _:
                     pass  # do nothing with unrecognised keys
         else:
             match key:
                 case " ":
-                    # progress the game a generation
-                    return True
+                    if self.edit_mode:
+                        # TODO: finish edit mode: add/remove cell
+                        pass
+                    else:
+                        # progress the game a generation
+                        return True
+                case "e":
+                    if self.edit_mode:
+                        self.edit_mode = False
+                        print(term.move_xy(0, 0), end="")
+                        self.print_ui(term)
+                    else:
+                        self.automatic = False
+                        self.edit_mode = True
+                        self.print_ui(term)
+                        print(term.move_x(floor(term.width / 2) - 1), end="")
+                        move_y: int = floor(term.height / 2) - 1 - MainGame.HEADER_ROWS
+                        print(term.move_y(move_y), end="")
                 case "a":
-                    self.automatic = not self.automatic
+                    if not self.edit_mode:
+                        self.automatic = not self.automatic
                 case "q":
                     self.run = False
                 case "+" | "=":  # also accept "=" so we don't have use shift all the time
-                    self.sleep_time = self.sleep_time / 2
+                    if not self.edit_mode:
+                        self.sleep_time = self.sleep_time / 2
                 case "-":
-                    self.sleep_time = self.sleep_time * 2
+                    if not self.edit_mode:
+                        self.sleep_time = self.sleep_time * 2
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
 
-    # layout model for top moving text
+    # layout model for UI top header moving text
     # |---------------------------------|  term.width = 50
     #                  h                   initial header_location = term.width / 2 = 25
     #           |----name----|             len(name) = 8
@@ -156,27 +188,28 @@ class MainGame:
                     self.header_direction_left = True
                     self.header_location -= 2
 
-        with term.location(0, 0):
+        with term.location(0, 0), term.hidden_cursor():
             # header section
             print(term.move_x(self.header_location - half_width) + term.bold(name))
             print(term.move_x(self.header_location - half_width) + term.bold(line))
             # don't forget to update MainGame.HEADER_ROWS if making changes here!!!
 
-        with term.location(0, term.height - MainGame.FOOTER_ROWS):
+        with term.location(0, term.height - MainGame.FOOTER_ROWS), term.hidden_cursor():
             print(term.bold("Statistics/Info") + term.move_down)
             print("Generation:    " + str(gol.generation))
             print("Live cells:    " + str(self.live_count))
             # intentional space on the end of "seconds " below
             print("Frame delay:   " + str(self.sleep_time) + " seconds ")
             print("Progress time: " + str(self.last_gen_time) + " ns ", end="")
-            # future stats, max total of 5
+            # future stats, max total of 6
+            # print("")
             # print("", end="")
 
     def print_game(
         self, term: Terminal, gol: GameOfLife, start_row: int, max_rows: int
     ) -> None:
         """Print the actual game board with cells from the GameOfLife instance."""
-        with term.location(0, start_row):
+        with term.location(0, start_row), term.hidden_cursor():
             row_list: list[str] = []
             # because we separate all cells by a space we can only do half the number of cols
             max_cols: int = floor(term.width / 2)
@@ -192,24 +225,31 @@ class MainGame:
                 print(" ".join(row_list))
                 row_list = []
 
-    @staticmethod
-    def print_ui(term: Terminal) -> tuple[int, int]:
+    def print_ui(self, term: Terminal) -> tuple[int, int]:
         """
         Print the main game UI.
 
         Returns a tuple with the 1st value being the row index to start printing the game board on,
         and the 2nd value being the maximum number of rows that the game board can print.
         """
-        with term.location(0, 0):
+        with term.location(0, 0), term.hidden_cursor():
             # footer section
             print(term.move_xy(0, term.height - (MainGame.FOOTER_ROWS + 1)))
             print(term.center(term.bold("Controls                   ")))
             print("=" * term.width)
             print(term.center("(ノಠ益ಠ)ノ彡┻━┻  q or ESC  "))  # intentional misalignment
-            print(term.center("Step forward:    <spacebar>"))
-            print(term.center("Autorun On/Off:  a         "))
-            print(term.center("Speed up/down:   +/-       "))
-            print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
+            if self.edit_mode:
+                print(term.center("Exit edit mode:  e         "))
+                print(term.center("Live/dead cell:  <spacebar>"))
+                print(term.center("Move cursor:     ⇦⇧⇩⇨      "))
+                print(term.center("                           "))
+                print(term.center("                           "), end="")
+            else:
+                print(term.center("Edit cells:      e         "))
+                print(term.center("Step forward:    <spacebar>"))
+                print(term.center("Autorun On/Off:  a         "))
+                print(term.center("Speed up/down:   +/-       "))
+                print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
             # don't forget to update MainGame.FOOTER_ROWS if making changes here!!!
 
             # TODO: new game (popup modal? select variant), add/remove cells
