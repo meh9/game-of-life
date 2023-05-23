@@ -48,6 +48,7 @@ class MainGame:
         # divide in half again because we only print every other col
         self.origin_col = 0 - floor(term.width / 2 / 2)
 
+        # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game
         with term.fullscreen(), term.cbreak():  # , term.hidden_cursor():
             start_row: int = 0
