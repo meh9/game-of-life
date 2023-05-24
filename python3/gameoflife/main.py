@@ -18,7 +18,7 @@ class MainGame:
         """Initialise the game."""
         self.run: bool = True  # keep looping as long as this is true
         self.automatic: bool = False  # loop automatically and continuously when true
-        self.sleep_time: float = 0.5  # seconds to sleep between loops in automatic
+        self.sleep_time: float = 0.25  # seconds to sleep between loops in automatic
         self.origin_row: int = 0  # top row of the game view of the universe
         self.origin_col: int = 0  # left most cell of the game view of the universe
         self.term_width: int = 0
@@ -34,7 +34,7 @@ class MainGame:
         """Run the main game loop."""
         term = Terminal()
         # TODO: if initialising an Array type, initialise to the exact term.width/height
-        self.gol = GameOfLifeArrays(15, 20)
+        self.gol = GameOfLifeArrays(30, 60)
         # gol = GameOfLifeSortedDict()
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
@@ -160,9 +160,11 @@ class MainGame:
                 case "+" | "=":  # also accept "=" so we don't have use shift all the time
                     if not self.edit_mode:
                         self.sleep_time = self.sleep_time / 2
+                        self.print_ui_update(term, False)
                 case "-":
                     if not self.edit_mode:
                         self.sleep_time = self.sleep_time * 2
+                        self.print_ui_update(term, False)
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
