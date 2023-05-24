@@ -28,20 +28,24 @@ class MainGame:
         self.header_direction_left: bool = False
         self.last_gen_time: int = 0
         self.edit_mode = False
+        self.gol: GameOfLife
 
     def main(self) -> None:
         """Run the main game loop."""
         term = Terminal()
         # TODO: if initialising an Array type, initialise to the exact term.width/height
-        gol: GameOfLife = GameOfLifeArrays(15, 20)
-        # gol: GameOfLife = GameOfLifeSortedDict()
-        MainGame.add_glider(gol)
-        self.live_count = gol.count_live_cells()
+        self.gol = GameOfLifeArrays(15, 20)
+        # gol = GameOfLifeSortedDict()
+        MainGame.add_glider(self.gol)
+        self.live_count = self.gol.count_live_cells()
 
         # centre the initial board
         # TODO: do a better job of putting the initial board in the centre
         # one way is actually to put the initial cells in the centre as opposed to the board
-        # for now, place 0,0 of the game board in the centre of the view
+        # For now, place 0,0 of the game board in the centre of the view.
+        # This defines the View of the board in the coordinates of the board.
+        # Another way to think of it is the origin_row/col defines how far away in board coords
+        # the top left corner of the View is from 0,0 of the board.
         self.origin_row = 0 - floor(
             (term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
         )
@@ -64,28 +68,28 @@ class MainGame:
                     # print out the minimal game UI
                     start_row, max_rows = self.print_ui(term)
                     self.header_location = floor(term.width / 2)
-                    self.print_ui_update(term, gol, False)
+                    self.print_ui_update(term, False)
 
                 # print the game cells, taking care not to print over the bottom text
-                self.print_game(term, gol, start_row, max_rows)
+                self.print_game(term, start_row, max_rows)
 
                 # handle any potential keystrokes
                 if self.automatic:
                     # progress the game a generation
                     start: int = perf_counter_ns()
-                    self.live_count = gol.progress()
+                    self.live_count = self.gol.progress()
                     self.last_gen_time = perf_counter_ns() - start
                     # update the UI to reflect any changes
-                    self.print_ui_update(term, gol, True)
+                    self.print_ui_update(term, True)
                     self.process_keystroke(term, False)
                 else:
                     # only progress the game if the user asked for it
                     if self.process_keystroke(term, True):
                         start = perf_counter_ns()
-                        self.live_count = gol.progress()
+                        self.live_count = self.gol.progress()
                         self.last_gen_time = perf_counter_ns() - start
                         # update the UI to reflect any changes
-                        self.print_ui_update(term, gol, True)
+                        self.print_ui_update(term, True)
 
     def process_keystroke(self, term: Terminal, block: bool) -> bool:
         """
@@ -113,12 +117,12 @@ class MainGame:
                         self.origin_row += 1
                 case term.KEY_LEFT:
                     if self.edit_mode:
-                        print(term.move_left(1), end="")
+                        print(term.move_left(2), end="")
                     else:
                         self.origin_col -= 1
                 case term.KEY_RIGHT:
                     if self.edit_mode:
-                        print(term.move_right(1), end="")
+                        print(term.move_right(2), end="")
                     else:
                         self.origin_col += 1
                 case _:
@@ -128,7 +132,26 @@ class MainGame:
                 case " ":
                     if self.edit_mode:
                         # TODO: finish edit mode: add/remove cell
-                        pass
+                        row, col = term.get_location()
+                        with term.location(0, 0):
+                            print(
+                                "row: "
+                                + str(row)
+                                + ", col: "
+                                + str(col)
+                                + ", cell y: "
+                                + str(row - MainGame.HEADER_ROWS + self.origin_row)
+                                + ", cell x: "
+                                + str(floor(col / 2) + self.origin_col)
+                                + "        "
+                            )
+                            print(
+                                "origin_row: "
+                                + str(self.origin_row)
+                                + ", origin_col: "
+                                + str(self.origin_col)
+                                + "         "
+                            )
                     else:
                         # progress the game a generation
                         return True
@@ -170,7 +193,7 @@ class MainGame:
     #                      p......h......  print location = header_location - (len(name) / 2) = 42
     #                      p......h......  header_location = term.width - (len(name) / 2) = 46
 
-    def print_ui_update(self, term: Terminal, gol: GameOfLife, progress: bool) -> None:
+    def print_ui_update(self, term: Terminal, progress: bool) -> None:
         """Update things in the UI that needs updating; game name location, stats, etc."""
         # calculate moving header sectiong
         name: str = " ■ Conways's Game of Life □ "
@@ -197,7 +220,7 @@ class MainGame:
 
         with term.location(0, term.height - MainGame.FOOTER_ROWS), term.hidden_cursor():
             print(term.bold("Statistics/Info") + term.move_down)
-            print("Generation:    " + str(gol.generation))
+            print("Generation:    " + str(self.gol.generation))
             print("Live cells:    " + str(self.live_count))
             # intentional space on the end of "seconds " below
             print("Frame delay:   " + str(self.sleep_time) + " seconds ")
@@ -206,9 +229,7 @@ class MainGame:
             # print("")
             # print("", end="")
 
-    def print_game(
-        self, term: Terminal, gol: GameOfLife, start_row: int, max_rows: int
-    ) -> None:
+    def print_game(self, term: Terminal, start_row: int, max_rows: int) -> None:
         """Print the actual game board with cells from the GameOfLife instance."""
         with term.location(0, start_row), term.hidden_cursor():
             row_list: list[str] = []
@@ -216,7 +237,7 @@ class MainGame:
             max_cols: int = floor(term.width / 2)
             for view_row in range(max_rows):
                 for view_col in range(max_cols):
-                    cell: bool | None = gol.get_cell(
+                    cell: bool | None = self.gol.get_cell(
                         self.origin_row + view_row, self.origin_col + view_col
                     )
                     if cell is None:
