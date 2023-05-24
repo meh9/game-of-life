@@ -205,11 +205,11 @@ class MainGame:
 
         with term.location(0, term.height - MainGame.FOOTER_ROWS), term.hidden_cursor():
             print(term.bold("Statistics/Info") + term.move_down)
-            print("Generation:    " + str(self.gol.generation))
-            print("Live cells:    " + str(self.live_count))
+            print("Generation:    " + str(self.gol.generation) + "     ")
+            print("Live cells:    " + str(self.live_count) + "     ")
             # intentional space on the end of "seconds " below
-            print("Frame delay:   " + str(self.sleep_time) + " seconds ")
-            print("Progress time: " + str(self.last_gen_time) + " ns ", end="")
+            print("Frame delay:   " + str(self.sleep_time) + " seconds    ")
+            print("Progress time: " + str(self.last_gen_time) + " ns    ", end="")
             # future stats, max total of 6
             # print("")
             # print("", end="")
@@ -227,9 +227,10 @@ class MainGame:
                         self.origin_row + view_row, self.origin_col + view_col
                     )
                     if cell is None:
-                        row_list.append(".")
+                        row_list.append(" ")
                     else:
-                        row_list.append("■" if cell else "□")
+                        row_list.append("■" if cell else ".")
+                        # □ ■ ▫ ◉ ○ ◌ ◎ ● ◯ ☉ ☐ ☻ ◦
                 print(" ".join(row_list))
                 row_list = []
 
