@@ -55,8 +55,6 @@ class MainGame:
         # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game
         with term.fullscreen(), term.cbreak():  # , term.hidden_cursor():
-            start_row: int = 0
-            max_rows: int = 0
             while self.run:
                 # check if we need to clear screen and refresh - will always happen first runthrough
                 # TODO: register a handler to refresh the screen on resize
@@ -66,12 +64,12 @@ class MainGame:
                     # reset cursor and clear the screen
                     print(term.home + term.clear, end="")
                     # print out the minimal game UI
-                    start_row, max_rows = self.print_ui(term)
+                    self.print_ui(term)
                     self.header_location = floor(term.width / 2)
                     self.print_ui_update(term, False)
 
                 # print the game cells, taking care not to print over the bottom text
-                self.print_game(term, start_row, max_rows)
+                self.print_game(term)
 
                 # handle any potential keystrokes
                 if self.automatic:
@@ -133,25 +131,12 @@ class MainGame:
                     if self.edit_mode:
                         # TODO: finish edit mode: add/remove cell
                         row, col = term.get_location()
-                        with term.location(0, 0):
-                            print(
-                                "row: "
-                                + str(row)
-                                + ", col: "
-                                + str(col)
-                                + ", cell y: "
-                                + str(row - MainGame.HEADER_ROWS + self.origin_row)
-                                + ", cell x: "
-                                + str(floor(col / 2) + self.origin_col)
-                                + "        "
-                            )
-                            print(
-                                "origin_row: "
-                                + str(self.origin_row)
-                                + ", origin_col: "
-                                + str(self.origin_col)
-                                + "         "
-                            )
+                        cell_row: int = row - MainGame.HEADER_ROWS + self.origin_row
+                        cell_col: int = floor(col / 2) + self.origin_col
+                        cell_state: bool | None = self.gol.get_cell(cell_row, cell_col)
+                        if cell_state is not None:
+                            self.gol.set_cell(cell_row, cell_col, not cell_state)
+                        self.print_game(term)
                     else:
                         # progress the game a generation
                         return True
@@ -229,10 +214,11 @@ class MainGame:
             # print("")
             # print("", end="")
 
-    def print_game(self, term: Terminal, start_row: int, max_rows: int) -> None:
+    def print_game(self, term: Terminal) -> None:
         """Print the actual game board with cells from the GameOfLife instance."""
-        with term.location(0, start_row), term.hidden_cursor():
+        with term.location(0, MainGame.HEADER_ROWS), term.hidden_cursor():
             row_list: list[str] = []
+            max_rows: int = term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
             # because we separate all cells by a space we can only do half the number of cols
             max_cols: int = floor(term.width / 2)
             for view_row in range(max_rows):
@@ -247,7 +233,7 @@ class MainGame:
                 print(" ".join(row_list))
                 row_list = []
 
-    def print_ui(self, term: Terminal) -> tuple[int, int]:
+    def print_ui(self, term: Terminal) -> None:
         """
         Print the main game UI.
 
@@ -273,9 +259,6 @@ class MainGame:
                 print(term.center("Speed up/down:   +/-       "))
                 print(term.center("Move the view:   ⇦⇧⇩⇨      "), end="")
             # don't forget to update MainGame.FOOTER_ROWS if making changes here!!!
-
-            # TODO: new game (popup modal? select variant), add/remove cells
-            return 2, term.height - MainGame.FOOTER_ROWS - MainGame.HEADER_ROWS
 
     @staticmethod
     def add_glider(gol: GameOfLife) -> None:
