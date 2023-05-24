@@ -129,7 +129,6 @@ class MainGame:
             match key:
                 case " ":
                     if self.edit_mode:
-                        # TODO: finish edit mode: add/remove cell
                         row, col = term.get_location()
                         cell_row: int = row - MainGame.HEADER_ROWS + self.origin_row
                         cell_col: int = floor(col / 2) + self.origin_col
@@ -149,6 +148,7 @@ class MainGame:
                         self.automatic = False
                         self.edit_mode = True
                         self.print_ui(term)
+                        # TODO: save where the last edit mode was, and return there, make sure to reset when window resizes
                         print(term.move_x(floor(term.width / 2) - 1), end="")
                         move_y: int = floor(term.height / 2) - 1 - MainGame.HEADER_ROWS
                         print(term.move_y(move_y), end="")
