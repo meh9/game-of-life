@@ -5,7 +5,7 @@ from time import perf_counter_ns
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
+from gameoflife import GameOfLife, GameOfLifeSortedDict  # GameOfLifeArrays
 
 
 class MainGame:
@@ -21,15 +21,15 @@ class MainGame:
         self.sleep_time: float = 0.25  # seconds to sleep between loops in automatic
         self.origin_row: int = 0  # top row of the game view of the universe
         self.origin_col: int = 0  # left most cell of the game view of the universe
-        self.term_width: int = 0
+        self.term_width: int = 0  # save term width/height to detect if it changes
         self.term_height: int = 0
-        self.live_count: int = 0
-        self.header_location: int = 0
+        self.live_count: int = 0  # track live cells for printing
+        self.header_location: int = 0  # track the header location for moving it
         self.header_direction_left: bool = False
-        self.last_gen_time: int = 0
-        self.edit_mode = False
-        self.gol: GameOfLife
-        self.last_edit_location: tuple[int, int]
+        self.last_gen_time: int = 0  # track how long time progress() took for printing
+        self.edit_mode = False  # are editing right now?
+        self.gol: GameOfLife  # game board and rules
+        self.last_edit_location: tuple[int, int]  # save where the cursor was last
 
     def main(self) -> None:
         """Run the main game loop."""
@@ -37,6 +37,7 @@ class MainGame:
         # TODO: if initialising an Array type, initialise to the exact term.width/height
         # self.gol = GameOfLifeArrays(30, 60)
         self.gol = GameOfLifeSortedDict()
+        # TODO: adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
 

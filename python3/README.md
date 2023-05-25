@@ -13,7 +13,7 @@ Collecting a few things TODO in here in no particular order:
 1. (Done? VSCode does it) Black as code formatting? https://github.com/psf/black
 
 
-## Manual steps:
+## Manual steps
 1. `pip install -r requirements.txt`
 1. `mypy --strict *.py`
 1. `black *.py`
