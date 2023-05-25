@@ -29,13 +29,14 @@ class MainGame:
         self.last_gen_time: int = 0
         self.edit_mode = False
         self.gol: GameOfLife
+        self.last_edit_location: tuple[int, int]
 
     def main(self) -> None:
         """Run the main game loop."""
         term = Terminal()
         # TODO: if initialising an Array type, initialise to the exact term.width/height
         self.gol = GameOfLifeArrays(30, 60)
-        # gol = GameOfLifeSortedDict()
+        # self.gol = GameOfLifeSortedDict()
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
 
@@ -67,6 +68,11 @@ class MainGame:
                     self.print_ui(term)
                     self.header_location = floor(term.width / 2)
                     self.print_ui_update(term, False)
+                    # set last edit location to be centre of screen
+                    self.last_edit_location = (
+                        floor(term.height / 2) - 1 - MainGame.HEADER_ROWS,
+                        floor(term.width / 2) - 1,
+                    )
 
                 # print the game cells, taking care not to print over the bottom text
                 self.print_game(term)
@@ -142,16 +148,17 @@ class MainGame:
                 case "e":
                     if self.edit_mode:
                         self.edit_mode = False
+                        # save where the last edit mode was so we can return there
+                        self.last_edit_location = term.get_location()
                         print(term.move_xy(0, 0), end="")
                         self.print_ui(term)
                     else:
                         self.automatic = False
                         self.edit_mode = True
                         self.print_ui(term)
-                        # TODO: save where the last edit mode was, and return there, make sure to reset when window resizes
-                        print(term.move_x(floor(term.width / 2) - 1), end="")
-                        move_y: int = floor(term.height / 2) - 1 - MainGame.HEADER_ROWS
-                        print(term.move_y(move_y), end="")
+                        # return to last edit location
+                        print(term.move_x(self.last_edit_location[1]), end="")
+                        print(term.move_y(self.last_edit_location[0]), end="")
                 case "a":
                     if not self.edit_mode:
                         self.automatic = not self.automatic
