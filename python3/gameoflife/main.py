@@ -5,7 +5,7 @@ from time import perf_counter_ns
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from gameoflife import GameOfLife, GameOfLifeArrays  # , GameOfLifeSortedDict
+from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
 class MainGame:
@@ -35,8 +35,8 @@ class MainGame:
         """Run the main game loop."""
         term = Terminal()
         # TODO: if initialising an Array type, initialise to the exact term.width/height
-        self.gol = GameOfLifeArrays(30, 60)
-        # self.gol = GameOfLifeSortedDict()
+        # self.gol = GameOfLifeArrays(30, 60)
+        self.gol = GameOfLifeSortedDict()
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
 
