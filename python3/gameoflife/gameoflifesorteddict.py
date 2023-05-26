@@ -82,7 +82,7 @@ class GameOfLifeSortedDict(GameOfLife):
                 if neighbour not in self._a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
-        elif (row, col) not in self._a_map:
+        else:
             self._a_map[(row, col)] = False
 
     def count_live_cells(self) -> int:
