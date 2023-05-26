@@ -1,6 +1,6 @@
 """Tests for all the Conway's Game of Life implementations."""
 
-from game_of_life import add_glider, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
+from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
 class TestGameOfLifeArrays:
@@ -9,7 +9,7 @@ class TestGameOfLifeArrays:
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
         gol: GameOfLife = GameOfLifeArrays(12, 15)
-        add_glider(gol)
+        MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
         for _ in range(10000):
             gol.progress()
@@ -27,7 +27,7 @@ class TestGameOfLifeSortedDict:
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
         gol: GameOfLife = GameOfLifeSortedDict()
-        add_glider(gol)
+        MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
         for _ in range(10000):
             gol.progress()
