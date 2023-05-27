@@ -44,6 +44,7 @@ class TestGameOfLifeArrays:
         assert gol.get_cell(6, 10) is True
         assert gol.get_cell(6, 11) is True
         assert gol.get_cell(6, 12) is True
+        assert gol.generation == 10000
 
     def test_outofbounds(self) -> None:
         """Test that we get None when asking for a cell out of bounds."""
@@ -95,6 +96,7 @@ class TestGameOfLifeSortedDict:
         assert gol.get_cell(2502, 2500) is True
         assert gol.get_cell(2502, 2501) is True
         assert gol.get_cell(2502, 2502) is True
+        assert gol.generation == 10000
 
     def test_outofbounds(self) -> None:
         """Test that we get False when asking for a cell out of bounds."""
@@ -120,3 +122,15 @@ class TestGameOfLifeSortedDict:
 □ ■ ■ ■ □ 
 □ □ □ □ □ """
         )
+
+    def test_match_case2(self) -> None:
+        """Test a live cell with exactly 2 neighbours."""
+        gol: GameOfLife = GameOfLifeSortedDict()
+        gol.set_cell(0, 0, True)
+        gol.set_cell(0, 1, True)
+        gol.set_cell(0, 2, True)
+        gol.progress()
+        assert gol.get_cell(-1, 1) is True
+        assert gol.get_cell(1, 1) is True
+        assert gol.get_cell(0, 0) is False
+        assert gol.get_cell(0, 2) is False

@@ -50,6 +50,8 @@ class GameOfLifeSortedDict(GameOfLife):
                     if live:
                         self.set_cell(coords[0], coords[1], live)
                         count += 1
+                    else:
+                        pass  # required for code coverage? :/
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the
                 # next generation.
                 case 3:
