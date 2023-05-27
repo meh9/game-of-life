@@ -53,6 +53,31 @@ class TestGameOfLifeArrays:
         assert gol.get_cell(2, 2) is False
         assert gol.get_cell(20, 20) is None
 
+    def test_str(self) -> None:
+        """Test the str generation."""
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        MainGame.add_glider(gol)
+        for _ in range(100):
+            gol.progress()
+            assert gol.count_live_cells() == 5
+        print(gol)
+        assert (
+            str(gol)
+            == """Generation: 100
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ 
+□ □ □ □ □ □ □ □ □ □ ■ ■ ■ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
+□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ """
+        )
+
 
 class TestGameOfLifeSortedDict:
     """Tests specifically for the class GameOfLifeSortedDict."""
@@ -77,3 +102,21 @@ class TestGameOfLifeSortedDict:
         gol.set_cell(10, 10, True)
         assert gol.get_cell(2, 2) is False
         assert gol.get_cell(10, 10) is True
+
+    def test_str(self) -> None:
+        """Test the str generation."""
+        gol: GameOfLife = GameOfLifeSortedDict()
+        MainGame.add_glider(gol)
+        for _ in range(100):
+            gol.progress()
+            assert gol.count_live_cells() == 5
+        print(gol)
+        assert (
+            str(gol)
+            == """Generation: 100
+  □ □ □   
+  □ ■ □ □ 
+□ □ □ ■ □ 
+□ ■ ■ ■ □ 
+□ □ □ □ □ """
+        )
