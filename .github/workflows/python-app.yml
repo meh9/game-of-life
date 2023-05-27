@@ -31,7 +31,7 @@ jobs:
     - name: Check formatting with Black
       working-directory: ./python3
       run: |
-        black --check -v *.py gameoflife/*.p
+        black --check -v *.py gameoflife/*.py
     - name: Check types with mypy
       working-directory: ./python3
       run: |
