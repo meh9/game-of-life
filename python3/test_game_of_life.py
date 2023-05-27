@@ -45,6 +45,14 @@ class TestGameOfLifeArrays:
         assert gol.get_cell(6, 11) is True
         assert gol.get_cell(6, 12) is True
 
+    def test_outofbounds(self) -> None:
+        """Test that we get None when asking for a cell out of bounds."""
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        gol.set_cell(5, 6, True)
+        assert gol.get_cell(5, 6) is True
+        assert gol.get_cell(2, 2) is False
+        assert gol.get_cell(20, 20) is None
+
 
 class TestGameOfLifeSortedDict:
     """Tests specifically for the class GameOfLifeSortedDict."""
@@ -62,3 +70,10 @@ class TestGameOfLifeSortedDict:
         assert gol.get_cell(2502, 2500) is True
         assert gol.get_cell(2502, 2501) is True
         assert gol.get_cell(2502, 2502) is True
+
+    def test_outofbounds(self) -> None:
+        """Test that we get False when asking for a cell out of bounds."""
+        gol: GameOfLife = GameOfLifeSortedDict()
+        gol.set_cell(10, 10, True)
+        assert gol.get_cell(2, 2) is False
+        assert gol.get_cell(10, 10) is True
