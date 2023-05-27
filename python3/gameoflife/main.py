@@ -37,7 +37,7 @@ class MainGame:
         # TODO: if initialising an Array type, initialise to the exact term.width/height
         # self.gol = GameOfLifeArrays(30, 60)
         self.gol = GameOfLifeSortedDict()
-        # TODO: adding a glider for now as an example - add more? less? none?
+        # adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
 
@@ -45,6 +45,7 @@ class MainGame:
         # TODO: do a better job of putting the initial board in the centre
         # one way is actually to put the initial cells in the centre as opposed to the board
         # For now, place 0,0 of the game board in the centre of the view.
+
         # This defines the View of the board in the coordinates of the board.
         # Another way to think of it is the origin_row/col defines how far away in board coords
         # the top left corner of the View is from 0,0 of the board.
@@ -193,7 +194,8 @@ class MainGame:
         # calculate moving header sectiong
         name: str = " ■ Conways's Game of Life □ "
         line: str = " ========================== "
-        # TODO: this is pretty complicated, would be nice to do something simpler!
+        # move the name and underline from side to side, manage switching directions
+        # this is pretty complicated, would be nice to do something simpler!
         half_width: int = floor(len(name) / 2)
         if progress:
             if self.header_direction_left:
