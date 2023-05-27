@@ -1,6 +1,26 @@
 # Conway's Game of Life implementations
 
+<img width="500" alt="gameplay" src="https://raw.githubusercontent.com/meh9/game-of-life/main/gameplay.gif">
+
 ## Just playing around, this is in no way complete and likely never will be. :)
+
+Plans:
+1. Java implementation: This was the first implementation. The game logic is complete, but no work on user interface.
+1. Python implementation: This is currently the most progressed, and has a simple terminal user interface.
+1. TypeScript implementation: Planned, currently unstarted.
+1. Haskell implementation: Yeah maybe, would be interesting.
+1. C# implementation: Maybe.
+
+TODO:
+1. Ability to get RLE directly from (popular?) GoL sites on the internet.
+1. Add RLE (Run Length Encoded) file format reading.
+1. (Done in Python) Implement simple terminal based interface.
+1. (Done in Java, Python) Add tests.
+1. (Done in Java, Python) Implement game logic.
+1. (Done in Java, Python) Use languange appropriate build management tools.
+
+
+## Conway's Game of Life rules
 
 Original Rules:
 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
