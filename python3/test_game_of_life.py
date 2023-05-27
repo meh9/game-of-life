@@ -3,8 +3,33 @@
 from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
+def test_set_unset_set() -> None:
+    """
+    Test that we can set, unset, then set a cell as live.
+
+    GameOfLifeSortedDict had an issue where this wasn't working which was fixed in
+    commit 47543a63a3364f1d00b802d74f8cc136aacc181a.
+    """
+    gol: GameOfLife = GameOfLifeArrays(100, 200)
+    set_cell_and_assert(gol, True, 1)
+    set_cell_and_assert(gol, False, 0)
+    set_cell_and_assert(gol, True, 1)
+
+    gol = GameOfLifeSortedDict()
+    set_cell_and_assert(gol, True, 1)
+    set_cell_and_assert(gol, False, 0)
+    set_cell_and_assert(gol, True, 1)
+
+
+def set_cell_and_assert(gol: GameOfLife, live: bool, num_live: int) -> None:
+    """Set a cell and assert it stuck."""
+    gol.set_cell(50, 55, live)
+    assert gol.get_cell(50, 55) is live
+    assert gol.count_live_cells() == num_live
+
+
 class TestGameOfLifeArrays:
-    """Tests for the GameOfLifeArrays class."""
+    """Tests specifically for the class GameOfLifeArrays."""
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
@@ -22,7 +47,7 @@ class TestGameOfLifeArrays:
 
 
 class TestGameOfLifeSortedDict:
-    """Tests for the class GameOfLifeSortedDict class."""
+    """Tests specifically for the class GameOfLifeSortedDict."""
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
