@@ -145,6 +145,46 @@ class TestMainGame:
     Is there a better way to do this?
     """
 
+    # use string concatenation to highlight necessary trailing spaces
+    PRINT_UI_OUTPUT = (
+        "\n"
+        + "                          Controls                                              \n"
+        + "================================================================================\n"
+        + "                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             \n"
+        + "                          Edit cells:      e                                    \n"
+        + "                          Step forward:    <spacebar>                           \n"
+        + "                          Autorun On/Off:  a                                    \n"
+        + "                          Speed up/down:   +/-                                  \n"
+        + "                          Move the view:   ⇦⇧⇩⇨                                 "
+    )
+
+    PRINT_UI_UPDATE_OUTPUT = (
+        " ■ Conways's Game of Life □ \n"
+        + " ========================== \n"
+        + "Statistics/Info\n"
+        + "Generation:    0     \n"
+        + "Live cells:    5     \n"
+        + "Frame delay:   0.25 seconds    \n"
+        + "Progress time: 0 ns    "
+    )
+
+    PRINT_GAME_OUTPUT = """. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . ■ ■ ■ . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+"""
+
     @staticmethod
     def create_main_game() -> tuple[MainGame, Terminal]:
         """Create a MainGame and a Terminal and return them."""
@@ -161,56 +201,29 @@ class TestMainGame:
         # apparently type-ignore below should start working soon:
         # https://github.com/python/mypy/issues/8823#issuecomment-1556288015
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
-        assert (
-            out
-            == """
-                          Controls                                              
-================================================================================
-                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             
-                          Edit cells:      e                                    
-                          Step forward:    <spacebar>                           
-                          Autorun On/Off:  a                                    
-                          Speed up/down:   +/-                                  
-                          Move the view:   ⇦⇧⇩⇨                                 """
-        )
+        assert out == TestMainGame.PRINT_UI_OUTPUT
 
     def test_print_ui_update(self, capfd) -> None:  # type: ignore
         """Test the print_ui_update method."""
         main, term = TestMainGame.create_main_game()
         main.print_ui_update(term, False)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
-        assert (
-            out
-            == """ ■ Conways's Game of Life □ 
- ========================== 
-Statistics/Info
-Generation:    0     
-Live cells:    5     
-Frame delay:   0.25 seconds    
-Progress time: 0 ns    """
-        )
+        assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
+
+    def test_print_ui_update_progress(self, capfd) -> None:  # type: ignore
+        """Test the print_ui_update method."""
+        main, term = TestMainGame.create_main_game()
+        # main.header_location = 1
+        main.header_direction_left = True
+        main.print_ui_update(term, True)
+        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        # the output is identical to the previos test_print_ui because term control characters
+        # are not printed
+        assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
 
     def test_print_game(self, capfd) -> None:  # type: ignore
         """Test the print_game method."""
         main, term = TestMainGame.create_main_game()
         main.print_game(term)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
-        assert (
-            out
-            == """. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . ■ ■ ■ . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-"""
-        )
+        assert out == TestMainGame.PRINT_GAME_OUTPUT
