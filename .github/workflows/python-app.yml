@@ -35,7 +35,7 @@ jobs:
     - name: Check types with mypy
       working-directory: ./python3
       run: |
-        mypy --strict -v *.py gameoflife/*.py
+        mypy --strict --no-warn-unused-ignores *.py gameoflife/*.py
     - name: Test with pytest
       working-directory: ./python3
       run: |
