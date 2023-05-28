@@ -158,6 +158,17 @@ class TestMainGame:
         + "                          Move the view:   ⇦⇧⇩⇨                                 "
     )
 
+    PRINT_UI_EDIT_MODE_OUTPUT = (
+        "\n                          Controls                                              \n"
+        + "================================================================================\n"
+        + "                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             \n"
+        + "                          Exit edit mode:  e                                    \n"
+        + "                          Live/dead cell:  <spacebar>                           \n"
+        + "                          Move cursor:     ⇦⇧⇩⇨                                 \n"
+        + "                                                                                \n"
+        + "                                                                                "
+    )
+
     PRINT_UI_UPDATE_OUTPUT = (
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
@@ -204,6 +215,14 @@ class TestMainGame:
         # https://github.com/python/mypy/issues/8823#issuecomment-1556288015
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
         assert out == TestMainGame.PRINT_UI_OUTPUT
+
+    def test_print_ui_edit_mode(self, capfd) -> None:  # type: ignore
+        """Test the print_ui method when edit mode is on."""
+        main, term = TestMainGame.create_main_game()
+        main.edit_mode = True
+        main.print_ui(term)
+        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        assert out == TestMainGame.PRINT_UI_EDIT_MODE_OUTPUT
 
     def test_print_ui_update(self, capfd) -> None:  # type: ignore
         """Test the print_ui_update method."""
