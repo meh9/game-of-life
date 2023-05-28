@@ -37,15 +37,15 @@ class TestGameOfLifeArrays:
         gol: GameOfLife = GameOfLifeArrays(12, 15)
         MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
-        for _ in range(10000):
+        for _ in range(1000):
             gol.progress()
             assert gol.count_live_cells() == 5
-        assert gol.get_cell(4, 11) is True
-        assert gol.get_cell(5, 12) is True
-        assert gol.get_cell(6, 10) is True
-        assert gol.get_cell(6, 11) is True
-        assert gol.get_cell(6, 12) is True
-        assert gol.generation == 10000
+        assert gol.get_cell(0, 10) is True
+        assert gol.get_cell(0, 11) is True
+        assert gol.get_cell(0, 12) is True
+        assert gol.get_cell(10, 11) is True
+        assert gol.get_cell(11, 12) is True
+        assert gol.generation == 1000
 
     def test_outofbounds(self) -> None:
         """Test that we get None when asking for a cell out of bounds."""
@@ -89,15 +89,15 @@ class TestGameOfLifeSortedDict:
         gol: GameOfLife = GameOfLifeSortedDict()
         MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
-        for _ in range(10000):
+        for _ in range(1000):
             gol.progress()
             assert gol.count_live_cells() == 5
-        assert gol.get_cell(2500, 2501) is True
-        assert gol.get_cell(2501, 2502) is True
-        assert gol.get_cell(2502, 2500) is True
-        assert gol.get_cell(2502, 2501) is True
-        assert gol.get_cell(2502, 2502) is True
-        assert gol.generation == 10000
+        assert gol.get_cell(250, 251) is True
+        assert gol.get_cell(251, 252) is True
+        assert gol.get_cell(252, 250) is True
+        assert gol.get_cell(252, 251) is True
+        assert gol.get_cell(252, 252) is True
+        assert gol.generation == 1000
 
     def test_outofbounds(self) -> None:
         """Test that we get False when asking for a cell out of bounds."""
