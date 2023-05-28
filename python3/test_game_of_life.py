@@ -138,21 +138,27 @@ class TestGameOfLifeSortedDict:
 
 
 class TestMainGame:
-    """Tests specifically for MainGame."""
+    """
+    Tests specifically for MainGame.
 
-    def test_main_game(self, capfd) -> None:  # type: ignore
-        """
-        Test if we can test MainGame.
+    Testing this is really awful and will mean changing long strings of text all the time.
+    Is there a better way to do this?
+    """
 
-        Testing this is really awful and will mean changing long strings of text all the time.
-        Is there a better way to do this?
-        """
+    @staticmethod
+    def create_main_game() -> tuple[MainGame, Terminal]:
+        """Create a MainGame and a Terminal and return them."""
         main: MainGame = MainGame()
         main.run = False
         main.main()
         term: Terminal = Terminal()
+        return main, term
+
+    def test_print_ui(self, capfd) -> None:  # type: ignore
+        """Test the print_ui method."""
+        main, term = TestMainGame.create_main_game()
         main.print_ui(term)
-        # type-ignore below should start working soon:
+        # apparently type-ignore below should start working soon:
         # https://github.com/python/mypy/issues/8823#issuecomment-1556288015
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
         assert (
@@ -168,6 +174,9 @@ class TestMainGame:
                           Move the view:   ⇦⇧⇩⇨                                 """
         )
 
+    def test_print_ui_update(self, capfd) -> None:  # type: ignore
+        """Test the print_ui_update method."""
+        main, term = TestMainGame.create_main_game()
         main.print_ui_update(term, False)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
         assert (
@@ -181,6 +190,9 @@ Frame delay:   0.25 seconds
 Progress time: 0 ns    """
         )
 
+    def test_print_game(self, capfd) -> None:  # type: ignore
+        """Test the print_game method."""
+        main, term = TestMainGame.create_main_game()
         main.print_game(term)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
         assert (
