@@ -1,5 +1,6 @@
 """Tests for all the Conway's Game of Life implementations."""
 
+from blessed import Terminal
 from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
@@ -134,3 +135,70 @@ class TestGameOfLifeSortedDict:
         assert gol.get_cell(1, 1) is True
         assert gol.get_cell(0, 0) is False
         assert gol.get_cell(0, 2) is False
+
+
+class TestMainGame:
+    """Tests specifically for MainGame."""
+
+    def test_main_game(self, capfd) -> None:  # type: ignore
+        """
+        Test if we can test MainGame.
+
+        Testing this is really awful and will mean changing long strings of text all the time.
+        Is there a better way to do this?
+        """
+        main: MainGame = MainGame()
+        main.run = False
+        main.main()
+        term: Terminal = Terminal()
+        main.print_ui(term)
+        # type-ignore below should start working soon:
+        # https://github.com/python/mypy/issues/8823#issuecomment-1556288015
+        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        assert (
+            out
+            == """
+                          Controls                                              
+================================================================================
+                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             
+                          Edit cells:      e                                    
+                          Step forward:    <spacebar>                           
+                          Autorun On/Off:  a                                    
+                          Speed up/down:   +/-                                  
+                          Move the view:   ⇦⇧⇩⇨                                 """
+        )
+
+        main.print_ui_update(term, False)
+        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        assert (
+            out
+            == """ ■ Conways's Game of Life □ 
+ ========================== 
+Statistics/Info
+Generation:    0     
+Live cells:    5     
+Frame delay:   0.25 seconds    
+Progress time: 0 ns    """
+        )
+
+        main.print_game(term)
+        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        assert (
+            out
+            == """. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . ■ ■ ■ . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+"""
+        )
