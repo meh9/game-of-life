@@ -1,6 +1,7 @@
 """Tests for all the Conway's Game of Life implementations."""
 
 from blessed import Terminal
+from pytest import CaptureFixture
 from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
 
@@ -207,46 +208,44 @@ class TestMainGame:
         term: Terminal = Terminal()
         return main, term
 
-    def test_print_ui(self, capfd) -> None:  # type: ignore
+    def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
         main, term = TestMainGame.create_main_game()
         main.print_ui(term)
-        # apparently type-ignore below should start working soon:
-        # https://github.com/python/mypy/issues/8823#issuecomment-1556288015
-        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_OUTPUT
 
-    def test_print_ui_edit_mode(self, capfd) -> None:  # type: ignore
+    def test_print_ui_edit_mode(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method when edit mode is on."""
         main, term = TestMainGame.create_main_game()
         main.edit_mode = True
         main.print_ui(term)
-        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_EDIT_MODE_OUTPUT
 
-    def test_print_ui_update(self, capfd) -> None:  # type: ignore
+    def test_print_ui_update(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
         main, term = TestMainGame.create_main_game()
         main.print_ui_update(term, False)
-        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
 
-    def test_print_ui_update_progress(self, capfd) -> None:  # type: ignore
+    def test_print_ui_update_progress(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
         main, term = TestMainGame.create_main_game()
-        # main.header_location = 1
+        main.header_location = 13
         main.header_direction_left = True
         main.print_ui_update(term, True)
-        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        out = capfd.readouterr()[0]
         # TODO: this is terrible - doesn't really test for much! fix this.
         # TODO: need to fiddle with the variables to ensure they are updated as expected?
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
 
-    def test_print_game(self, capfd) -> None:  # type: ignore
+    def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
         main, term = TestMainGame.create_main_game()
         main.print_game(term)
-        out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_GAME_OUTPUT
