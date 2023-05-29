@@ -40,6 +40,7 @@ class MainGame:
         # adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self.gol)
         self.live_count = self.gol.count_live_cells()
+        # TODO: use python curses module to set window title?
 
         # centre the initial board
         # TODO: do a better job of putting the initial board in the centre

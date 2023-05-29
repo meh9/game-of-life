@@ -239,6 +239,7 @@ class TestMainGame:
         main.print_ui_update(term, True)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
         # TODO: this is terrible - doesn't really test for much! fix this.
+        # TODO: need to fiddle with the variables to ensure they are updated as expected?
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
