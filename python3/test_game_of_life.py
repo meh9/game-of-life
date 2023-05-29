@@ -238,6 +238,7 @@ class TestMainGame:
         main.header_direction_left = True
         main.print_ui_update(term, True)
         out, _ = capfd.readouterr()  # type: ignore[unused-ignore]
+        # TODO: this is terrible - doesn't really test for much! fix this.
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
