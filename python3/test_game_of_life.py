@@ -233,15 +233,26 @@ class TestMainGame:
     def test_print_ui_update_progress(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
         main, term = TestMainGame.create_main_game()
+
+        # test left edge turnaround
         main.header_location = 13
         main.header_direction_left = True
         main.print_ui_update(term, True)
         out = capfd.readouterr()[0]
-        # TODO: this is terrible - doesn't really test for much! fix this.
-        # TODO: need to fiddle with the variables to ensure they are updated as expected?
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
+        assert main.header_location == 14
+        assert main.header_direction_left is False
+        main.print_ui_update(term, True)
+        assert main.header_location == 15
+        assert main.header_direction_left is False
+
+        # test right edge turnaround
+        main.header_location = 66
+        main.print_ui_update(term, True)
+        assert main.header_location == 65
+        assert main.header_direction_left is True
 
     def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
