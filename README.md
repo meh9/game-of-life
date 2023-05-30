@@ -15,7 +15,7 @@ TODO:
 1. Ability to get RLE directly from (popular?) GoL sites on the internet.
 1. Add RLE (Run Length Encoded) file format reading.
 1. (Done for Python) GitHub Actions CI?
-1. (Done for Python) Codecov? https://codecov.io
+1. (Done for Python) Codecov?
 1. (Done in Python) Implement simple terminal based interface.
 1. (Done in Java, Python) Add tests.
 1. (Done in Java, Python) Implement game logic.
