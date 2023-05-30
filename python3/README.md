@@ -1,5 +1,7 @@
 # Let's do a Python version
 
+[![codecov](https://codecov.io/gh/meh9/game-of-life/branch/main/graph/badge.svg?token=82OI1W6WTU)](https://codecov.io/gh/meh9/game-of-life)
+
 Collecting a few things TODO in here in no particular order:
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
 1. Use Sphinx with Google code guide: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
