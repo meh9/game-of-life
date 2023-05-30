@@ -31,11 +31,11 @@ jobs:
     - name: Check formatting with Black
       working-directory: ./python3
       run: |
-        black --check -v *.py gameoflife/*.py
+        black --check -v *.py gameoflife/*.py tests/*.py
     - name: Check types with mypy
       working-directory: ./python3
       run: |
-        mypy --strict --no-warn-unused-ignores *.py gameoflife/*.py
+        mypy --strict --no-warn-unused-ignores *.py gameoflife/*.py tests/*.py
     - name: Test with pytest
       working-directory: ./python3
       run: |
@@ -43,6 +43,5 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
-        #files: ./python3/.coverage
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
