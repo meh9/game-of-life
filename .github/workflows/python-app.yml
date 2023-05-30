@@ -42,4 +42,7 @@ jobs:
         pytest -v --cov --cov-branch --cov-report term-missing
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
-      
+      with:
+        files: ./python3/.coverage
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
