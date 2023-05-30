@@ -17,8 +17,8 @@ Collecting a few things TODO in here in no particular order:
 
 ## Manual steps
 1. `pip install -r requirements.txt`
-1. `mypy --strict -v *.py gameoflife/*.py`
-1. `black -v *.py gameoflife/*.py`
+1. `mypy --strict *.py gameoflife/*.py tests/*.py`
+1. `black -v *.py gameoflife/*.py tests/*.py`
 1. `python -m pytest -v --cov --cov-branch --cov-report html --cov-report term-missing`
 1. `python3 game_of_life.py`
 1. pylint? pydocstyle?
