@@ -34,13 +34,12 @@ class MainGame:
     def main(self) -> None:
         """Run the main game loop."""
         term = Terminal()
-        # TODO: if initialising an Array type, initialise to the exact term.width/height
+        # if initialising an Array type, figure out how to initialise to exact term.width/height
         # self.gol = GameOfLifeArrays(30, 60)
         self._gol = GameOfLifeSortedDict()
         # adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self._gol)
         self._live_count = self._gol.count_live_cells()
-        # TODO: use python curses module to set window title?
 
         # centre the initial board
         # TODO: do a better job of putting the initial board in the centre
