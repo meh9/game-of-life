@@ -138,6 +138,8 @@ class TestGameOfLifeSortedDict:
         assert gol.get_cell(0, 2) is False
 
 
+# pylint: disable=protected-access
+# pyright: reportPrivateUsage=false
 class TestMainGame:
     """
     Tests specifically for MainGame.
@@ -203,7 +205,7 @@ class TestMainGame:
     def create_main_game() -> tuple[MainGame, Terminal]:
         """Create a MainGame and a Terminal and return them."""
         main: MainGame = MainGame()
-        main.run = False
+        main._run = False
         main.main()
         term: Terminal = Terminal()
         return main, term
@@ -218,7 +220,7 @@ class TestMainGame:
     def test_print_ui_edit_mode(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method when edit mode is on."""
         main, term = TestMainGame.create_main_game()
-        main.edit_mode = True
+        main._edit_mode = True
         main.print_ui(term)
         out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_EDIT_MODE_OUTPUT
@@ -235,24 +237,24 @@ class TestMainGame:
         main, term = TestMainGame.create_main_game()
 
         # test left edge turnaround
-        main.header_location = 13
-        main.header_direction_left = True
+        main._header_location = 13
+        main._header_direction_left = True
         main.print_ui_update(term, True)
         out = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
-        assert main.header_location == 14
-        assert main.header_direction_left is False
+        assert main._header_location == 14
+        assert main._header_direction_left is False
         main.print_ui_update(term, True)
-        assert main.header_location == 15
-        assert main.header_direction_left is False
+        assert main._header_location == 15
+        assert main._header_direction_left is False
 
         # test right edge turnaround
-        main.header_location = 66
+        main._header_location = 66
         main.print_ui_update(term, True)
-        assert main.header_location == 65
-        assert main.header_direction_left is True
+        assert main._header_location == 65
+        assert main._header_direction_left is True
 
     def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
