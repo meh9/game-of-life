@@ -59,7 +59,7 @@ class MainGame:
         # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game
         with term.fullscreen(), term.cbreak():  # , term.hidden_cursor():
-            while self._run:
+            while self._run:  # pragma: no cover
                 # check if we need to clear screen and refresh - will always happen first runthrough
                 # TODO: register a handler to refresh the screen on resize
                 if self._term_width != term.width or self._term_height != term.height:
@@ -98,7 +98,9 @@ class MainGame:
                         # update the UI to reflect any changes
                         self.print_ui_update(term, True)
 
-    def process_keystroke(self, term: Terminal, block: bool) -> bool:
+    def process_keystroke(
+        self, term: Terminal, block: bool
+    ) -> bool:  # pragma: no cover
         """
         Wait for a keystroke (with optional timeout) and process it.
 
