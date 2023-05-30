@@ -1,5 +1,7 @@
 # Conway's Game of Life implementations
 
+[![codecov](https://codecov.io/gh/meh9/game-of-life/branch/main/graph/badge.svg?token=82OI1W6WTU)](https://codecov.io/gh/meh9/game-of-life)
+
 <img width="500" alt="gameplay" src="https://raw.githubusercontent.com/meh9/game-of-life/main/gameplay.gif">
 
 ## Just playing around, this is in no way complete and likely never will be. :)
