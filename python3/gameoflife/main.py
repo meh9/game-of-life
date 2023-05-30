@@ -223,7 +223,7 @@ class MainGame:
             # intentional space on the end of "seconds " below
             print("Frame delay:   " + str(self.sleep_time) + " seconds    ")
             print("Progress time: " + str(self.last_gen_time) + " ns    ", end="")
-            # future stats, max total of 6
+            # future stats, max total of FOOTER_ROWS-2 due to current formatting
             # print("")
             # print("", end="")
 
