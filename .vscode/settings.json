@@ -33,5 +33,9 @@
     "python.linting.pylintCategorySeverity.fatal": "Warning",
     "python.analysis.stubPath": "python3/typings",
     "python.testing.pytestEnabled": true,
-    "python.analysis.inlayHints.pytestParameters": true
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.testing.pytestArgs": [
+        "python3"
+    ],
+    "python.testing.unittestEnabled": false
 }
