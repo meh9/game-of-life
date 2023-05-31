@@ -35,7 +35,7 @@ class MainGame:
         """Run the main game loop."""
         term = Terminal()
         # if initialising an Array type, figure out how to initialise to exact term.width/height
-        # self.gol = GameOfLifeArrays(30, 60)
+        # self._gol = GameOfLifeArrays(30, 60)
         self._gol = GameOfLifeSortedDict()
         # adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self._gol)
@@ -70,11 +70,24 @@ class MainGame:
                     self.print_ui(term)
                     self._header_location = floor(term.width / 2)
                     self.print_ui_update(term, False)
-                    # set last edit location to be centre of screen
-                    self._last_edit_location = (
-                        floor(term.height / 2) - 1 - MainGame.HEADER_ROWS,
-                        floor(term.width / 2) - 1,
+                    # init last edit location to be centre of view
+                    row: int = (
+                        floor(
+                            # calculate the number of game rows in the view
+                            (term.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS)
+                            # find the centre of the game rows
+                            / 2
+                        )
+                        # turn into 0-indexed terminal row
+                        - 1
+                        # offseet down by HEADER_ROWS
+                        + MainGame.HEADER_ROWS
                     )
+                    # find the centre of the terminal view, turn into 0-index terminal col
+                    col: int = floor(term.width / 2) - 1
+                    # column has to be even number as we only print cells in even columns
+                    col = col if col % 2 == 0 else col - 1
+                    self._last_edit_location = (row, col)
 
                 # print the game cells, taking care not to print over the bottom text
                 self.print_game(term)
@@ -157,7 +170,7 @@ class MainGame:
                         print(term.move_xy(0, 0), end="")
                         self.print_ui(term)
                     else:
-                        self._automatic = False
+                        self._automatic = False  # if we are running, stop
                         self._edit_mode = True
                         self.print_ui(term)
                         # return to last edit location
@@ -241,6 +254,7 @@ class MainGame:
                         self._origin_row + view_row, self._origin_col + view_col
                     )
                     if cell is None:
+                        # TODO: add test to exercise GameOfLifeArrays for this line if possible?
                         row_list.append(" ")
                     else:
                         row_list.append("■" if cell else ".")
