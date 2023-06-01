@@ -7,6 +7,8 @@
 
 1. Python 3.10
 
+(No testing has been carried out using Microsoft Windows. If someone does, please get in touch.)
+
 
 ## Installation
 
