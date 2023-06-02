@@ -179,7 +179,7 @@ class TestMainGame:
         + "Generation:    0     \n"
         + "Live cells:    5     \n"
         + "Frame delay:   0.25 seconds    \n"
-        + "Progress time: 0 ns    "
+        + "Progress time: 0 µs    "
     )
 
     PRINT_GAME_OUTPUT = (

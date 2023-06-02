@@ -232,11 +232,12 @@ class MainGame:
 
         with term.location(0, term.height - MainGame.FOOTER_ROWS), term.hidden_cursor():
             print(term.bold("Statistics/Info") + term.move_down)
-            print("Generation:    " + str(self._gol.generation) + "     ")
-            print("Live cells:    " + str(self._live_count) + "     ")
+            print(f"Generation:    {self._gol.generation}     ")
+            print(f"Live cells:    {self._live_count}     ")
             # intentional space on the end of "seconds " below
-            print("Frame delay:   " + str(self._sleep_time) + " seconds    ")
-            print("Progress time: " + str(self._last_gen_time) + " ns    ", end="")
+            print(f"Frame delay:   {self._sleep_time} seconds    ")
+            tµs: float = self._last_gen_time / 1000
+            print(f"Progress time: {tµs:.3n} µs    ", end="")
             # future stats, max total of FOOTER_ROWS-2 due to current formatting
             # print("")
             # print("", end="")
