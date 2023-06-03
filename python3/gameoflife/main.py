@@ -14,7 +14,7 @@ class MainGame:
     HEADER_ROWS: int = 2
     FOOTER_ROWS: int = 8
 
-    def __init__(self, rle_file: str | None = None) -> None:
+    def __init__(self, file: str | None = None, rle: bool | None = None) -> None:
         """Initialise the game."""
         self._run: bool = True  # keep looping as long as this is true
         self._automatic: bool = False  # loop automatically and continuously when true
