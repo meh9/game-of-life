@@ -248,9 +248,8 @@ class MainGame:
             # intentional space on the end of "seconds " below
             print(f"Frame delay:   {self._sleep_time} seconds    ")
             if last_gen_time is not None:
-                # TODO: using 'n' was a bad change, probablu use '.1f'
                 tµs: float = last_gen_time / 1000
-                print(f"Progress time: {tµs:.3n} µs    ", end="")
+                print(f"Progress time: {tµs:.0f} µs    ", end="")
             # future stats, max total of FOOTER_ROWS-2 due to current formatting
             # print("")
             # print("", end="")
