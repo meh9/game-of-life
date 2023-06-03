@@ -208,6 +208,15 @@ class TestMainGame:
         main.main()
         return main
 
+    def test_load_rle_file(self, capfd: CaptureFixture[str]) -> None:
+        """Test the loading of an RLE file."""
+        main: MainGame = MainGame("../data/glider.rle", True)
+        main._run = False
+        main.main()
+        main.print_game()
+        out = capfd.readouterr()[0]
+        assert out == TestMainGame.PRINT_GAME_OUTPUT
+
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
         main = TestMainGame.create_main_game()

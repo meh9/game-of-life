@@ -1,6 +1,7 @@
 """Game of Life abstract class specifying the interface."""
 
 from abc import ABC, abstractmethod
+from gameoflife import FileLoader
 
 
 class GameOfLife(ABC):
@@ -30,3 +31,7 @@ class GameOfLife(ABC):
     @abstractmethod
     def generation(self) -> int:
         """Return the current generation of the game."""
+
+    @abstractmethod
+    def add_cells(self, loader: FileLoader) -> None:
+        """Load cells from the given loader."""

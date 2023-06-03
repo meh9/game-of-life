@@ -1,6 +1,6 @@
 """Game of Life array based implementation."""
 
-from gameoflife import GameOfLife
+from gameoflife import GameOfLife, FileLoader
 
 
 class GameOfLifeArrays(GameOfLife):
@@ -107,6 +107,10 @@ class GameOfLifeArrays(GameOfLife):
                 row_list.append("■ " if cell else "□ ")
             str_list.append("".join(row_list))
         return "\n".join(str_list)
+
+    # TODO: implement def add_cells(self, loader: FileLoader) -> None:
+    def add_cells(self, loader: FileLoader) -> None:
+        """Load cells from the given loader."""
 
     @property
     def generation(self) -> int:

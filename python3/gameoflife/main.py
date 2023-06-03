@@ -4,8 +4,11 @@ from math import floor
 from time import perf_counter_ns
 from blessed import Terminal
 from blessed.keyboard import Keystroke
-
-from gameoflife import GameOfLife, GameOfLifeSortedDict  # GameOfLifeArrays
+from gameoflife import (
+    GameOfLife,
+    GameOfLifeSortedDict,
+    create_loader,
+)  # GameOfLifeArrays
 
 
 class MainGame:
@@ -32,6 +35,12 @@ class MainGame:
         # if initialising an Array type, figure out how to initialise to exact term.width/height
         # self._gol = GameOfLifeArrays(30, 60)
         self._gol = GameOfLifeSortedDict()
+
+        if file:
+            with create_loader(file, rle) as loader:
+                self._gol.add_cells(loader)
+            # elif plain:
+            #     pass
         # adding a glider for now as an example - add more? less? none?
         MainGame.add_glider(self._gol)
 

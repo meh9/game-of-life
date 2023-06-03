@@ -1,7 +1,7 @@
 """Game of Life sorted dict implementation."""
 
 from sortedcontainers import SortedDict  # type: ignore
-from gameoflife import GameOfLife
+from gameoflife import GameOfLife, FileLoader
 
 Coordinate = tuple[int, int]
 
@@ -105,6 +105,10 @@ class GameOfLifeSortedDict(GameOfLife):
         if live is None:
             return False
         return live
+
+    # TODO: implement def add_cells(self, loader: FileLoader) -> None:
+    def add_cells(self, loader: FileLoader) -> None:
+        """Load cells from the given loader."""
 
     @staticmethod
     def _live_neighbours(b_map: dict[Coordinate, bool], coords: Coordinate) -> int:

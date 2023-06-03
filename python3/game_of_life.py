@@ -1,6 +1,6 @@
 """Simple Conway's Game of Life implementation."""
 
-from argparse import ArgumentParser, FileType, Namespace
+from argparse import ArgumentParser, Namespace
 from sys import exit as sysexit
 from gameoflife import MainGame
 
@@ -11,8 +11,8 @@ def main() -> None:
     parser.add_argument(
         "-f",
         "--file",
+        # don't use FileType here - we want a str to use a context manager with later
         nargs="?",
-        type=FileType("r"),
         help="specify a file to read initial cells from",
     )
     # mypy ignore below should work in next mypy version
@@ -39,7 +39,7 @@ def main() -> None:
             parser.print_help()
             sysexit(1)
 
-    MainGame(file=args.file, rle=args.rle).main()
+    MainGame(args.file, args.rle).main()
 
 
 if __name__ == "__main__":
