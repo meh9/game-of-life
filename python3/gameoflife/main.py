@@ -23,8 +23,8 @@ class MainGame:
         self._origin_col: int = 0  # left most cell of the game view of the universe
         self._term_width: int = 0  # save term width/height to detect if it changes
         self._term_height: int = 0
-        self._header_location: int = 0  # track the header location for moving it
-        self._header_direction_left: bool = False
+        self._header_loc: int = 0  # track the header location for moving it
+        self._header_dir_left: bool = False
         self._edit_mode = False  # are editing right now?
         self._last_edit_location: tuple[int, int]  # save where the cursor was last
         self._t = Terminal()
@@ -66,7 +66,7 @@ class MainGame:
                     print(self._t.home + self._t.clear, end="")
                     # print out the minimal game UI
                     self.print_ui()
-                    self._header_location = floor(self._t.width / 2)
+                    self._header_loc = floor(self._t.width / 2)
                     self.print_ui_update(False, self._gol.count_live_cells(), None)
                     # init last edit location to be centre of view
                     row: int = (
@@ -217,39 +217,32 @@ class MainGame:
         # this is pretty complicated, would be nice to do something simpler!
         half_width: int = floor(len(name) / 2)
         if progress:
-            if self._header_direction_left:
-                self._header_location -= 1
-                if self._header_location - half_width < 0:
-                    self._header_direction_left = False
-                    self._header_location += 2
+            if self._header_dir_left:
+                self._header_loc -= 1
+                if self._header_loc - half_width < 0:
+                    self._header_dir_left = False
+                    self._header_loc += 2
             else:
-                self._header_location += 1
-                if self._header_location >= self._t.width - half_width:
-                    self._header_direction_left = True
-                    self._header_location -= 2
+                self._header_loc += 1
+                if self._header_loc >= self._t.width - half_width:
+                    self._header_dir_left = True
+                    self._header_loc -= 2
 
         with self._t.location(0, 0), self._t.hidden_cursor():
             # header section
-            print(
-                self._t.move_x(self._header_location - half_width) + self._t.bold(name)
-            )
-            print(
-                self._t.move_x(self._header_location - half_width) + self._t.bold(line)
-            )
+            print(self._t.move_x(self._header_loc - half_width) + self._t.bold(name))
+            print(self._t.move_x(self._header_loc - half_width) + self._t.bold(line))
             # don't forget to update MainGame.HEADER_ROWS if making changes here!!!
 
-        with self._t.location(
-            0, self._t.height - MainGame.FOOTER_ROWS
-        ), self._t.hidden_cursor():
+        footer_start_row: int = self._t.height - MainGame.FOOTER_ROWS
+        with self._t.location(0, footer_start_row), self._t.hidden_cursor():
             print(self._t.bold("Statistics/Info") + self._t.move_down)
-            # TODO: change all these to be using padding format
-            print(f"Generation:    {self._gol.generation}     ")
-            print(f"Live cells:    {live_count}     ")
+            print(f"Generation:    {self._gol.generation}")
+            print(f"Live cells:    {live_count}   ")
             # intentional space on the end of "seconds " below
-            print(f"Frame delay:   {self._sleep_time} seconds    ")
+            print(f"Frame delay:   {self._sleep_time*1000:.4g} ms   ")
             if last_gen_time is not None:
-                tµs: float = last_gen_time / 1000
-                print(f"Progress time: {tµs:.0f} µs    ", end="")
+                print(f"Progress time: {round(last_gen_time / 1000)} µs   ", end="")
             # future stats, max total of FOOTER_ROWS-2 due to current formatting
             # print("")
             # print("", end="")
@@ -287,7 +280,6 @@ class MainGame:
             print(self._t.move_xy(0, self._t.height - (MainGame.FOOTER_ROWS + 1)))
             print(self._t.center(self._t.bold("Controls                   ")))
             print("=" * self._t.width)
-            # TODO: change all these to be using padding format
             # intentional misalignment as some of these are wider on a terminal
             print(self._t.center("(ノಠ益ಠ)ノ彡┻━┻  q or ESC  "))
             if self._edit_mode:

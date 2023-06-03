@@ -175,10 +175,10 @@ class TestMainGame:
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
         + "Statistics/Info\n"
-        + "Generation:    0     \n"
-        + "Live cells:    5     \n"
-        + "Frame delay:   0.25 seconds    \n"
-        + "Progress time: 0 µs    "
+        + "Generation:    0\n"
+        + "Live cells:    5   \n"
+        + "Frame delay:   250 ms   \n"
+        + "Progress time: 0 µs   "
     )
 
     PRINT_GAME_OUTPUT = (
@@ -235,24 +235,24 @@ class TestMainGame:
         main = TestMainGame.create_main_game()
 
         # test left edge turnaround
-        main._header_location = 13
-        main._header_direction_left = True
+        main._header_loc = 13
+        main._header_dir_left = True
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
         out = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
-        assert main._header_location == 14
-        assert main._header_direction_left is False
+        assert main._header_loc == 14
+        assert main._header_dir_left is False
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
-        assert main._header_location == 15
-        assert main._header_direction_left is False
+        assert main._header_loc == 15
+        assert main._header_dir_left is False
 
         # test right edge turnaround
-        main._header_location = 66
+        main._header_loc = 66
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
-        assert main._header_location == 65
-        assert main._header_direction_left is True
+        assert main._header_loc == 65
+        assert main._header_dir_left is True
 
     def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
