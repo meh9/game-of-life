@@ -1,6 +1,5 @@
 """Tests for all the Conway's Game of Life implementations."""
 
-from blessed import Terminal
 from pytest import CaptureFixture
 from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
 
@@ -202,63 +201,62 @@ class TestMainGame:
     )
 
     @staticmethod
-    def create_main_game() -> tuple[MainGame, Terminal]:
+    def create_main_game() -> MainGame:
         """Create a MainGame and a Terminal and return them."""
         main: MainGame = MainGame()
         main._run = False
         main.main()
-        term: Terminal = Terminal()
-        return main, term
+        return main
 
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
-        main, term = TestMainGame.create_main_game()
-        main.print_ui(term)
+        main = TestMainGame.create_main_game()
+        main.print_ui()
         out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_OUTPUT
 
     def test_print_ui_edit_mode(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method when edit mode is on."""
-        main, term = TestMainGame.create_main_game()
+        main = TestMainGame.create_main_game()
         main._edit_mode = True
-        main.print_ui(term)
+        main.print_ui()
         out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_EDIT_MODE_OUTPUT
 
     def test_print_ui_update(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
-        main, term = TestMainGame.create_main_game()
-        main.print_ui_update(term, False)
+        main = TestMainGame.create_main_game()
+        main.print_ui_update(False, main._gol.count_live_cells(), 0)
         out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
 
     def test_print_ui_update_progress(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
-        main, term = TestMainGame.create_main_game()
+        main = TestMainGame.create_main_game()
 
         # test left edge turnaround
         main._header_location = 13
         main._header_direction_left = True
-        main.print_ui_update(term, True)
+        main.print_ui_update(True, main._gol.count_live_cells(), 0)
         out = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
         assert main._header_location == 14
         assert main._header_direction_left is False
-        main.print_ui_update(term, True)
+        main.print_ui_update(True, main._gol.count_live_cells(), 0)
         assert main._header_location == 15
         assert main._header_direction_left is False
 
         # test right edge turnaround
         main._header_location = 66
-        main.print_ui_update(term, True)
+        main.print_ui_update(True, main._gol.count_live_cells(), 0)
         assert main._header_location == 65
         assert main._header_direction_left is True
 
     def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
-        main, term = TestMainGame.create_main_game()
-        main.print_game(term)
+        main = TestMainGame.create_main_game()
+        main.print_game()
         out = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_GAME_OUTPUT
