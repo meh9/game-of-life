@@ -210,7 +210,7 @@ class TestMainGame:
 
     def test_load_rle_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of an RLE file."""
-        main: MainGame = MainGame("../data/glider.rle", True)
+        main: MainGame = MainGame("../data/glider.rle")
         main._run = False
         main.main()
         main.print_game()

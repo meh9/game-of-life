@@ -1,18 +1,18 @@
 """Tests for all the FileLoader implementations."""
 
-from pytest import raises
+# from pytest import raises
 from gameoflife import create_loader, FileLoader, RunLengthEncoded
 
 
 def test_create_loader() -> None:
     """Test the create_loader function."""
-    loader: FileLoader = create_loader("", True)
+    loader: FileLoader = create_loader("")
     assert loader.__class__ is RunLengthEncoded
-    with raises(ValueError):
-        create_loader("", False)
+    # with raises(ValueError):
+    #     create_loader("")
 
 
 def test_run_length_encoded() -> None:
     """Test the RunLengthEncoded file type."""
-    with create_loader("../data/glider.rle", True) as loader:
+    with create_loader("../data/glider.rle") as loader:
         assert loader.cells()[0][0] is False

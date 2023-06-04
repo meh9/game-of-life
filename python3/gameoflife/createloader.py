@@ -7,9 +7,9 @@ Using separate file to avoid module import issues.
 from gameoflife import FLContextManager, RunLengthEncoded
 
 
-# TODO: it's terrible to pass each additional file type as a bool, must fix!
-def create_loader(file: str, rle: bool | None) -> FLContextManager:
+# TODO: did all this prematurely - we don't have different loaders yet!
+def create_loader(file: str) -> FLContextManager:
     """Create and return the correct FileLoader."""
-    if rle:
-        return RunLengthEncoded(file)
-    raise ValueError("Incorrect or no file type specified.")
+    # if rle:
+    return RunLengthEncoded(file)
+    # raise ValueError("Incorrect or no file type specified.")
