@@ -1,7 +1,7 @@
 # Let's do a Python version
 
 [![codecov](https://codecov.io/gh/meh9/game-of-life/branch/main/graph/badge.svg?token=82OI1W6WTU)](https://codecov.io/gh/meh9/game-of-life)
-
+[![build status](https://github.com/meh9/game-of-life/actions/workflows/python-app.yml/badge.svg)](https://github.com/meh9/game-of-life/actions/workflows/python-app.yml)
 
 ## Requirements
 
