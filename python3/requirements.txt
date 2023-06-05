@@ -1,4 +1,4 @@
-astroid==2.15.4
+astroid==2.15.5
 black==23.3.0
 blessed==1.20.0
 click==8.1.3
