@@ -19,6 +19,7 @@ TODO:
 1. (Done for Python) GitHub Actions CI?
 1. (Done for Python) Codecov?
 1. (Done in Python) Implement simple terminal based interface.
+1. (Done in Java, Python) Add GitHub Dependabot.
 1. (Done in Java, Python) Add tests.
 1. (Done in Java, Python) Implement game logic.
 1. (Done in Java, Python) Use languange appropriate build management tools.
