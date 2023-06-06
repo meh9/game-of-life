@@ -6,15 +6,15 @@ from gameoflife import FileLoader, FLContextManager
 
 
 class RunLengthEncoded(FLContextManager):
-    """Implements Game of Life using SortedDict (Red/Black "treemap" implementation)."""
+    """Implements loading Run Length Encoded data from files."""
 
     def __init__(self, file: str) -> None:
-        """Initialise the map."""
+        """Initialise the loader."""
         self._filename: str = file
         self._file: TextIOWrapper
 
     def cells(self) -> list[list[bool]]:
-        """Return an array of cells."""
+        """Return an array of cells loaded from the file."""
         return [[False]]
 
     def __enter__(self) -> FileLoader:
