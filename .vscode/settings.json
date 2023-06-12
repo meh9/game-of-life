@@ -39,5 +39,5 @@
         "python3"
     ],
     "python.testing.unittestEnabled": false,
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "automatic"
 }
