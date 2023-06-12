@@ -31,10 +31,13 @@ class RunLengthEncoded(FLContextManager):
         .set_name("metadata")
     )
 
+    PARSER: pp.ParserElement = pp.ZeroOrMore(METADATA_LINE)
+
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
         self._filename: str = file
         self._file: TextIOWrapper
+        self.metadata: pp.ParseResults
 
     def cells(self) -> list[list[bool]]:
         """Return an array of cells lopaded from the file."""
@@ -43,10 +46,8 @@ class RunLengthEncoded(FLContextManager):
     def __enter__(self) -> FileLoader:
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
-        # print(METADATA)
-        # parser:
-        # parsed_file = parser.parse_file(self._file)
-        # print(parsed_file)
+        results: pp.ParseResults = RunLengthEncoded.PARSER.parse_file(self._file)
+        self.metadata = results.metadata  # type: ignore
         return self
 
     def __exit__(
