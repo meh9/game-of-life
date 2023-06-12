@@ -15,19 +15,21 @@ import pyparsing as pp
 x = 3, y = 3, rule = B3/S23
 bob$2bo$3o!
 """
-METADATA: pp.ParserElement = (
-    (
-        pp.AtLineStart("#").suppress()
-        + pp.one_of("C c N O P R r")
-        + pp.OneOrMore(pp.Word(pp.alphas))
-    )
-    .set_results_name("metadata")
-    .set_name("metadata")
-)
 
 
 class RunLengthEncoded(FLContextManager):
     """Implements loading Run Length Encoded data from files."""
+
+    METADATA_LINE: pp.ParserElement = (
+        (
+            pp.AtLineStart("#").suppress()
+            + pp.one_of("C c N O P R r")
+            + pp.Word(pp.printables + " ")
+            + pp.Suppress(pp.line_end)
+        )
+        .set_results_name("metadata", True)
+        .set_name("metadata")
+    )
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
