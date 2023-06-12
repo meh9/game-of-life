@@ -79,7 +79,7 @@ Generation: 100
 □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
 □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
 □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ """
-        )
+        )  # note trailing spaces on all rows above
 
 
 class TestGameOfLifeSortedDict:
@@ -124,7 +124,7 @@ Generation: 100
 □ □ □ ■ □ 
 □ ■ ■ ■ □ 
 □ □ □ □ □ """
-        )
+        )  # note trailing spaces on all rows above
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
