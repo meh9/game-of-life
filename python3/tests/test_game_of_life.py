@@ -65,7 +65,8 @@ class TestGameOfLifeArrays:
         print(gol)
         assert (
             str(gol)
-            == """Generation: 100
+            == """\
+Generation: 100
 □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
 □ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ 
 □ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ 
@@ -116,7 +117,8 @@ class TestGameOfLifeSortedDict:
         print(gol)
         assert (
             str(gol)
-            == """Generation: 100
+            == """\
+Generation: 100
   □ □ □   
   □ ■ □ □ 
 □ □ □ ■ □ 
@@ -160,6 +162,7 @@ class TestMainGame:
         + "                          Move the view:   ⇦⇧⇩⇨                                 "
     )
 
+    # use string concatenation to highlight necessary trailing spaces
     PRINT_UI_EDIT_MODE_OUTPUT = (
         "\n                          Controls                                              \n"
         + "================================================================================\n"
@@ -171,6 +174,7 @@ class TestMainGame:
         + "                                                                                "
     )
 
+    # use string concatenation to highlight necessary trailing spaces
     PRINT_UI_UPDATE_OUTPUT = (
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
@@ -181,9 +185,9 @@ class TestMainGame:
         + "Progress time: 0 µs   "
     )
 
-    PRINT_GAME_OUTPUT = (
-        ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n"
-        + """. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    PRINT_GAME_OUTPUT = """\
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -198,7 +202,6 @@ class TestMainGame:
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 """
-    )
 
     @staticmethod
     def create_main_game() -> MainGame:
