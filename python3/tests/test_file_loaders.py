@@ -48,14 +48,17 @@ class TestRunLengthEncoded:
             assert loader.rule  # type: ignore
             # the below will change when we actually have data
             assert loader.cells()[0][0] is False
-            print(loader)
             assert (
                 str(loader)
                 == """\
 [['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
 'The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed \
 c/4.'], ['C', 'www.conwaylife.com/wiki/index.php?title=Glider']]
-cols: 3, rows: 3, rule: B3/S23"""
+cols: 3, rows: 3, rule: B3/S23
+cell_array:
+. ■ .
+. . ■
+■ ■ ■"""
             )
 
     def test_metadata_parser(self) -> None:
@@ -86,17 +89,17 @@ cols: 3, rows: 3, rule: B3/S23"""
         assert results.header[1][1] == 5  # type:ignore
         assert len(results.rule) == 0  # type:ignore
 
-    def test_cell_rows_parser(self) -> None:
+    def test_data_rows_parser(self) -> None:
         """Test the CELL_ROWS parser."""
-        results: pp.ParseResults = RunLengthEncoded._CELL_ROWS.parse_string(GLIDER_DATA)
-        assert len(results.cell_rows) == 3  # type:ignore
-        assert results.cell_rows[0].as_list() == ["b", "o", "b"]  # type:ignore
-        assert results.cell_rows[2].as_list() == [3, "o"]  # type:ignore
+        results: pp.ParseResults = RunLengthEncoded._DATA_ROWS.parse_string(GLIDER_DATA)
+        assert len(results.data_rows) == 3  # type:ignore
+        assert results.data_rows[0].as_list() == ["b", "o", "b"]  # type:ignore
+        assert results.data_rows[2].as_list() == [3, "o"]  # type:ignore
 
-        results = RunLengthEncoded._CELL_ROWS.parse_string(GOSPER_DATA)
-        assert len(results.cell_rows) == 9  # type:ignore
-        assert results.cell_rows[0].as_list() == [24, "b", "o"]  # type:ignore
-        assert results.cell_rows[6].as_list() == [  # type:ignore
+        results = RunLengthEncoded._DATA_ROWS.parse_string(GOSPER_DATA)
+        assert len(results.data_rows) == 9  # type:ignore
+        assert results.data_rows[0].as_list() == [24, "b", "o"]  # type:ignore
+        assert results.data_rows[6].as_list() == [  # type:ignore
             10,
             "b",
             "o",
@@ -107,4 +110,4 @@ cols: 3, rows: 3, rule: B3/S23"""
             "b",
             "o",
         ]
-        assert results.cell_rows[8].as_list() == [12, "b", 2, "o"]  # type:ignore
+        assert results.data_rows[8].as_list() == [12, "b", 2, "o"]  # type:ignore

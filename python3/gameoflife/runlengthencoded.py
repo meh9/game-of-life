@@ -24,6 +24,7 @@ class RunLengthEncoded(FLContextManager):
         lambda t: [int(t[0])]  # type:ignore
     )
 
+    # is there an existing pyparsing element that has all alphas separated by spaces?
     _CELL_STATES: pp.ParserElement = pp.one_of(" ".join(c for c in pp.alphas))
 
     # N Glider
@@ -60,26 +61,29 @@ class RunLengthEncoded(FLContextManager):
     #
     # 24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
     # obo$10bo5bo7bo$11bo3bo$12b2o!
-    _CELL_ROWS: pp.ParserElement = (
+    _DATA_ROWS: pp.ParserElement = (
         pp.OneOrMore(
             (
                 pp.OneOrMore(pp.Optional(_INT_NUMBER) + _CELL_STATES)
                 + pp.Optional(pp.Literal("$").suppress())
-            ).set_results_name("cell_rows", True)
+            ).set_results_name("data_rows", True)
         )
         + pp.Literal("!").suppress()
     )
 
-    _PARSER: pp.ParserElement = pp.ZeroOrMore(_METADATA_LINE) + _HEADER + _RULE
+    _PARSER: pp.ParserElement = (
+        pp.ZeroOrMore(_METADATA_LINE) + _HEADER + _RULE + _DATA_ROWS
+    )
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
         self._filename: str = file
         self._file: TextIOWrapper
-        self.metadata: pp.ParseResults
+        self.metadata: list[list[int | bool]]
         self.cols: int
         self.rows: int
         self.rule: str
+        self.cell_array: list[list[bool]]
 
     def cells(self) -> list[list[bool]]:
         """Return an array of cells loaded from the file."""
@@ -89,11 +93,38 @@ class RunLengthEncoded(FLContextManager):
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
-        self.metadata = results.metadata  # type: ignore
-        self.cols = results.header[0][1]  # type: ignore
-        self.rows = results.header[1][1]  # type: ignore
+        self.metadata = results.metadata.as_list()  # type:ignore
+        self.cols = int(results.header[0][1])  # type:ignore
+        self.rows = int(results.header[1][1])  # type:ignore
         if results.rule:  # type: ignore
             self.rule = results.rule[0]  # type: ignore
+
+        # initialise a row/col array of False to take the cells
+        self.cell_array = [[False for _ in range(self.cols)] for _ in range(self.rows)]
+        # create iterator in order to add types
+        row_iter: enumerate[list[int | str]] = enumerate(
+            results.data_rows  # type:ignore
+        )
+        # iterate over the rows of data, equivalent to rows of cells
+        for row_index, data_row in row_iter:
+            col_index: int = 0
+            # create another iterator so we can add types
+            data_iter: enumerate[int | str] = enumerate(data_row)  # type:ignore
+            # iterate of the data elements - note not equivalent to cells yet
+            for data_index, data in data_iter:
+                # if we get an int then we replicate that number of cells
+                if isinstance(data, int):
+                    cell: bool = data_row[data_index + 1] == "o"
+                    # skip the next data value as we just "used" it
+                    next(data_iter, None)
+                    # set the number of cells to the value
+                    for _ in range(data):
+                        self.cell_array[row_index][col_index] = cell
+                        col_index += 1
+                # otherwise transform the data value to a cell value and store it
+                else:
+                    self.cell_array[row_index][col_index] = data == "o"
+                    col_index += 1
 
         return self
 
@@ -108,8 +139,16 @@ class RunLengthEncoded(FLContextManager):
 
     def __str__(self) -> str:
         """To string."""
+        # make a more human readable list of the cell values
+        cells: str = "\n".join(
+            [
+                " ".join(["■" if cell else "." for cell in cell_row])
+                for cell_row in self.cell_array
+            ]
+        )
         return (
             f"{self.metadata}\n"
             + f"cols: {self.cols}, rows: {self.rows}, "
-            + f"rule: {self.rule if hasattr(self, 'rule') else 'none'}"
+            + f"rule: {self.rule if hasattr(self, 'rule') else 'none'}\n"
+            + f"cell_array:\n{cells}"
         )
