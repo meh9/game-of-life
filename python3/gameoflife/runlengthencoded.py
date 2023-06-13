@@ -50,7 +50,7 @@ class RunLengthEncoded(FLContextManager):
     # x = 3, y = 3, rule = B3/S23
     # x = 3, y = 3
     _RULE: pp.ParserElement = pp.ZeroOrMore(
-        pp.Keyword("rule")
+        pp.Keyword("rule").suppress()
         + pp.Suppress("=")
         + pp.Word(pp.printables + " ")
         + pp.Suppress(pp.line_end)
@@ -82,7 +82,7 @@ class RunLengthEncoded(FLContextManager):
         self.rule: str
 
     def cells(self) -> list[list[bool]]:
-        """Return an array of cells lopaded from the file."""
+        """Return an array of cells loaded from the file."""
         return [[False]]
 
     def __enter__(self) -> FileLoader:
@@ -93,7 +93,8 @@ class RunLengthEncoded(FLContextManager):
         self.cols = results.header[0][1]  # type: ignore
         self.rows = results.header[1][1]  # type: ignore
         if results.rule:  # type: ignore
-            self.rule = results.rule[1]  # type: ignore
+            self.rule = results.rule[0]  # type: ignore
+
         return self
 
     def __exit__(

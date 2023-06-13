@@ -77,7 +77,7 @@ cols: 3, rows: 3, rule: B3/S23"""
         ).parse_string(HEADER_RULE)
         assert results.header[0][1] == 4  # type:ignore
         assert results.header[1][1] == 5  # type:ignore
-        assert results.rule[1] == "B3/S23"  # type:ignore
+        assert results.rule[0] == "B3/S23"  # type:ignore
 
         results = (RunLengthEncoded._HEADER + RunLengthEncoded._RULE).parse_string(
             HEADER_NO_RULE
