@@ -33,29 +33,30 @@ def test_create_loader() -> None:
     #     create_loader("")
 
 
-def test_run_length_encoded() -> None:
-    """Test the RunLengthEncoded file type."""
-    with create_loader("../data/glider.rle") as loader:
-        assert loader.__class__ is RunLengthEncoded
-        assert loader.metadata  # type: ignore
-        assert loader.cols  # type: ignore
-        assert loader.rows  # type: ignore
-        assert loader.rule  # type: ignore
-        # the below will change when we actually have data
-        assert loader.cells()[0][0] is False
-        print(loader)
-        assert (
-            str(loader)
-            == "[['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', 'The smallest, most common, and "
-            + "first discovered spaceship. Diagonal, has period 4 and speed c/4.'], ['C', "
-            + "'www.conwaylife.com/wiki/index.php?title=Glider']]\ncols: 3, rows: 3, rule: B3/S23"
-        )
-
-
 # pylint: disable=protected-access
 # pyright: reportPrivateUsage=false
 class TestRunLengthEncoded:
     """Tests specifically for the class RunLengthEncoded."""
+
+    def test_run_length_encoded(self) -> None:
+        """Test the RunLengthEncoded file type."""
+        with create_loader("../data/glider.rle") as loader:
+            assert loader.__class__ is RunLengthEncoded
+            assert loader.metadata  # type: ignore
+            assert loader.cols  # type: ignore
+            assert loader.rows  # type: ignore
+            assert loader.rule  # type: ignore
+            # the below will change when we actually have data
+            assert loader.cells()[0][0] is False
+            print(loader)
+            assert (
+                str(loader)
+                == """\
+[['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
+'The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed \
+c/4.'], ['C', 'www.conwaylife.com/wiki/index.php?title=Glider']]
+cols: 3, rows: 3, rule: B3/S23"""
+            )
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
