@@ -2,13 +2,9 @@
 
 from math import floor
 from time import perf_counter_ns
-from blessed import Terminal
-from blessed.keyboard import Keystroke
-from gameoflife import (
-    GameOfLife,
-    GameOfLifeSortedDict,
-    create_loader,
-)  # GameOfLifeArrays
+from blessed import Terminal  # type:ignore
+from blessed.keyboard import Keystroke  # type:ignore
+from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict, create_loader
 
 
 class MainGame:
@@ -17,7 +13,7 @@ class MainGame:
     HEADER_ROWS: int = 2
     FOOTER_ROWS: int = 8
 
-    def __init__(self, file: str | None = None) -> None:
+    def __init__(self, wrap: bool, file: str = "") -> None:
         """Initialise the game."""
         self._run: bool = True  # keep looping as long as this is true
         self._automatic: bool = False  # loop automatically and continuously when true
@@ -32,9 +28,14 @@ class MainGame:
         self._last_edit_location: tuple[int, int]  # save where the cursor was last
         self._t = Terminal()
 
-        # if initialising an Array type, figure out how to initialise to exact term.width/height
-        # self._gol = GameOfLifeArrays(30, 60)
-        self._gol = GameOfLifeSortedDict()
+        # infinite or wrapping universe
+        if wrap:
+            height: int = self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
+            self._gol: GameOfLife = GameOfLifeArrays(height, floor(self._t.width / 2))
+            print("wrap")
+        else:
+            self._gol = GameOfLifeSortedDict()
+            print("infinite")
 
         if file:
             with create_loader(file) as loader:
@@ -45,17 +46,18 @@ class MainGame:
     def main(self) -> None:
         """Run the main game loop."""
         # centre the initial board
-        # TODO: do a better job of putting the initial board in the centre
+        # for now, disable this and just default to terminal 0,0 == game 0,0
+        # TO DO: do a better job of putting the initial board in the centre
         # one way is actually to put the initial cells in the centre as opposed to the board
         # For now, place 0,0 of the game board in the centre of the view.
         # This defines the View of the board in the coordinates of the board.
         # Another way to think of it is the origin_row/col defines how far away in board coords
         # the top left corner of the View is from 0,0 of the board.
-        self._origin_row = 0 - floor(
-            (self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
-        )
+        # self._origin_row = 0 - floor(
+        #     (self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
+        # )
         # divide in half again because we only print every other col
-        self._origin_col = 0 - floor(self._t.width / 2 / 2)
+        # self._origin_col = 0 - floor(self._t.width / 2 / 2)
 
         # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game

@@ -16,6 +16,15 @@ def main() -> None:
         nargs="?",
         help="specify a file to read initial cells from",
     )
+    parser.add_argument(
+        "-w",
+        "--wrap",
+        default=False,
+        action="store_true",
+        help="change the default from using an infinite universe to instead use a universe of a "
+        + "fixed size which wraps around the edges, the fixed size universe will default to the "
+        + "size of the terminal on start and cannot be changed later",
+    )
     # mypy ignore below should work in next mypy version
     # REMEMBER to remove --no-warn-unused-ignores from workspace config when fixed
     # TODO: we don't need to add ability to load anything but RLE at this point
@@ -34,7 +43,7 @@ def main() -> None:
     #     parser.print_help()
     #     sysexit(1)
 
-    MainGame(args.file).main()
+    MainGame(args.wrap, args.file).main()
 
 
 if __name__ == "__main__":
