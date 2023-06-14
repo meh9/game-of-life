@@ -38,6 +38,27 @@ def test_create_loader() -> None:
 class TestRunLengthEncoded:
     """Tests specifically for the class RunLengthEncoded."""
 
+    def test_empty_row_data(self) -> None:
+        """
+        Specific test for testing data patterns like "7$" and "23$" which specifies a number of
+        empty rows.
+        """
+        with create_loader("../data/t1point5infinitegrowth2.rle") as loader:
+            # print(loader)
+            # first two rows of data is (note "2$" at the end which skips a row of cells):
+            #
+            # 71b3o11b3o$70bo2bo10bo2bo$40b3o11b3o16bo4b3o6bo$40bo2bo10bo2bo15bo4bo
+            # 2bo5bo$40bo6b3o4bo17bo4bo8bo$40bo5bo2bo4bo$41bo8bo4bo2$...
+            # the skipped row is row index 7, so check it's all False
+            assert loader.cells()[7] == [False for _ in range(218)]
+            # then check some random True
+            assert loader.cells()[6][40] is False
+            assert loader.cells()[6][41] is True
+            assert loader.cells()[6][42] is False
+            assert loader.cells()[8][71] is False
+            assert loader.cells()[8][72] is True
+            assert loader.cells()[8][73] is False
+
     def test_run_length_encoded(self) -> None:
         """Test the RunLengthEncoded file type."""
         # with create_loader("../data/Gosper_glider_gun.rle") as loader:
@@ -49,6 +70,7 @@ class TestRunLengthEncoded:
             assert loader.rule  # type: ignore
             # the below will change when we actually have data
             assert loader.cells()[0][0] is False
+            assert loader.cells()[0][1] is True
             assert (
                 str(loader)
                 == """\

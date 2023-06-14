@@ -48,6 +48,10 @@ class RunLengthEncoded(FLContextManager):
         ).set_results_name("header", True)
     )
 
+    # Parse the actual rule in the future:
+    #   If a rule string is B34/S34:
+    #     B34 means a cell is born if it has 3 or 4 neighbors.
+    #     S34 means a cell survives if it has 3 or 4 neighbors.
     # x = 3, y = 3, rule = B3/S23
     # x = 3, y = 3
     _RULE: pp.ParserElement = pp.ZeroOrMore(
@@ -61,14 +65,15 @@ class RunLengthEncoded(FLContextManager):
     #
     # 24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
     # obo$10bo5bo7bo$11bo3bo$12b2o!
-    _DATA_ROWS: pp.ParserElement = (
-        pp.OneOrMore(
-            (
-                pp.OneOrMore(pp.Optional(_INT_NUMBER) + _CELL_STATES)
-                + pp.Optional(pp.Literal("$").suppress())
-            ).set_results_name("data_rows", True)
-        )
-        + pp.Literal("!").suppress()
+    _DATA_ROWS: pp.ParserElement = pp.OneOrMore(
+        (
+            pp.OneOrMore(pp.Optional(_INT_NUMBER) + _CELL_STATES)
+            + (
+                _INT_NUMBER + pp.Literal("$")
+                | pp.Literal("$").suppress()
+                | pp.Literal("!").suppress()
+            )
+        ).set_results_name("data_rows", True)
     )
 
     _PARSER: pp.ParserElement = (
@@ -105,6 +110,8 @@ class RunLengthEncoded(FLContextManager):
         row_iter: enumerate[list[int | str]] = enumerate(
             results.data_rows  # type:ignore
         )
+        # it is necessary to keep track of an empty row offset for data like "7$"
+        empty_rows: int = 0
         # iterate over the rows of data, equivalent to rows of cells
         for row_index, data_row in row_iter:
             col_index: int = 0
@@ -114,16 +121,21 @@ class RunLengthEncoded(FLContextManager):
             for data_index, data in data_iter:
                 # if we get an int then we replicate that number of cells
                 if isinstance(data, int):
-                    cell: bool = data_row[data_index + 1] == "o"
+                    # detect empty rows
+                    if data_row[data_index + 1] == "$":
+                        # because we are currently processing one of the empty rows add -1
+                        empty_rows += data - 1
+                    else:
+                        cell: bool = data_row[data_index + 1] == "o"
+                        # set the number of cells to the value
+                        for _ in range(data):
+                            self.cell_array[row_index + empty_rows][col_index] = cell
+                            col_index += 1
                     # skip the next data value as we just "used" it
                     next(data_iter, None)
-                    # set the number of cells to the value
-                    for _ in range(data):
-                        self.cell_array[row_index][col_index] = cell
-                        col_index += 1
                 # otherwise transform the data value to a cell value and store it
                 else:
-                    self.cell_array[row_index][col_index] = data == "o"
+                    self.cell_array[row_index + empty_rows][col_index] = data == "o"
                     col_index += 1
 
         return self
