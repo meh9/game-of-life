@@ -206,7 +206,7 @@ class TestMainGame:
     @staticmethod
     def create_main_game() -> MainGame:
         """Create a MainGame and a Terminal and return them."""
-        main: MainGame = MainGame()
+        main: MainGame = MainGame("../data/glider.rle")
         main._run = False
         main.main()
         return main

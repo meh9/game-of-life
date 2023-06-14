@@ -106,9 +106,12 @@ class GameOfLifeSortedDict(GameOfLife):
             return False
         return live
 
-    # TODO: implement def add_cells(self, loader: FileLoader) -> None:
     def add_cells(self, loader: FileLoader) -> None:
         """Load cells from the given loader."""
+        for row_index, row in enumerate(loader.cells()):
+            for col_index, cell in enumerate(row):
+                if cell:
+                    self.set_cell(row_index, col_index, cell)
 
     @staticmethod
     def _live_neighbours(b_map: dict[Coordinate, bool], coords: Coordinate) -> int:

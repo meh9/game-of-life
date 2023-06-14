@@ -41,8 +41,6 @@ class MainGame:
                 self._gol.add_cells(loader)
             # elif plain:
             #     pass
-        # adding a glider for now as an example - add more? less? none?
-        MainGame.add_glider(self._gol)
 
     def main(self) -> None:
         """Run the main game loop."""

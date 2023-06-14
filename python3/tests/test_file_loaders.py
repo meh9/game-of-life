@@ -40,6 +40,7 @@ class TestRunLengthEncoded:
 
     def test_run_length_encoded(self) -> None:
         """Test the RunLengthEncoded file type."""
+        # with create_loader("../data/Gosper_glider_gun.rle") as loader:
         with create_loader("../data/glider.rle") as loader:
             assert loader.__class__ is RunLengthEncoded
             assert loader.metadata  # type: ignore

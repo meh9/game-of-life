@@ -87,7 +87,7 @@ class RunLengthEncoded(FLContextManager):
 
     def cells(self) -> list[list[bool]]:
         """Return an array of cells loaded from the file."""
-        return [[False]]
+        return self.cell_array
 
     def __enter__(self) -> FileLoader:
         """Enter context manager which causes the file to be parsed immediately."""
