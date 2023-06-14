@@ -37,5 +37,5 @@
     "python.analysis.inlayHints.pytestParameters": true,
     "python.testing.unittestEnabled": false,
     "java.configuration.updateBuildConfiguration": "automatic",
-    "python.testing.cwd": "python3"
+    "python.testing.cwd": ""
 }
