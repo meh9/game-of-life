@@ -62,7 +62,6 @@ class MainGame:
         with self._t.fullscreen(), self._t.cbreak():  # , term.hidden_cursor():
             while self._run:  # pragma: no cover
                 # check if we need to clear screen and refresh - will always happen first runthrough
-                # TODO: register a handler to refresh the screen on resize
                 if (
                     self._term_width != self._t.width
                     or self._term_height != self._t.height
@@ -126,8 +125,10 @@ class MainGame:
         Return if the game should be progressed a generation due to user input.
         """
         # either block waiting for a keystroke or wait for sleep_time seconds
+        # actually only block for a short while, then fall through, causing the screen to refresh
+        # this deals with the terminal resizing
         key: Keystroke = (
-            self._t.inkey() if block else self._t.inkey(timeout=self._sleep_time)
+            self._t.inkey(0.1) if block else self._t.inkey(timeout=self._sleep_time)
         )
 
         # process any potential key
