@@ -165,7 +165,7 @@ class MainGame:
                 case self._t.KEY_RIGHT:
                     # check if we are at the right edge of the view and need to scroll instead
                     col = self._t.get_location()[1]
-                    if self._edit_mode and col + 1 < self._t.width:
+                    if self._edit_mode and col + 2 < self._t.width:
                         print(self._t.move_right(2), end="")
                     else:
                         self._origin_col += 1
