@@ -50,11 +50,11 @@ Collecting a few things TODO in here in no particular order:
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
 1. Use Sphinx with Google code guide: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 1. Configure pre-commit hooks for Mypy, Black, etc? https://composed.blog/python/pre-commit
-1. (Started) Use argparse to parse command line args.
+1. (Done) Use argparse to parse command line args.
 1. (Done) Add some kind of curses capability for displaying better in a terminal.
 1. (Done) Use pytest to test things.
 1. (Done) Don't forget your `requirements.txt` file.
 1. (Done? VSCode does it. Not using Google standard though) Use Pylint to check code standard, use Google standard? https://www.pylint.org/ https://google.github.io/styleguide/pyguide.html
-1. (Done? VSCode does it) Use Mypy to check types.
-1. (Done? VSCode does it) Black as code formatting.
+1. (Done) Use Mypy to check types.
+1. (Done) Black as code formatting.
 
