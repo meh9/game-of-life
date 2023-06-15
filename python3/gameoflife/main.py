@@ -288,9 +288,8 @@ class MainGame:
             print(self._t.move_xy(0, self._t.height - (MainGame.FOOTER_ROWS + 1)))
             print(self._t.center(self._t.bold("Controls                   ")))
             print("=" * self._t.width)
-            # TODO: table flip string is not fully compatible on e.g. latest Raspbian
             # intentional misalignment as some of these are wider on a terminal
-            print(self._t.center("(ノಠ益ಠ)ノ彡┻━┻  q or ESC  "))
+            print(self._t.center("(ノº益º)ノ彡┻━┻  q or ESC  "))
             if self._edit_mode:
                 print(self._t.center("Exit edit mode:  e         "))
                 print(self._t.center("Live/dead cell:  <spacebar>"))

@@ -154,7 +154,7 @@ class TestMainGame:
         "\n"
         + "                          Controls                                              \n"
         + "================================================================================\n"
-        + "                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             \n"
+        + "                          (ノº益º)ノ彡┻━┻  q or ESC                             \n"
         + "                          Edit cells:      e                                    \n"
         + "                          Step forward:    <spacebar>                           \n"
         + "                          Autorun On/Off:  a                                    \n"
@@ -166,7 +166,7 @@ class TestMainGame:
     PRINT_UI_EDIT_MODE_OUTPUT = (
         "\n                          Controls                                              \n"
         + "================================================================================\n"
-        + "                          (ノಠ益ಠ)ノ彡┻━┻  q or ESC                             \n"
+        + "                          (ノº益º)ノ彡┻━┻  q or ESC                             \n"
         + "                          Exit edit mode:  e                                    \n"
         + "                          Live/dead cell:  <spacebar>                           \n"
         + "                          Move cursor:     ⇦⇧⇩⇨                                 \n"
