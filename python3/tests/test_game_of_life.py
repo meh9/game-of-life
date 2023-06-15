@@ -186,6 +186,9 @@ class TestMainGame:
     )
 
     PRINT_GAME_OUTPUT = """\
+. ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+■ ■ ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -193,9 +196,6 @@ class TestMainGame:
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . ■ . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . ■ ■ ■ . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -206,14 +206,18 @@ class TestMainGame:
     @staticmethod
     def create_main_game() -> MainGame:
         """Create a MainGame and a Terminal and return them."""
-        main: MainGame = MainGame("../data/glider.rle")
+        main: MainGame = MainGame(False, "../data/glider.rle")
         main._run = False
         main.main()
         return main
 
+    def test_initialise(self) -> None:
+        """Test that we can even run at all."""
+        assert MainGame(False)
+
     def test_load_rle_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of an RLE file."""
-        main: MainGame = MainGame("../data/glider.rle")
+        main: MainGame = MainGame(True, "../data/glider.rle")
         main._run = False
         main.main()
         main.print_game()

@@ -32,10 +32,8 @@ class MainGame:
         if wrap:
             height: int = self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
             self._gol: GameOfLife = GameOfLifeArrays(height, floor(self._t.width / 2))
-            print("wrap")
         else:
             self._gol = GameOfLifeSortedDict()
-            print("infinite")
 
         if file:
             with create_loader(file) as loader:
@@ -270,7 +268,6 @@ class MainGame:
                         self._origin_row + view_row, self._origin_col + view_col
                     )
                     if cell is None:
-                        # TODO: add test to exercise GameOfLifeArrays for this line if possible?
                         row_list.append(" ")
                     else:
                         row_list.append("■" if cell else ".")
