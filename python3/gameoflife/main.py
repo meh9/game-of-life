@@ -45,12 +45,12 @@ class MainGame:
         """Run the main game loop."""
         # centre the initial board
         # for now, disable this and just default to terminal 0,0 == game 0,0
-        # TO DO: do a better job of putting the initial board in the centre
-        # one way is actually to put the initial cells in the centre as opposed to the board
-        # For now, place 0,0 of the game board in the centre of the view.
-        # This defines the View of the board in the coordinates of the board.
-        # Another way to think of it is the origin_row/col defines how far away in board coords
-        # the top left corner of the View is from 0,0 of the board.
+        # # TO DO: do a better job of putting the initial board in the centre
+        # # one way is actually to put the initial cells in the centre as opposed to the board
+        # # For now, place 0,0 of the game board in the centre of the view.
+        # # This defines the View of the board in the coordinates of the board.
+        # # Another way to think of it is the origin_row/col defines how far away in board coords
+        # # the top left corner of the View is from 0,0 of the board.
         # self._origin_row = 0 - floor(
         #     (self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS) / 2
         # )
@@ -192,13 +192,21 @@ class MainGame:
                         self._automatic = not self._automatic
                 case "q":
                     self._run = False
-                case "+" | "=":  # also accept "=" so we don't have use shift all the time
+                case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
                     if not self._edit_mode:
-                        self._sleep_time = self._sleep_time / 2
+                        self._sleep_time /= 2
+                        # once we reach a low threshold just set it to 0
+                        if self._sleep_time < 0.001:
+                            self._sleep_time = 0
                         self.print_ui_update(False, self._gol.count_live_cells(), None)
-                case "-":
+                case "-" | "[":
                     if not self._edit_mode:
-                        self._sleep_time = self._sleep_time * 2
+                        self._sleep_time = (
+                            self._sleep_time * 2
+                            if self._sleep_time > 0
+                            else 0.001953125
+                        )
+                        # self._sleep_time *= 2
                         self.print_ui_update(False, self._gol.count_live_cells(), None)
                 case _:
                     pass  # do nothing with unrecognised keys
@@ -249,7 +257,7 @@ class MainGame:
             print(f"Generation:    {self._gol.generation}")
             print(f"Live cells:    {live_count}   ")
             # intentional space on the end of "seconds " below
-            print(f"Frame delay:   {self._sleep_time*1000:.4g} ms   ")
+            print(f"Frame delay:   {self._sleep_time*1000:.4g} ms    ")
             if last_gen_time is not None:
                 print(f"Progress time: {round(last_gen_time / 1000)} µs   ", end="")
             # future stats, max total of FOOTER_ROWS-2 due to current formatting
