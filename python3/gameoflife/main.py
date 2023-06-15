@@ -31,7 +31,9 @@ class MainGame:
         # infinite or wrapping universe
         if wrap:
             height: int = self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
-            self._gol: GameOfLife = GameOfLifeArrays(height, floor(self._t.width / 2))
+            self._gol: GameOfLife = GameOfLifeArrays(
+                height, floor((self._t.width + 1) / 2)
+            )
         else:
             self._gol = GameOfLifeSortedDict()
 
@@ -137,23 +139,33 @@ class MainGame:
                 case self._t.KEY_ESCAPE:
                     self._run = False
                 case self._t.KEY_UP:
-                    # TODO: moving to the edges of the view in edit mode does not move the view
-                    if self._edit_mode:
+                    # check if we are at the top of the view and need to scroll instead
+                    row: int = self._t.get_location()[0]
+                    if self._edit_mode and row > MainGame.HEADER_ROWS:
                         print(self._t.move_up(1), end="")
                     else:
                         self._origin_row -= 1
                 case self._t.KEY_DOWN:
-                    if self._edit_mode:
+                    # check if we are at the bottom of the view and need to scroll instead
+                    row = self._t.get_location()[0]
+                    if (
+                        self._edit_mode
+                        and row + 1 < self._t.height - MainGame.FOOTER_ROWS
+                    ):
                         print(self._t.move_down(1), end="")
                     else:
                         self._origin_row += 1
                 case self._t.KEY_LEFT:
-                    if self._edit_mode:
+                    # check if we are at the left edge of the view and need to scroll instead
+                    col: int = self._t.get_location()[1]
+                    if self._edit_mode and col > 0:
                         print(self._t.move_left(2), end="")
                     else:
                         self._origin_col -= 1
                 case self._t.KEY_RIGHT:
-                    if self._edit_mode:
+                    # check if we are at the right edge of the view and need to scroll instead
+                    col = self._t.get_location()[1]
+                    if self._edit_mode and col + 1 < self._t.width:
                         print(self._t.move_right(2), end="")
                     else:
                         self._origin_col += 1
@@ -271,7 +283,7 @@ class MainGame:
             row_list: list[str] = []
             max_rows: int = self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
             # because we separate all cells by a space we can only do half the number of cols
-            max_cols: int = floor(self._t.width / 2)
+            max_cols: int = floor((self._t.width + 1) / 2)
             for view_row in range(max_rows):
                 for view_col in range(max_cols):
                     cell: bool | None = self._gol.get_cell(
