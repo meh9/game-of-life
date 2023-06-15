@@ -204,6 +204,7 @@ class MainGame:
                         self._sleep_time = (
                             self._sleep_time * 2
                             if self._sleep_time > 0
+                            # 250ms (the default) / 128, i.e. you have to push the + key 7 times
                             else 0.001953125
                         )
                         # self._sleep_time *= 2
