@@ -8,10 +8,10 @@ class GameOfLifeArrays(GameOfLife):
 
     def __init__(self, rows: int, cols: int) -> None:
         """Initialise the two parallel arrays."""
+        super().__init__()
         self._a_array: list[list[bool]] = [
             [False for _ in range(cols)] for _ in range(rows)
         ]
-        self._generation = 0
 
     def progress(self) -> int:
         """Progress the game another generation."""
@@ -39,7 +39,7 @@ class GameOfLifeArrays(GameOfLife):
 
         # swap the arrays
         self._a_array = next_gen
-        self._generation += 1
+        self.generation += 1
         return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
@@ -100,15 +100,10 @@ class GameOfLifeArrays(GameOfLife):
         # return "\n".join(list(map(lambda r: "".join(list(map(lambda c: "■ " if c else "□ ", r))),
         #   self.a)))
         # expanded double for loop version
-        str_list: list[str] = ["Generation: " + str(self._generation)]
+        str_list: list[str] = ["Generation: " + str(self.generation)]
         for row in self._a_array:
             row_list: list[str] = []
             for cell in row:
                 row_list.append("■ " if cell else "□ ")
             str_list.append("".join(row_list))
         return "\n".join(str_list)
-
-    @property
-    def generation(self) -> int:
-        """Return the current generation of the game."""
-        return self._generation

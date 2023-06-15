@@ -11,8 +11,8 @@ class GameOfLifeSortedDict(GameOfLife):
 
     def __init__(self) -> None:
         """Initialise the map."""
+        super().__init__()
         self._a_map: dict[Coordinate, bool] = SortedDict()
-        self._generation: int = 0
         self._min_row: int = 0
         self._max_row: int = 0
         self._min_col: int = 0
@@ -20,7 +20,7 @@ class GameOfLifeSortedDict(GameOfLife):
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
-        str_list: list[str] = ["Generation: " + str(self._generation)]
+        str_list: list[str] = ["Generation: " + str(self.generation)]
         for row in range(self._min_row, self._max_row + 1):  # add 1 to include last
             row_list: list[str] = []
             for col in range(self._min_col, self._max_col + 1):  # add 1 to include last
@@ -60,7 +60,7 @@ class GameOfLifeSortedDict(GameOfLife):
                 # 3. All other cells are dead in the next generation.
                 case _:
                     pass
-        self._generation += 1
+        self.generation += 1
         return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
@@ -90,8 +90,8 @@ class GameOfLifeSortedDict(GameOfLife):
     def count_live_cells(self) -> int:
         """Count the total number of live cells in the GoL universe."""
         count: int = 0
-        for live in self._a_map.values():
-            if live:
+        for cell in self._a_map.values():
+            if cell:
                 count += 1
         return count
 
@@ -143,8 +143,3 @@ class GameOfLifeSortedDict(GameOfLife):
             (bottom, left),
             (row, left),
         ]
-
-    @property
-    def generation(self) -> int:
-        """Return the current generation of the game."""
-        return self._generation

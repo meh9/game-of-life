@@ -7,6 +7,10 @@ from gameoflife import FileLoader
 class GameOfLife(ABC):
     """Abstract class to specify the interface for different implementations of Game of Life."""
 
+    def __init__(self) -> None:
+        """Initialise."""
+        self._generation: int = 0
+
     @abstractmethod
     def __str__(self) -> str:
         """Produce a human readable string to represent the state of the GoL universe."""
@@ -28,9 +32,14 @@ class GameOfLife(ABC):
         """Return the live status of the given cell."""
 
     @property
-    @abstractmethod
     def generation(self) -> int:
         """Return the current generation of the game."""
+        return self._generation
+
+    @generation.setter
+    def generation(self, gen: int) -> None:
+        """Return the current generation of the game."""
+        self._generation = gen
 
     def add_cells(self, loader: FileLoader) -> None:
         """Load cells from the given loader."""
