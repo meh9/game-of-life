@@ -30,12 +30,14 @@ class RunLengthEncoded(FLContextManager):
     # N Glider
     # O Richard K. Guy
     # C www.conwaylife.com/wiki/index.php?title=Glider
-    _METADATA_LINE: pp.ParserElement = (
-        pp.AtLineStart("#").suppress()
-        + pp.Word(pp.printables)
-        + pp.Word(pp.printables + " ")
-        + pp.Suppress(pp.line_end)
-    ).set_results_name("metadata", True)
+    _METADATA_LINE: pp.ParserElement = pp.ZeroOrMore(
+        (
+            pp.AtLineStart("#").suppress()
+            + pp.Word(pp.printables)
+            + pp.Word(pp.printables + " ")
+            + pp.Suppress(pp.line_end)
+        ).set_results_name("metadata", True)
+    )
 
     # x = 3, y = 3, rule = B3/S23
     # x = 3, y = 3
@@ -76,9 +78,7 @@ class RunLengthEncoded(FLContextManager):
         ).set_results_name("data_rows", True)
     )
 
-    _PARSER: pp.ParserElement = (
-        pp.ZeroOrMore(_METADATA_LINE) + _HEADER + _RULE + _DATA_ROWS
-    )
+    _PARSER: pp.ParserElement = _METADATA_LINE + _HEADER + _RULE + _DATA_ROWS
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
@@ -92,7 +92,10 @@ class RunLengthEncoded(FLContextManager):
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
-        self.metadata = results.metadata.as_list()  # type:ignore
+        if results.metadata:  # type:ignore
+            self.metadata = results.metadata.as_list()  # type:ignore
+        else:
+            self.metadata = []
         self._cols = int(results.header[0][1])  # type:ignore
         self._rows = int(results.header[1][1])  # type:ignore
         if results.rule:  # type: ignore

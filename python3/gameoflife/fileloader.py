@@ -34,7 +34,7 @@ class FileLoader(ABC):
             + f"cells:\n{cells_str}"
         )
 
-    # TODO: add getting top-left coords, which will need new parsing too
+    # TO DO: add getting top-left coords, which will need new parsing too
     # Example: #R -22 -57
     # Gives the coordinates of the top-left corner of the pattern. RLE files produced by XLife
     # usually have this line, and the coordinates are usually negative, with the intention of

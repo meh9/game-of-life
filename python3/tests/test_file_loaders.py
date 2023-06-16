@@ -39,13 +39,17 @@ def test_create_loader() -> None:
 class TestRunLengthEncoded:
     """Tests specifically for the class RunLengthEncoded."""
 
+    def test_no_metadata(self) -> None:
+        """Specific test for an RLE file with no metadata rows, and some other interesting things
+        thrown in."""
+        with create_loader("../data/no_metadata_test.rle") as loader:
+            print(loader)
+            assert loader.metadata == []
+
     def test_empty_row_data(self) -> None:
-        """
-        Specific test for testing data patterns like "7$" and "23$" which specifies a number of
-        empty rows.
-        """
+        """Specific test for testing data patterns like "7$" and "23$" which specifies a number of
+        empty rows."""
         with create_loader("../data/t1point5infinitegrowth2.rle") as loader:
-            # print(loader)
             # first two rows of data is (note "2$" at the end which skips a row of cells):
             #
             # 71b3o11b3o$70bo2bo10bo2bo$40b3o11b3o16bo4b3o6bo$40bo2bo10bo2bo15bo4bo
@@ -90,9 +94,7 @@ rule: B3/S23"""
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
-        results: pp.ParseResults = pp.ZeroOrMore(
-            RunLengthEncoded._METADATA_LINE
-        ).parse_string(GLIDER)
+        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(GLIDER)
         assert len(results) == 8
         assert results[0] == "N"
         assert results[1] == "Glider"
