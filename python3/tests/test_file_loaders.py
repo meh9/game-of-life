@@ -76,6 +76,7 @@ class TestRunLengthEncoded:
                 str(loader)
                 == """\
 RunLengthEncoded
+file: ../data/glider.rle
 metadata: [['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
 'The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed \
 c/4.'], ['C', 'www.conwaylife.com/wiki/index.php?title=Glider']]

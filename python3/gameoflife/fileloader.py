@@ -7,8 +7,9 @@ from types import TracebackType
 class FileLoader(ABC):
     """ABC for the interface of different file encoding types for cells for Game of Life."""
 
-    def __init__(self) -> None:
+    def __init__(self, file: str) -> None:
         """Initialise."""
+        self._filename: str = file
         self.cells: list[list[bool]]
         self.metadata: list[list[int | bool]]
 
@@ -28,6 +29,7 @@ class FileLoader(ABC):
         )
         return (
             f"{type(self).__name__}\n"
+            + f"file: {self._filename}\n"
             + f"metadata: {self.metadata}\n"
             + f"cells:\n{cells_str}"
         )

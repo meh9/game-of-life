@@ -26,10 +26,8 @@ class PlainText(FLContextManager):
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
-        super().__init__()
-        self._filename: str = file
+        super().__init__(file)
         self._file: TextIOWrapper
-        self.metadata: list[list[int | bool]]
 
     def __enter__(self) -> FileLoader:
         """Enter context manager which causes the file to be parsed immediately."""
@@ -46,14 +44,3 @@ class PlainText(FLContextManager):
     ) -> None:
         """Exit context manager."""
         self._file.close()
-
-    def __str__(self) -> str:
-        """To string."""
-        # make a more human readable list of the cell values
-        cells_str: str = "\n".join(
-            [
-                " ".join(["■" if cell else "." for cell in cell_row])
-                for cell_row in self.cells
-            ]
-        )
-        return f"{self.metadata}\n" + f"cells:\n{cells_str}"

@@ -82,8 +82,7 @@ class RunLengthEncoded(FLContextManager):
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
-        super().__init__()
-        self._filename: str = file
+        super().__init__(file)
         self._file: TextIOWrapper
         self._cols: int
         self._rows: int
