@@ -2,3 +2,4 @@
 
 # pylint: disable=useless-import-alias
 from gameoflife.dataloaders.runlengthencoded import RunLengthEncoded as RunLengthEncoded
+from gameoflife.dataloaders.plaintext import PlainText as PlainText
