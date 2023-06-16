@@ -32,7 +32,7 @@ class RunLengthEncoded(FLContextManager):
     # C www.conwaylife.com/wiki/index.php?title=Glider
     _METADATA_LINE: pp.ParserElement = (
         pp.AtLineStart("#").suppress()
-        + pp.one_of("C c N O P R r")
+        + pp.Word(pp.printables)
         + pp.Word(pp.printables + " ")
         + pp.Suppress(pp.line_end)
     ).set_results_name("metadata", True)
