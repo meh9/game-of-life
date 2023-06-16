@@ -15,6 +15,16 @@ x = 3, y = 3, rule = B3/S23
 bob$2bo$3o!
 """
 
+METADATA_NO_CONTENT: str = """\
+#N next row has trailing space
+#O 
+#C
+#
+#C www.conwaylife.com/wiki/index.php?title=Glider
+x = 3, y = 3, rule = B3/S23
+bob$2bo$3o!
+"""
+
 HEADER_RULE: str = "x = 4, y = 5, rule = B3/S23"
 HEADER_NO_RULE: str = "x = 4, y = 5"
 
@@ -91,6 +101,19 @@ cells:
 cols: 3, rows: 3
 rule: B3/S23"""
             )
+
+    def test_metadata_no_content(self) -> None:
+        """Test the METADATA parser."""
+        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
+            METADATA_NO_CONTENT
+        )
+        assert results.metadata.as_list() == [  # type:ignore
+            ["N", "next row has trailing space"],
+            ["O"],
+            ["C"],
+            [],
+            ["C", "www.conwaylife.com/wiki/index.php?title=Glider"],
+        ]
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""

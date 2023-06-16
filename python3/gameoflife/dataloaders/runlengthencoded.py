@@ -25,30 +25,27 @@ class RunLengthEncoded(FLContextManager):
     )
 
     # is there an existing pyparsing element that has all alphas separated by spaces?
-    _CELL_STATES: pp.ParserElement = pp.one_of(" ".join(c for c in pp.alphas))
+    _CELL_STATES: pp.ParserElement = pp.one_of(" ".join(list(pp.alphas)))
 
-    # N Glider
-    # O Richard K. Guy
-    # C www.conwaylife.com/wiki/index.php?title=Glider
+    # # N Glider
+    # # O Richard K. Guy
+    # #C www.conwaylife.com/wiki/index.php?title=Glider
+    # #
     _METADATA_LINE: pp.ParserElement = pp.ZeroOrMore(
         (
             pp.AtLineStart("#").suppress()
-            + pp.Word(pp.printables)
-            + pp.Word(pp.printables + " ")
-            + pp.Suppress(pp.line_end)
+            + pp.Optional(
+                pp.one_of(" ".join(list(pp.printables)))
+            ).set_whitespace_chars(" \t")
+            + pp.Optional(pp.Word(pp.printables + " ")).set_whitespace_chars(" \t")
         ).set_results_name("metadata", True)
     )
 
     # x = 3, y = 3, rule = B3/S23
     # x = 3, y = 3
-    _HEADER: pp.ParserElement = pp.OneOrMore(
-        (
-            pp.one_of("x y")
-            + pp.Suppress("=")
-            + _INT_NUMBER
-            + pp.Optional(",").suppress()
-        ).set_results_name("header", True)
-    )
+    _HEADER: pp.ParserElement = (
+        pp.one_of("x y") + pp.Suppress("=") + _INT_NUMBER + pp.Optional(",").suppress()
+    ).set_results_name("header", True) * 2
 
     # Parse the actual rule in the future:
     #   If a rule string is B34/S34:
@@ -56,11 +53,10 @@ class RunLengthEncoded(FLContextManager):
     #     S34 means a cell survives if it has 3 or 4 neighbors.
     # x = 3, y = 3, rule = B3/S23
     # x = 3, y = 3
-    _RULE: pp.ParserElement = pp.ZeroOrMore(
+    _RULE: pp.ParserElement = pp.Optional(
         pp.Keyword("rule").suppress()
         + pp.Suppress("=")
-        + pp.Word(pp.printables + " ")
-        + pp.Suppress(pp.line_end)
+        + pp.Word(pp.printables + " ").set_whitespace_chars(" \t")
     ).set_results_name("rule")
 
     # bob$2bo$3o!
