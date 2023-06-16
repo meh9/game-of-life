@@ -46,6 +46,7 @@ python3 game_of_life.py
 ## TODO:
 
 Collecting a few things TODO in here in no particular order:
+1. RunLengthEncoded or GameOfLifeSortedDict is very memory hungry, see if we can do something about that.
 1. Python dependencies and transient dependencies license checker - possibility to check for license compatibility automatically?
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
 1. Use Sphinx with Google code guide: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
