@@ -20,9 +20,9 @@ The `venv` is best located in the root of the git directory in order for VSCode 
 % python3 -m venv .venv    
 % cd python3 
 python3 % source ../.venv/bin/activate
-(.venv) python3 % python3 -m venv .venv`
-python3 % python3 -m pip install --upgrade pip`
-python3 % pip install -r requirements.txt`
+(.venv) python3 % python3 -m venv .venv
+python3 % python3 -m pip install --upgrade pip
+python3 % pip install -r requirements.txt
 ```
 
 ## Developing
