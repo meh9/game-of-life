@@ -221,40 +221,40 @@ class TestMainGame:
         main._run = False
         main.main()
         main.print_game()
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_GAME_OUTPUT
 
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
-        main = TestMainGame.create_main_game()
+        main: MainGame = TestMainGame.create_main_game()
         main.print_ui()
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_OUTPUT
 
     def test_print_ui_edit_mode(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method when edit mode is on."""
-        main = TestMainGame.create_main_game()
+        main: MainGame = TestMainGame.create_main_game()
         main._edit_mode = True
         main.print_ui()
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_EDIT_MODE_OUTPUT
 
     def test_print_ui_update(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
-        main = TestMainGame.create_main_game()
+        main: MainGame = TestMainGame.create_main_game()
         main.print_ui_update(False, main._gol.count_live_cells(), 0)
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
 
     def test_print_ui_update_progress(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui_update method."""
-        main = TestMainGame.create_main_game()
+        main: MainGame = TestMainGame.create_main_game()
 
         # test left edge turnaround
         main._header_loc = 13
         main._header_dir_left = True
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
@@ -272,7 +272,7 @@ class TestMainGame:
 
     def test_print_game(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_game method."""
-        main = TestMainGame.create_main_game()
+        main: MainGame = TestMainGame.create_main_game()
         main.print_game()
-        out = capfd.readouterr()[0]
+        out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_GAME_OUTPUT
