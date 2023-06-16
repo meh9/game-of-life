@@ -7,9 +7,30 @@ from types import TracebackType
 class FileLoader(ABC):
     """ABC for the interface of different file encoding types for cells for Game of Life."""
 
+    def __init__(self) -> None:
+        """Initialise."""
+        self.cells: list[list[bool]]
+        self.metadata: list[list[int | bool]]
+
     @abstractmethod
-    def cells(self) -> list[list[bool]]:
-        """Return an array of cells."""
+    def __str__(self) -> str:
+        """
+        To str method default implementation.
+
+        Sublasses might want to replace or augment this output.
+        """
+        # make a more human readable list of the cell values
+        cells_str: str = "\n".join(
+            [
+                " ".join(["■" if cell else "." for cell in cell_row])
+                for cell_row in self.cells
+            ]
+        )
+        return (
+            f"{type(self).__name__}\n"
+            + f"metadata: {self.metadata}\n"
+            + f"cells:\n{cells_str}"
+        )
 
     # TODO: add getting top-left coords, which will need new parsing too
     # Example: #R -22 -57

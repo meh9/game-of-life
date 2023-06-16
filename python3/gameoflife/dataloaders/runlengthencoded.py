@@ -82,30 +82,25 @@ class RunLengthEncoded(FLContextManager):
 
     def __init__(self, file: str) -> None:
         """Initialise the loader."""
+        super().__init__()
         self._filename: str = file
         self._file: TextIOWrapper
-        self.metadata: list[list[int | bool]]
-        self.cols: int
-        self.rows: int
-        self.rule: str
-        self.cell_array: list[list[bool]]
-
-    def cells(self) -> list[list[bool]]:
-        """Return an array of cells loaded from the file."""
-        return self.cell_array
+        self._cols: int
+        self._rows: int
+        self._rule: str
 
     def __enter__(self) -> FileLoader:
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
         self.metadata = results.metadata.as_list()  # type:ignore
-        self.cols = int(results.header[0][1])  # type:ignore
-        self.rows = int(results.header[1][1])  # type:ignore
+        self._cols = int(results.header[0][1])  # type:ignore
+        self._rows = int(results.header[1][1])  # type:ignore
         if results.rule:  # type: ignore
-            self.rule = results.rule[0]  # type: ignore
+            self._rule = results.rule[0]  # type: ignore
 
         # initialise a row/col array of False to take the cells
-        self.cell_array = [[False for _ in range(self.cols)] for _ in range(self.rows)]
+        self.cells = [[False for _ in range(self._cols)] for _ in range(self._rows)]
         # create iterator in order to add types
         row_iter: enumerate[list[int | str]] = enumerate(
             results.data_rows  # type:ignore
@@ -129,13 +124,13 @@ class RunLengthEncoded(FLContextManager):
                         cell: bool = data_row[data_index + 1] == "o"
                         # set the number of cells to the value
                         for _ in range(data):
-                            self.cell_array[row_index + empty_rows][col_index] = cell
+                            self.cells[row_index + empty_rows][col_index] = cell
                             col_index += 1
                     # skip the next data value as we just "used" it
                     next(data_iter, None)
                 # otherwise transform the data value to a cell value and store it
                 else:
-                    self.cell_array[row_index + empty_rows][col_index] = data == "o"
+                    self.cells[row_index + empty_rows][col_index] = data == "o"
                     col_index += 1
 
         return self
@@ -151,16 +146,8 @@ class RunLengthEncoded(FLContextManager):
 
     def __str__(self) -> str:
         """To string."""
-        # make a more human readable list of the cell values
-        cells: str = "\n".join(
-            [
-                " ".join(["■" if cell else "." for cell in cell_row])
-                for cell_row in self.cell_array
-            ]
-        )
         return (
-            f"{self.metadata}\n"
-            + f"cols: {self.cols}, rows: {self.rows}, "
-            + f"rule: {self.rule if hasattr(self, 'rule') else 'none'}\n"
-            + f"cell_array:\n{cells}"
+            super().__str__()
+            + f"\ncols: {self._cols}, rows: {self._rows}\n"
+            + f"rule: {self._rule if hasattr(self, '_rule') else 'none'}"
         )

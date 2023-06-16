@@ -51,14 +51,14 @@ class TestRunLengthEncoded:
             # 71b3o11b3o$70bo2bo10bo2bo$40b3o11b3o16bo4b3o6bo$40bo2bo10bo2bo15bo4bo
             # 2bo5bo$40bo6b3o4bo17bo4bo8bo$40bo5bo2bo4bo$41bo8bo4bo2$...
             # the skipped row is row index 7, so check it's all False
-            assert loader.cells()[7] == [False for _ in range(218)]
+            assert loader.cells[7] == [False for _ in range(218)]
             # then check some random True
-            assert loader.cells()[6][40] is False
-            assert loader.cells()[6][41] is True
-            assert loader.cells()[6][42] is False
-            assert loader.cells()[8][71] is False
-            assert loader.cells()[8][72] is True
-            assert loader.cells()[8][73] is False
+            assert loader.cells[6][40] is False
+            assert loader.cells[6][41] is True
+            assert loader.cells[6][42] is False
+            assert loader.cells[8][71] is False
+            assert loader.cells[8][72] is True
+            assert loader.cells[8][73] is False
 
     def test_run_length_encoded(self) -> None:
         """Test the RunLengthEncoded file type."""
@@ -66,23 +66,25 @@ class TestRunLengthEncoded:
         with create_loader("../data/glider.rle") as loader:
             assert loader.__class__ is RunLengthEncoded
             assert loader.metadata  # type: ignore
-            assert loader.cols  # type: ignore
-            assert loader.rows  # type: ignore
-            assert loader.rule  # type: ignore
+            assert loader._cols  # type: ignore
+            assert loader._rows  # type: ignore
+            assert loader._rule  # type: ignore
             # the below will change when we actually have data
-            assert loader.cells()[0][0] is False
-            assert loader.cells()[0][1] is True
+            assert loader.cells[0][0] is False
+            assert loader.cells[0][1] is True
             assert (
                 str(loader)
                 == """\
-[['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
+RunLengthEncoded
+metadata: [['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
 'The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed \
 c/4.'], ['C', 'www.conwaylife.com/wiki/index.php?title=Glider']]
-cols: 3, rows: 3, rule: B3/S23
-cell_array:
+cells:
 . ■ .
 . . ■
-■ ■ ■"""
+■ ■ ■
+cols: 3, rows: 3
+rule: B3/S23"""
             )
 
     def test_metadata_parser(self) -> None:
