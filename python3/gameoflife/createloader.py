@@ -4,7 +4,8 @@ Simple function to create the different FileLoaders.
 Using separate file to avoid module import issues.
 """
 
-from gameoflife import FLContextManager, RunLengthEncoded
+from gameoflife import FLContextManager
+from gameoflife.dataloaders import RunLengthEncoded
 
 
 # TODO: did all this prematurely - we don't have different loaders yet!

@@ -1,7 +1,8 @@
 """Tests for all the FileLoader implementations."""
 
 # from pytest import raises
-from gameoflife import create_loader, FileLoader, RunLengthEncoded
+from gameoflife import create_loader, FileLoader
+from gameoflife.dataloaders import RunLengthEncoded
 import pyparsing as pp
 
 
