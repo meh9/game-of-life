@@ -2,7 +2,7 @@
 
 # from pytest import raises
 from gameoflife import create_loader, FileLoader
-from gameoflife.dataloaders import RunLengthEncoded
+from gameoflife.dataloaders import RunLengthEncoded, PlainText
 import pyparsing as pp
 
 
@@ -38,10 +38,9 @@ obo$10bo5bo7bo$11bo3bo$12b2o!
 def test_create_loader() -> None:
     """Test the create_loader function."""
     loader: FileLoader = create_loader("file.rle")
-    # the below will change if and when we support different loader types
     assert loader.__class__ is RunLengthEncoded
-    # with raises(ValueError):
-    #     create_loader("")
+    loader = create_loader("file.cells")
+    assert loader.__class__ is PlainText
 
 
 # pylint: disable=protected-access
