@@ -14,7 +14,7 @@ Plans:
 TODO:
 1. Add ability to use different rules.
 1. Ability to get RLE and other formats directly from (popular?) GoL sites on the internet.
-1. Add other formats such as Plaintext.
+1. (Done for Python) Add other formats such as Plaintext.
 1. (Done for Python) Add RLE (Run Length Encoded) file format reading.
 1. (Done for Python) GitHub Actions CI?
 1. (Done for Python) Codecov?
