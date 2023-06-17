@@ -34,13 +34,11 @@ class PlainText(FLContextManager):
         )
     )
 
-    # is there an existing pyparsing element that has all alphas separated by spaces?
     _CELL_STATES: pp.ParserElement = pp.one_of(". O").set_whitespace_chars(" \t")
 
-    # bob$2bo$3o!
-    #
-    # 24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
-    # obo$10bo5bo7bo$11bo3bo$12b2o!
+    # .O
+    # ..O
+    # OOO
     _DATA_ROWS: pp.ParserElement = pp.OneOrMore(
         (pp.OneOrMore(_CELL_STATES) + pp.line_end.suppress()).set_results_name(
             "data_rows", True
