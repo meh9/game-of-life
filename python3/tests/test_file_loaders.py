@@ -80,34 +80,6 @@ OO........O...O.OO....O.O...........
 class TestRunLengthEncoded:
     """Tests specifically for the class RunLengthEncoded."""
 
-    GLIDER_RLE: str = """\
-#N Glider
-#O Richard K. Guy
-#C The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed c/4.
-#C www.conwaylife.com/wiki/index.php?title=Glider
-x = 3, y = 3, rule = B3/S23
-bob$2bo$3o!
-"""
-
-    METADATA_NO_CONTENT_RLE: str = """\
-#N next row has trailing space
-#O 
-#C
-#
-#C www.conwaylife.com/wiki/index.php?title=Glider
-x = 3, y = 3, rule = B3/S23
-bob$2bo$3o!
-"""
-
-    HEADER_RULE_RLE: str = "x = 4, y = 5, rule = B3/S23"
-    HEADER_NO_RULE_RLE: str = "x = 4, y = 5"
-
-    GLIDER_DATA_RLE: str = "bob$2bo$3o!"
-    GOSPER_DATA_RLE: str = """\
-24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
-obo$10bo5bo7bo$11bo3bo$12b2o!
-"""
-
     def test_no_metadata(self) -> None:
         """Specific test for an RLE file with no metadata rows, and some other interesting things
         thrown in."""
@@ -168,7 +140,15 @@ rule: B3/S23"""
     def test_metadata_no_content(self) -> None:
         """Test the METADATA parser."""
         results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
-            TestRunLengthEncoded.METADATA_NO_CONTENT_RLE
+            """\
+#N next row has trailing space
+#O 
+#C
+#
+#C www.conwaylife.com/wiki/index.php?title=Glider
+x = 3, y = 3, rule = B3/S23
+bob$2bo$3o!
+"""
         )
         assert results.metadata.as_list() == [  # type:ignore
             ["N", "next row has trailing space"],
@@ -181,7 +161,14 @@ rule: B3/S23"""
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
         results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
-            TestRunLengthEncoded.GLIDER_RLE
+            """\
+#N Glider
+#O Richard K. Guy
+#C The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed c/4.
+#C www.conwaylife.com/wiki/index.php?title=Glider
+x = 3, y = 3, rule = B3/S23
+bob$2bo$3o!
+"""
         )
         assert results.metadata.as_list() == [  # type:ignore
             ["N", "Glider"],
@@ -198,12 +185,12 @@ rule: B3/S23"""
         """Test the HEADER parser."""
         results: pp.ParseResults = (
             RunLengthEncoded._HEADER + RunLengthEncoded._RULE
-        ).parse_string(TestRunLengthEncoded.HEADER_RULE_RLE)
+        ).parse_string("x = 4, y = 5, rule = B3/S23")
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert results.rule.as_list() == ["B3/S23"]  # type:ignore
 
         results = (RunLengthEncoded._HEADER + RunLengthEncoded._RULE).parse_string(
-            TestRunLengthEncoded.HEADER_NO_RULE_RLE
+            "x = 4, y = 5"
         )
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert len(results.rule) == 0  # type:ignore
@@ -211,7 +198,7 @@ rule: B3/S23"""
     def test_data_rows_parser(self) -> None:
         """Test the CELL_ROWS parser."""
         results: pp.ParseResults = RunLengthEncoded._DATA_ROWS.parse_string(
-            TestRunLengthEncoded.GLIDER_DATA_RLE
+            "bob$2bo$3o!"
         )
         assert results.data_rows.as_list() == [  # type:ignore
             ["b", "o", "b"],
@@ -220,7 +207,10 @@ rule: B3/S23"""
         ]
 
         results = RunLengthEncoded._DATA_ROWS.parse_string(
-            TestRunLengthEncoded.GOSPER_DATA_RLE
+            """\
+24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
+obo$10bo5bo7bo$11bo3bo$12b2o!
+"""
         )
         assert len(results.data_rows) == 9  # type:ignore
         assert results.data_rows[0].as_list() == [24, "b", "o"]  # type:ignore
