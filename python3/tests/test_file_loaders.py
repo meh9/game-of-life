@@ -43,6 +43,10 @@ def test_create_loader() -> None:
     assert loader.__class__ is PlainText
 
 
+class TestPlainText:
+    """Tests specifically for the class PlainText."""
+
+
 # pylint: disable=protected-access
 # pyright: reportPrivateUsage=false
 class TestRunLengthEncoded:
@@ -52,8 +56,12 @@ class TestRunLengthEncoded:
         """Specific test for an RLE file with no metadata rows, and some other interesting things
         thrown in."""
         with create_loader("../data/no_metadata_test.rle") as loader:
-            print(loader)
             assert loader.metadata == []
+            assert loader.cells[0][0] is False
+            assert loader.cells[0][1] is True
+            assert loader.cells[0][2] is False
+            assert loader.cells[13][6] is False
+            assert loader.cells[13][7] is True
 
     def test_empty_row_data(self) -> None:
         """Specific test for testing data patterns like "7$" and "23$" which specifies a number of
