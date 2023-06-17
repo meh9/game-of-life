@@ -74,6 +74,25 @@ OO........O...O.OO....O.O...........
         assert results.data_rows[8].as_list()[13] == "O"  # type:ignore
         assert results.data_rows[8].as_list()[14] == "."  # type:ignore
 
+    def test_plain_text(self) -> None:
+        """Test the PlainText file type."""
+        with create_loader("../data/glider.cells") as loader:
+            assert loader.__class__ is PlainText
+            assert loader.metadata  # type: ignore
+            # assert loader.cells[0][0] is False
+            # assert loader.cells[0][1] is True
+            assert (
+                str(loader)
+                == """\
+PlainText
+file: ../data/glider.cells
+metadata: [['Name: Glider'], ['Author: Richard K. Guy'], ['The smallest, most common, and first discovered spaceship.'], ['www.conwaylife.com/wiki/index.php?title=Glider']]
+cells:
+. ■
+. . ■
+■ ■ ■"""
+            )
+
 
 # pylint: disable=protected-access
 # pyright: reportPrivateUsage=false
@@ -118,7 +137,6 @@ class TestRunLengthEncoded:
             assert loader._cols  # type: ignore
             assert loader._rows  # type: ignore
             assert loader._rule  # type: ignore
-            # the below will change when we actually have data
             assert loader.cells[0][0] is False
             assert loader.cells[0][1] is True
             assert (

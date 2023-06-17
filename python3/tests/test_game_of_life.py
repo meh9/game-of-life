@@ -224,6 +224,15 @@ class TestMainGame:
         out: str = capfd.readouterr()[0]
         assert out == TestMainGame.PRINT_GAME_OUTPUT
 
+    def test_load_plain_text_file(self, capfd: CaptureFixture[str]) -> None:
+        """Test the loading of a Plain Text file."""
+        main: MainGame = MainGame(True, "../data/glider.cells")
+        main._run = False
+        main.main()
+        main.print_game()
+        out: str = capfd.readouterr()[0]
+        assert out == TestMainGame.PRINT_GAME_OUTPUT
+
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
         main: MainGame = TestMainGame.create_main_game()

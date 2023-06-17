@@ -1,5 +1,6 @@
 """The main game control and run loop."""
 
+# from sys import exit as sysexit
 from math import floor
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
@@ -40,8 +41,6 @@ class MainGame:
         if file:
             with create_loader(file) as loader:
                 self._gol.add_cells(loader)
-            # elif plain:
-            #     pass
 
     def main(self) -> None:
         """Run the main game loop."""

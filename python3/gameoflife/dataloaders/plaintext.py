@@ -57,9 +57,11 @@ class PlainText(FLContextManager):
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = PlainText._PARSER.parse_file(self._file)
         self.metadata = results.metadata.as_list()  # type:ignore
-        print(self.metadata)  # type:ignore
-        print(results.data_rows.as_list())  # type:ignore
         self.cells = []
+        for row_index, row in enumerate(results.data_rows.as_list()):  # type:ignore
+            self.cells.append([])
+            for col in row:  # type:ignore
+                self.cells[row_index].append(True if col == "O" else False)
         return self
 
     def __exit__(
