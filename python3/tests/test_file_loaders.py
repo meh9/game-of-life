@@ -37,7 +37,7 @@ obo$10bo5bo7bo$11bo3bo$12b2o!
 
 def test_create_loader() -> None:
     """Test the create_loader function."""
-    loader: FileLoader = create_loader("")
+    loader: FileLoader = create_loader("file.rle")
     # the below will change if and when we support different loader types
     assert loader.__class__ is RunLengthEncoded
     # with raises(ValueError):
