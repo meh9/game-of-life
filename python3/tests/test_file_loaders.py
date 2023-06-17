@@ -6,7 +6,81 @@ from gameoflife.dataloaders import RunLengthEncoded, PlainText
 import pyparsing as pp
 
 
-GLIDER: str = """\
+def test_create_loader() -> None:
+    """Test the create_loader function."""
+    loader: FileLoader = create_loader("file.rle")
+    assert loader.__class__ is RunLengthEncoded
+    loader = create_loader("file.cells")
+    assert loader.__class__ is PlainText
+
+
+# pylint: disable=protected-access
+# pyright: reportPrivateUsage=false
+class TestPlainText:
+    """Tests specifically for the class PlainText."""
+
+    def test_metadata_parser(self) -> None:
+        """Test the METADATA parser."""
+        results: pp.ParseResults = PlainText._METADATA_LINE.parse_string(
+            """\
+!Name: Glider
+!Author: Richard K. Guy
+!The smallest, most common, and first discovered spaceship.
+!www.conwaylife.com/wiki/index.php?title=Glider
+.O
+..O
+OOO
+"""
+        )
+        assert results.metadata.as_list() == [  # type:ignore
+            ["Name: Glider"],
+            ["Author: Richard K. Guy"],
+            ["The smallest, most common, and first discovered spaceship."],
+            ["www.conwaylife.com/wiki/index.php?title=Glider"],
+        ]
+
+    def test_data_rows_parser(self) -> None:
+        """Test the CELL_ROWS parser."""
+        results: pp.ParseResults = PlainText._DATA_ROWS.parse_string(
+            """\
+.O
+..O
+OOO
+"""
+        )
+        assert results.data_rows.as_list() == [  # type:ignore
+            [".", "O"],
+            [".", ".", "O"],
+            ["O", "O", "O"],
+        ]
+
+        results = PlainText._DATA_ROWS.parse_string(
+            """\
+........................O...........
+......................O.O...........
+............OO......OO............OO
+...........O...O....OO............OO
+OO........O.....O...OO..............
+OO........O...O.OO....O.O...........
+..........O.....O.......O...........
+...........O...O....................
+............OO......................"""
+        )
+        assert len(results.data_rows) == 9  # type:ignore
+        assert results.data_rows[0].as_list()[24] == "O"  # type:ignore
+        assert results.data_rows[6].as_list()[10] == "O"  # type:ignore
+        assert results.data_rows[8].as_list()[11] == "."  # type:ignore
+        assert results.data_rows[8].as_list()[12] == "O"  # type:ignore
+        assert results.data_rows[8].as_list()[13] == "O"  # type:ignore
+        assert results.data_rows[8].as_list()[14] == "."  # type:ignore
+
+
+# pylint: disable=protected-access
+# pyright: reportPrivateUsage=false
+class TestRunLengthEncoded:
+    """Tests specifically for the class RunLengthEncoded."""
+
+    GLIDER_RLE: str = """\
 #N Glider
 #O Richard K. Guy
 #C The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed c/4.
@@ -15,7 +89,7 @@ x = 3, y = 3, rule = B3/S23
 bob$2bo$3o!
 """
 
-METADATA_NO_CONTENT: str = """\
+    METADATA_NO_CONTENT_RLE: str = """\
 #N next row has trailing space
 #O 
 #C
@@ -25,32 +99,14 @@ x = 3, y = 3, rule = B3/S23
 bob$2bo$3o!
 """
 
-HEADER_RULE: str = "x = 4, y = 5, rule = B3/S23"
-HEADER_NO_RULE: str = "x = 4, y = 5"
+    HEADER_RULE_RLE: str = "x = 4, y = 5, rule = B3/S23"
+    HEADER_NO_RULE_RLE: str = "x = 4, y = 5"
 
-GLIDER_DATA: str = "bob$2bo$3o!"
-GOSPER_DATA: str = """\
+    GLIDER_DATA_RLE: str = "bob$2bo$3o!"
+    GOSPER_DATA_RLE: str = """\
 24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
 obo$10bo5bo7bo$11bo3bo$12b2o!
 """
-
-
-def test_create_loader() -> None:
-    """Test the create_loader function."""
-    loader: FileLoader = create_loader("file.rle")
-    assert loader.__class__ is RunLengthEncoded
-    loader = create_loader("file.cells")
-    assert loader.__class__ is PlainText
-
-
-class TestPlainText:
-    """Tests specifically for the class PlainText."""
-
-
-# pylint: disable=protected-access
-# pyright: reportPrivateUsage=false
-class TestRunLengthEncoded:
-    """Tests specifically for the class RunLengthEncoded."""
 
     def test_no_metadata(self) -> None:
         """Specific test for an RLE file with no metadata rows, and some other interesting things
@@ -112,7 +168,7 @@ rule: B3/S23"""
     def test_metadata_no_content(self) -> None:
         """Test the METADATA parser."""
         results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
-            METADATA_NO_CONTENT
+            TestRunLengthEncoded.METADATA_NO_CONTENT_RLE
         )
         assert results.metadata.as_list() == [  # type:ignore
             ["N", "next row has trailing space"],
@@ -124,7 +180,9 @@ rule: B3/S23"""
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
-        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(GLIDER)
+        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
+            TestRunLengthEncoded.GLIDER_RLE
+        )
         assert results.metadata.as_list() == [  # type:ignore
             ["N", "Glider"],
             ["O", "Richard K. Guy"],
@@ -140,26 +198,30 @@ rule: B3/S23"""
         """Test the HEADER parser."""
         results: pp.ParseResults = (
             RunLengthEncoded._HEADER + RunLengthEncoded._RULE
-        ).parse_string(HEADER_RULE)
+        ).parse_string(TestRunLengthEncoded.HEADER_RULE_RLE)
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert results.rule.as_list() == ["B3/S23"]  # type:ignore
 
         results = (RunLengthEncoded._HEADER + RunLengthEncoded._RULE).parse_string(
-            HEADER_NO_RULE
+            TestRunLengthEncoded.HEADER_NO_RULE_RLE
         )
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert len(results.rule) == 0  # type:ignore
 
     def test_data_rows_parser(self) -> None:
         """Test the CELL_ROWS parser."""
-        results: pp.ParseResults = RunLengthEncoded._DATA_ROWS.parse_string(GLIDER_DATA)
+        results: pp.ParseResults = RunLengthEncoded._DATA_ROWS.parse_string(
+            TestRunLengthEncoded.GLIDER_DATA_RLE
+        )
         assert results.data_rows.as_list() == [  # type:ignore
             ["b", "o", "b"],
             [2, "b", "o"],
             [3, "o"],
         ]
 
-        results = RunLengthEncoded._DATA_ROWS.parse_string(GOSPER_DATA)
+        results = RunLengthEncoded._DATA_ROWS.parse_string(
+            TestRunLengthEncoded.GOSPER_DATA_RLE
+        )
         assert len(results.data_rows) == 9  # type:ignore
         assert results.data_rows[0].as_list() == [24, "b", "o"]  # type:ignore
         assert results.data_rows[6].as_list() == [  # type:ignore
