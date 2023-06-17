@@ -54,6 +54,7 @@ OOO
             [".", "O"],
             [".", ".", "O"],
             ["O", "O", "O"],
+            [],
         ]
 
         results = PlainText._DATA_ROWS.parse_string(
@@ -81,8 +82,8 @@ OO........O...O.OO....O.O...........
         with create_loader("../data/glider.cells") as loader:
             assert loader.__class__ is PlainText
             assert loader.metadata  # type: ignore
-            # assert loader.cells[0][0] is False
-            # assert loader.cells[0][1] is True
+            assert loader.cells[0][0] is False
+            assert loader.cells[0][1] is True
             assert (
                 str(loader)
                 == """\
@@ -92,7 +93,35 @@ metadata: [['Name: Glider'], ['Author: Richard K. Guy'], ['The smallest, most co
 cells:
 . ■
 . . ■
-■ ■ ■"""
+■ ■ ■
+"""
+            )
+
+    def test_empty_data_rows(self) -> None:
+        """Test the PlainText file type."""
+        with create_loader("../data/empty_data_rows.cells") as loader:
+            assert loader.__class__ is PlainText
+            assert loader.metadata == []  # type: ignore
+            assert (
+                str(loader)
+                == """\
+PlainText
+file: ../data/empty_data_rows.cells
+metadata: []
+cells:
+. . . . . . . . . . . . ■ ■ . . . . . . . . . . . . . . . . . . . . . .
+
+
+. . . . . ■ .
+. . ■ . .
+
+. . .
+
+
+
+■
+
+."""
             )
 
 

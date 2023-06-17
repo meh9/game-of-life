@@ -88,10 +88,9 @@ class RunLengthEncoded(FLContextManager):
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
-        if results.metadata:  # type:ignore
-            self.metadata = results.metadata.as_list()  # type:ignore
-        else:
-            self.metadata = []
+        self.metadata = (
+            results.metadata.as_list() if results.metadata else []  # type:ignore
+        )
         self._cols = int(results.header[0][1])  # type:ignore
         self._rows = int(results.header[1][1])  # type:ignore
         if results.rule:  # type: ignore

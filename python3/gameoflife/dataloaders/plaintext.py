@@ -40,7 +40,7 @@ class PlainText(FLContextManager):
     # ..O
     # OOO
     _DATA_ROWS: pp.ParserElement = pp.OneOrMore(
-        (pp.OneOrMore(_CELL_STATES) + pp.line_end.suppress()).set_results_name(
+        (pp.ZeroOrMore(_CELL_STATES) + pp.line_end.suppress()).set_results_name(
             "data_rows", True
         )
     )
@@ -56,7 +56,9 @@ class PlainText(FLContextManager):
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         results: pp.ParseResults = PlainText._PARSER.parse_file(self._file)
-        self.metadata = results.metadata.as_list()  # type:ignore
+        self.metadata = (
+            results.metadata.as_list() if results.metadata else []  # type:ignore
+        )
         self.cells = []
         for row_index, row in enumerate(results.data_rows.as_list()):  # type:ignore
             self.cells.append([])
