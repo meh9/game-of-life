@@ -17,20 +17,20 @@ No real installation yet - currently run directly out of the source `python3` di
 The `venv` is best located in the root of the git directory in order for VSCode to pick it up automatically:
 
 ```
-% python3 -m venv .venv    
-% cd python3 
+game-of-life % python3 -m venv .venv    
+game-of-life % cd python3 
 python3 % source ../.venv/bin/activate
 (.venv) python3 % python3 -m venv .venv
-python3 % python3 -m pip install --upgrade pip
-python3 % pip install -r requirements.txt
+(.venv) python3 % python3 -m pip install --upgrade pip
+(.venv) python3 % pip install -r requirements.txt
 ```
 
 ## Developing
 
 Things you might want to do when developing further (VSCode also does most of this):
 
-1. `mypy --strict *.py gameoflife/*.py tests/*.py`
-1. `black -v *.py gameoflife/*.py tests/*.py`
+1. `mypy --strict game_of_life.py gameoflife tests`
+1. `black -v game_of_life.py gameoflife tests`
 1. `python3 -m pytest -v --cov --cov-branch --cov-report html --cov-report term-missing`
 1. TODO: pylint? pydocstyle? Currently VSCode takes care of this.
 
@@ -39,7 +39,7 @@ Things you might want to do when developing further (VSCode also does most of th
 
 Simply run it from inside the `python3` directory:
 ```
-python3 game_of_life.py
+python3 game_of_life.py --help
 ```
 
 

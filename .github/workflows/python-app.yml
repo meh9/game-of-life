@@ -31,11 +31,11 @@ jobs:
     - name: Check formatting with Black
       working-directory: ./python3
       run: |
-        black --check -v *.py gameoflife/*.py tests/*.py
+        black --check game_of_life.py gameoflife tests
     - name: Check types with mypy
       working-directory: ./python3
       run: |
-        mypy --strict --no-warn-unused-ignores *.py gameoflife/*.py tests/*.py
+        mypy --strict --no-warn-unused-ignores game_of_life.py gameoflife tests
     - name: Test with pytest
       working-directory: ./python3
       run: |
