@@ -13,7 +13,6 @@ class FileLoader(ABC):
         self.cells: list[list[bool]]
         self.metadata: list[list[int | bool]]
 
-    @abstractmethod
     def __str__(self) -> str:
         """
         To str method default implementation.
