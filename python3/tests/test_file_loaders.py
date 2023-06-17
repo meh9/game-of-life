@@ -1,6 +1,6 @@
 """Tests for all the FileLoader implementations."""
 
-# from pytest import raises
+from pytest import raises
 from gameoflife import create_loader, FileLoader
 from gameoflife.dataloaders import RunLengthEncoded, PlainText
 import pyparsing as pp
@@ -12,6 +12,8 @@ def test_create_loader() -> None:
     assert loader.__class__ is RunLengthEncoded
     loader = create_loader("file.cells")
     assert loader.__class__ is PlainText
+    with raises(ValueError):
+        create_loader("foo.bar")
 
 
 # pylint: disable=protected-access
