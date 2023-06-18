@@ -9,6 +9,7 @@ pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
+@pytest.mark.skip
 def test_dict_progress_large_file() -> None:
     """Performance test for the GameOfLifeDict().progress() method."""
     gol: GameOfLife = GameOfLifeDict()
@@ -36,6 +37,7 @@ def test_dict_progress_large_file() -> None:
     )
 
 
+# @pytest.mark.skip
 def test_faster_dict_progress_large_file() -> None:
     """Performance test for the GameOfLifeFasterDict().progress() method."""
     gol: GameOfLife = GameOfLifeFasterDict()

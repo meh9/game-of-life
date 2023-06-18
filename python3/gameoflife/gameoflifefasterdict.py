@@ -11,7 +11,7 @@ class GameOfLifeFasterDict(GameOfLife):
     def __init__(self) -> None:
         """Initialise the map."""
         super().__init__()
-        self._a_map: dict[Coordinate, bool] = {}
+        self._cells: set[Coordinate] = set()
         self._min_row: int = 0
         self._max_row: int = 0
         self._min_col: int = 0
@@ -23,8 +23,8 @@ class GameOfLifeFasterDict(GameOfLife):
         for row in range(self._min_row, self._max_row + 1):  # add 1 to include last
             row_list: list[str] = []
             for col in range(self._min_col, self._max_col + 1):  # add 1 to include last
-                if (row, col) in self._a_map:
-                    row_list.append("■ " if self._a_map.get((row, col)) else "□ ")
+                if (row, col) in self._cells:
+                    row_list.append("■ " if (row, col) in self._cells else "□ ")
                 else:
                     row_list.append("  ")
             str_list.append("".join(row_list))
@@ -36,63 +36,75 @@ class GameOfLifeFasterDict(GameOfLife):
         self._max_row = 0
         self._min_col = 0
         self._max_col = 0
-        b_map: dict[Coordinate, bool] = self._a_map
-        self._a_map = {}
+        old_gen: set[Coordinate] = self._cells
+        self._cells = set()
+        checked_dead_cells: set[Coordinate] = set()
         count: int = 0
-        # loop over every tracked cell
-        for item in b_map.items():
-            coords: Coordinate = item[0]
-            live: bool = item[1]
-            match GameOfLifeFasterDict._live_neighbours(b_map, coords):
+        # loop over every live cell
+        for coords in old_gen:
+            # check how many live neighbours we have
+            num_live_neighbours: int = 0
+            dead_neighbour_coords: list[Coordinate] = []
+            for cell_coord in GameOfLifeFasterDict._compute_neighbours(
+                coords[0], coords[1]
+            ):
+                if cell_coord in old_gen:
+                    num_live_neighbours += 1
+                else:
+                    dead_neighbour_coords.append(cell_coord)
+
+            # check if the current cell being processed should live
+            match num_live_neighbours:
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
-                    if live:
-                        self.set_cell(coords[0], coords[1], live)
-                        count += 1
-                    else:
-                        pass  # required for code coverage? :/
+                    self._cells.add(coords)
+                    count += 1
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the
                 # next generation.
                 case 3:
-                    self.set_cell(coords[0], coords[1], True)
+                    self._cells.add(coords)
                     count += 1
                 # 3. All other cells are dead in the next generation.
                 case _:
                     pass
+
+            # check if any of the dead neighbours should come alive
+            for coords in dead_neighbour_coords:
+                if coords not in checked_dead_cells:
+                    num_live_neighbours = 0
+                    for cell_coord in GameOfLifeFasterDict._compute_neighbours(
+                        coords[0], coords[1]
+                    ):
+                        if cell_coord in old_gen:
+                            num_live_neighbours += 1
+                    if num_live_neighbours == 3:
+                        self._cells.add(coords)
+                        count += 1
+                checked_dead_cells.add(coords)
+
         self.generation += 1
         return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
-        # track the min/max of cols
-        if len(self._a_map) == 0:  # just set them first time around
-            self._min_row = row
-            self._max_row = row
-            self._min_col = col
-            self._max_col = col
-        else:
-            self._min_row = row if row < self._min_row else self._min_row
-            self._max_row = row if row > self._max_row else self._max_row
-            self._min_col = col if col < self._min_col else self._min_col
-            self._max_col = col if col > self._max_col else self._max_col
-        # if we are adding a live cell, also add dead neighbours if they don't already exist
+        # only add the cell to the map if it is live
         if live:
-            self._a_map[(row, col)] = live
-            # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in GameOfLifeFasterDict._compute_neighbours(row, col):
-                if neighbour not in self._a_map:
-                    # recurse to set min/max
-                    self.set_cell(neighbour[0], neighbour[1], False)
-        else:
-            self._a_map[(row, col)] = False
+            self._cells.add((row, col))
+            # track the min/max of cols
+            if len(self._cells) == 0:  # just set them first time around
+                self._min_row = row
+                self._max_row = row
+                self._min_col = col
+                self._max_col = col
+            else:
+                self._min_row = row if row < self._min_row else self._min_row
+                self._max_row = row if row > self._max_row else self._max_row
+                self._min_col = col if col < self._min_col else self._min_col
+                self._max_col = col if col > self._max_col else self._max_col
 
     def count_live_cells(self) -> int:
         """Count the total number of live cells in the GoL universe."""
-        count: int = 0
-        for cell in self._a_map.values():
-            if cell:
-                count += 1
-        return count
+        return len(self._cells)
 
     def get_cell(self, row: int, col: int) -> bool | None:
         """
@@ -100,36 +112,12 @@ class GameOfLifeFasterDict(GameOfLife):
 
         This implementation never returns None since the universe is "infinite".
         """
-        live: bool | None = self._a_map.get((row, col))
-        if live is None:
-            return False
-        return live
-
-    @staticmethod
-    def _live_neighbours(b_map: dict[Coordinate, bool], coords: Coordinate) -> int:
-        """
-        Count the number of live neighbours the cell at the given coords has.
-
-        As a shortcut will only return up to the number 4, as we don't need to know any more for
-        Game of Life.
-        """
-        live_count: int = 0
-        for cell_coord in GameOfLifeFasterDict._compute_neighbours(
-            coords[0], coords[1]
-        ):
-            live: bool | None = b_map.get(cell_coord)
-            if live is not None and live:
-                live_count += 1
-            # the funyy thing is that doing the below actually slows the appication down by 2.5%...
-            # if there's more than 3 we're done
-            # if live_count > 3:
-            #     return live_count
-        return live_count
+        return (row, col) in self._cells
 
     @staticmethod
     def _compute_neighbours(row: int, col: int) -> list[Coordinate]:
         """Compute the coordinates of all the neighbours of the given cell."""
-        # pre-allocating these is 5% faster
+        # pre-allocating these like this is 5% faster
         top: int = row - 1
         bottom: int = row + 1
         left: int = col - 1
