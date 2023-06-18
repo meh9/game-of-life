@@ -1,11 +1,11 @@
-"""Game of Life dict implementation."""
+"""Game of Life Faster dict implementation."""
 
 from gameoflife import GameOfLife
 
 Coordinate = tuple[int, int]
 
 
-class GameOfLifeDict(GameOfLife):
+class GameOfLifeFasterDict(GameOfLife):
     """Implements Game of Life using a Python dict implementation."""
 
     def __init__(self) -> None:
@@ -43,7 +43,7 @@ class GameOfLifeDict(GameOfLife):
         for item in b_map.items():
             coords: Coordinate = item[0]
             live: bool = item[1]
-            match GameOfLifeDict._live_neighbours(b_map, coords):
+            match GameOfLifeFasterDict._live_neighbours(b_map, coords):
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
                     if live:
@@ -79,7 +79,7 @@ class GameOfLifeDict(GameOfLife):
         if live:
             self._a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in GameOfLifeDict._compute_neighbours(row, col):
+            for neighbour in GameOfLifeFasterDict._compute_neighbours(row, col):
                 if neighbour not in self._a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
@@ -114,7 +114,9 @@ class GameOfLifeDict(GameOfLife):
         Game of Life.
         """
         live_count: int = 0
-        for cell_coord in GameOfLifeDict._compute_neighbours(coords[0], coords[1]):
+        for cell_coord in GameOfLifeFasterDict._compute_neighbours(
+            coords[0], coords[1]
+        ):
             live: bool | None = b_map.get(cell_coord)
             if live is not None and live:
                 live_count += 1
