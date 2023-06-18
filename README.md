@@ -66,17 +66,17 @@ Positives:
 1. simple to understand
 
 
-### TreeMap simple implementation - actually scratch that, the Python version now uses a normal map for better performance.
+### TreeMap simple implementation - actually scratch that, the Python version now uses a normal map/dict for better performance.
 1. Create new TreeMap<int[], Cell>, A. 
     1. The key is the int[row,col] of the Cell. 
     1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
         1. Funnily enough the way the python version was implemented this is not actually true and we _do not_ rely on the ordering. Changing to a normal dict resulted in an immediate 30% performance increase.
         1. Revisit this in the Java version some time.
     1. Need to check what natural ordering is of int[row,col] - might have to provide our own Comparator. When we iterate over the keys they need to come out in row order left to right.
-1. Create new live Cells and put/replace in TreeMap at their row,col coordinate. No need to check if it exists already.
-    1. Check in TreeMap if each neighbour exists. For each that does not exist, add a new dead Cell.
+1. Create new live Cells and put/replace in map at their row,col coordinate. No need to check if it exists already.
+    1. Check in map if each neighbour exists. For each that does not exist, add a new dead Cell.
 1. Now we have all live and dead Cells that need to be considered when progressing a generation.
-1. Create new TreeMap B for next generation.
+1. Create new map B for next generation.
 1. Iterate through all Cells in A
     1. Check each cell - both live and dead - if it will be alive in next gen by doing lookups for all 8 of its neighbours in A. Use predefined `int[row,col]` for N, NE, E, SE, S, SW, W, NW neighbours to avoid garbage collection? Maybe test this for speed.
     1. Because we have also checked all dead neighbours of all live cells, we have checked all cells in the universe that could possibly become live.
@@ -86,7 +86,7 @@ Positives:
 1. Assign B to A.
 
 Negatives:
-1. does a lot of TreeMap lookups
+1. does a lot of map lookups
 
 Positives:
 1. able to create much larger universes compared to arrays - as long as the universe is sparsely populated
