@@ -1,18 +1,17 @@
-"""Game of Life sorted dict implementation."""
+"""Game of Life dict implementation."""
 
-from sortedcontainers import SortedDict  # type: ignore
 from gameoflife import GameOfLife
 
 Coordinate = tuple[int, int]
 
 
-class GameOfLifeSortedDict(GameOfLife):
-    """Implements Game of Life using SortedDict (Red/Black "treemap" implementation)."""
+class GameOfLifeDict(GameOfLife):
+    """Implements Game of Life using a Python dict implementation)."""
 
     def __init__(self) -> None:
         """Initialise the map."""
         super().__init__()
-        self._a_map: dict[Coordinate, bool] = SortedDict()
+        self._a_map: dict[Coordinate, bool] = {}
         self._min_row: int = 0
         self._max_row: int = 0
         self._min_col: int = 0
@@ -38,13 +37,13 @@ class GameOfLifeSortedDict(GameOfLife):
         self._min_col = 0
         self._max_col = 0
         b_map: dict[Coordinate, bool] = self._a_map
-        self._a_map = SortedDict()
+        self._a_map = {}
         count: int = 0
         # loop over every tracked cell
         for item in b_map.items():
             coords: Coordinate = item[0]
             live: bool = item[1]
-            match GameOfLifeSortedDict._live_neighbours(b_map, coords):
+            match GameOfLifeDict._live_neighbours(b_map, coords):
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
                     if live:
@@ -80,7 +79,7 @@ class GameOfLifeSortedDict(GameOfLife):
         if live:
             self._a_map[(row, col)] = live
             # add all the dead neighbours if there is not a cell in the map already
-            for neighbour in GameOfLifeSortedDict._compute_neighbours(row, col):
+            for neighbour in GameOfLifeDict._compute_neighbours(row, col):
                 if neighbour not in self._a_map:
                     # recurse to set min/max
                     self.set_cell(neighbour[0], neighbour[1], False)
@@ -115,9 +114,7 @@ class GameOfLifeSortedDict(GameOfLife):
         Game of Life.
         """
         live_count: int = 0
-        for cell_coord in GameOfLifeSortedDict._compute_neighbours(
-            coords[0], coords[1]
-        ):
+        for cell_coord in GameOfLifeDict._compute_neighbours(coords[0], coords[1]):
             live: bool | None = b_map.get(cell_coord)
             if live is not None and live:
                 live_count += 1

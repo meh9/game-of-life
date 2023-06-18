@@ -1,7 +1,7 @@
 """Tests for all the Conway's Game of Life implementations."""
 
 from pytest import CaptureFixture
-from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeSortedDict
+from gameoflife import MainGame, GameOfLife, GameOfLifeArrays, GameOfLifeDict
 
 
 def test_set_unset_set() -> None:
@@ -16,7 +16,7 @@ def test_set_unset_set() -> None:
     set_cell_and_assert(gol, False, 0)
     set_cell_and_assert(gol, True, 1)
 
-    gol = GameOfLifeSortedDict()
+    gol = GameOfLifeDict()
     set_cell_and_assert(gol, True, 1)
     set_cell_and_assert(gol, False, 0)
     set_cell_and_assert(gol, True, 1)
@@ -87,7 +87,7 @@ class TestGameOfLifeSortedDict:
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
-        gol: GameOfLife = GameOfLifeSortedDict()
+        gol: GameOfLife = GameOfLifeDict()
         MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
         for _ in range(1000):
@@ -102,14 +102,14 @@ class TestGameOfLifeSortedDict:
 
     def test_outofbounds(self) -> None:
         """Test that we get False when asking for a cell out of bounds."""
-        gol: GameOfLife = GameOfLifeSortedDict()
+        gol: GameOfLife = GameOfLifeDict()
         gol.set_cell(10, 10, True)
         assert gol.get_cell(2, 2) is False
         assert gol.get_cell(10, 10) is True
 
     def test_str(self) -> None:
         """Test the str generation."""
-        gol: GameOfLife = GameOfLifeSortedDict()
+        gol: GameOfLife = GameOfLifeDict()
         MainGame.add_glider(gol)
         for _ in range(100):
             gol.progress()
@@ -128,7 +128,7 @@ Generation: 100
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
-        gol: GameOfLife = GameOfLifeSortedDict()
+        gol: GameOfLife = GameOfLifeDict()
         gol.set_cell(0, 0, True)
         gol.set_cell(0, 1, True)
         gol.set_cell(0, 2, True)

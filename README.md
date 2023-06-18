@@ -66,10 +66,12 @@ Positives:
 1. simple to understand
 
 
-### TreeMap simple implementation
+### TreeMap simple implementation - actually scratch that, the Python version now uses a normal map for better performance.
 1. Create new TreeMap<int[], Cell>, A. 
     1. The key is the int[row,col] of the Cell. 
     1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
+        1. Funnily enough the way the python version was implemented this is not actually true and we _do not_ rely on the ordering. Changing to a normal dict resulted in an immediate 30% performance increase.
+        1. Revisit this in the Java version some time.
     1. Need to check what natural ordering is of int[row,col] - might have to provide our own Comparator. When we iterate over the keys they need to come out in row order left to right.
 1. Create new live Cells and put/replace in TreeMap at their row,col coordinate. No need to check if it exists already.
     1. Check in TreeMap if each neighbour exists. For each that does not exist, add a new dead Cell.
