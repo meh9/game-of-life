@@ -118,14 +118,16 @@ class GameOfLifeDict(GameOfLife):
             live: bool | None = b_map.get(cell_coord)
             if live is not None and live:
                 live_count += 1
+            # the funyy thing is that doing the below actually slows the appication down by 2.5%...
             # if there's more than 3 we're done
-            if live_count > 3:
-                return live_count
+            # if live_count > 3:
+            #     return live_count
         return live_count
 
     @staticmethod
     def _compute_neighbours(row: int, col: int) -> list[Coordinate]:
         """Compute the coordinates of all the neighbours of the given cell."""
+        # pre-allocating these is 5% faster
         top: int = row - 1
         bottom: int = row + 1
         left: int = col - 1
