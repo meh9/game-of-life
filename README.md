@@ -7,11 +7,12 @@
 Plans:
 1. Java implementation: This was the first implementation. The game logic is complete, but no work on user interface.
 1. Python implementation: This is currently the most progressed, and has a simple terminal user interface.
-1. TypeScript implementation: Planned, currently unstarted.
+1. TypeScript in NodeJS implementation: Planned, currently unstarted.
 1. Haskell implementation: Yeah maybe, would be interesting.
 1. C# implementation: Maybe.
 
 TODO:
+1. Some form of different UI allowing different zoom levels? (Preferably not a web interface...)
 1. Add ability to use different rules.
 1. Ability to get RLE and other formats directly from (popular?) GoL sites on the internet.
 1. (Done for Python) Add other formats such as Plaintext.
@@ -46,7 +47,33 @@ Further simplified Rules that are easier to program:
 
 ## Approaches
 
-### Parallel arrays
+### Set based simple implementation
+1. Create new Set<int, int>, `A`. This set simply records the coordinates as (row,col) of live cells. By being in the set it's a live cell. We don't record dead cells, so it is a very sparse data structure.
+1. Create new set `B` for next generation.
+1. Create a new ephemeral set for recording dead cells that have been checked this generation, `tmp`.
+1. Iterate through all live cells in `A`
+    1. For each cell, check how many of the 8 neighbours are alive in `A`. If 2 or 3, this cell stays alive so add the coordinates to the next-gen `B` set.
+    1. Get the collection of the 8 neighbours that are dead.
+    1. Check each of the dead cells if it has already been checked by looking if it is in `tmp`.
+    1. Check if the dead neighbour has exactly 3 live neighbours in `A`, in which case it will come alive in the next generation, so add it to `B` meaning it will be live.
+    1. Record the dead cell in `tmp` as having been checked.
+    1. We have now checked all live cells, and all their neighbours - this means we have checked all cells in the universe that could possibly become live.
+1. At this point the next generation of live cells is ready in `B`.
+1. Assign `B` to `A`, clear `tmp`.
+
+Negatives:
+1. does a lot of set lookups:
+    1. 8 lookups to find the neighbours of each live cell
+    1. 1 lookup for each dead neighbour to see if it has already been checked
+    1. for each of the dead neighbours that has not already been checked, another 8 lookups to see if it has enough live neighbours to come alive
+
+Positives:
+1. able to create much larger universes compared to e.g. arrays or the map implementation - as long as the universe is sparsely populated
+1. no edge to the universe except for the languages maximum key value (e.g. in Java Integer.MAX) which gliders etc will eventually hit - could try to deal with this by using some implementation of e.g. BigInteger?
+1. not too hard to understand
+
+
+### 2D arrays
 1. `A[rows][columns]` array created at init
 1. Set each individual live cell in `A`
 1. Create parallel `B` array set to same size but all cells are dead
