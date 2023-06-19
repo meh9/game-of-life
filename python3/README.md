@@ -39,6 +39,11 @@ Things you might want to do when developing further (VSCode also does most of th
 
 Simply run it from inside the `python3` directory:
 ```
+python3 game_of_life.py
+```
+
+Or print out the command line help:
+```
 python3 game_of_life.py --help
 ```
 
