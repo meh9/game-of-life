@@ -3,7 +3,7 @@
 import logging
 from time import perf_counter_ns
 import pytest
-from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeFasterDict, create_loader
+from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet, create_loader
 
 pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ def test_dict_progress_large_file() -> None:
 # @pytest.mark.skip
 def test_faster_dict_progress_large_file() -> None:
     """Performance test for the GameOfLifeFasterDict().progress() method."""
-    gol: GameOfLife = GameOfLifeFasterDict()
+    gol: GameOfLife = GameOfLifeSet()
     LOGGER.info("'create_loader(period59glidergun.rle)' starting...")
     start: int = perf_counter_ns()
     with create_loader("../data/period59glidergun.rle") as loader:

@@ -1,12 +1,12 @@
-"""Game of Life Faster dict implementation."""
+"""Game of Life set implementation."""
 
 from gameoflife import GameOfLife
 
 Coordinate = tuple[int, int]
 
 
-class GameOfLifeFasterDict(GameOfLife):
-    """Implements Game of Life using a Python dict implementation."""
+class GameOfLifeSet(GameOfLife):
+    """Implements Game of Life using a Python set implementation."""
 
     def __init__(self) -> None:
         """Initialise the map."""
@@ -45,9 +45,7 @@ class GameOfLifeFasterDict(GameOfLife):
             # check how many live neighbours we have
             num_live_neighbours: int = 0
             dead_neighbour_coords: list[Coordinate] = []
-            for cell_coord in GameOfLifeFasterDict._compute_neighbours(
-                coords[0], coords[1]
-            ):
+            for cell_coord in GameOfLifeSet._compute_neighbours(coords[0], coords[1]):
                 if cell_coord in old_gen:
                     num_live_neighbours += 1
                 else:
@@ -72,7 +70,7 @@ class GameOfLifeFasterDict(GameOfLife):
             for coords in dead_neighbour_coords:
                 if coords not in checked_dead_cells:
                     num_live_neighbours = 0
-                    for cell_coord in GameOfLifeFasterDict._compute_neighbours(
+                    for cell_coord in GameOfLifeSet._compute_neighbours(
                         coords[0], coords[1]
                     ):
                         if cell_coord in old_gen:

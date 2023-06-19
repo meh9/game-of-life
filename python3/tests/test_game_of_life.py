@@ -6,7 +6,7 @@ from gameoflife import (
     GameOfLife,
     GameOfLifeArrays,
     GameOfLifeDict,
-    GameOfLifeFasterDict,
+    GameOfLifeSet,
 )
 
 
@@ -81,7 +81,7 @@ Generation: 100
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
-        gol: GameOfLife = GameOfLifeFasterDict()
+        gol: GameOfLife = GameOfLifeSet()
         gol.set_cell(0, 0, True)
         gol.set_cell(0, 1, True)
         gol.set_cell(0, 2, True)
