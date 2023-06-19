@@ -1,6 +1,8 @@
 """File Loader for Run Length Encoded file types."""
 
 from io import TextIOWrapper
+
+# from time import perf_counter_ns
 from types import TracebackType
 from gameoflife import FileLoader, FLContextManager
 import pyparsing as pp
@@ -87,7 +89,10 @@ class RunLengthEncoded(FLContextManager):
     def __enter__(self) -> FileLoader:
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
+        # start: int = perf_counter_ns()
         results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
+        # last_gen_time: int = perf_counter_ns() - start
+        # print(f"Parsing finished in {round(last_gen_time / 1000)} µs")
         self.metadata = (
             results.metadata.as_list() if results.metadata else []  # type:ignore
         )
@@ -96,8 +101,8 @@ class RunLengthEncoded(FLContextManager):
         if results.rule:  # type: ignore
             self._rule = results.rule[0]  # type: ignore
 
-        # initialise a row/col array of False to take the cells
-        self.cells = [[False for _ in range(self._cols)] for _ in range(self._rows)]
+        # print("Starting to process parsed data...")
+        # start = perf_counter_ns()
         # create iterator in order to add types
         row_iter: enumerate[list[int | str]] = enumerate(
             results.data_rows  # type:ignore
@@ -113,23 +118,32 @@ class RunLengthEncoded(FLContextManager):
             for data_index, data in data_iter:
                 # if we get an int then we replicate that number of cells
                 if isinstance(data, int):
-                    # detect empty rows
+                    # is it a number of empty rows
                     if data_row[data_index + 1] == "$":
-                        # because we are currently processing one of the empty rows add -1
+                        # track the number of empty rows, subtract 1 to avoid double counting it
+                        # because we are currently processing the first empty row
                         empty_rows += data - 1
+                    # if it is not an empty row
                     else:
-                        cell: bool = data_row[data_index + 1] == "o"
-                        # set the number of cells to the value
-                        for _ in range(data):
-                            self.cells[row_index + empty_rows][col_index] = cell
-                            col_index += 1
+                        live: bool = data_row[data_index + 1] == "o"
+                        # if we are adding live cells add their coords to the list of cells
+                        if live:
+                            for _ in range(data):
+                                self.cells.append((row_index + empty_rows, col_index))
+                                col_index += 1
+                        # "skip" dead cells by adding them as an offset to the col index
+                        else:
+                            col_index += data
                     # skip the next data value as we just "used" it
                     next(data_iter, None)
                 # otherwise transform the data value to a cell value and store it
                 else:
-                    self.cells[row_index + empty_rows][col_index] = data == "o"
+                    live = data_row[data_index] == "o"
+                    if live:
+                        self.cells.append((row_index + empty_rows, col_index))
                     col_index += 1
-
+        # last_gen_time = perf_counter_ns() - start
+        # print(f"Processing parsed data finished in {round(last_gen_time / 1000)} µs")
         return self
 
     def __exit__(

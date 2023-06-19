@@ -1,8 +1,7 @@
 """Game of Life dict implementation."""
 
 from gameoflife import GameOfLife
-
-Coordinate = tuple[int, int]
+from gameoflife import Coordinate
 
 
 class GameOfLifeDict(GameOfLife):

@@ -59,11 +59,10 @@ class PlainText(FLContextManager):
         self.metadata = (
             results.metadata.as_list() if results.metadata else []  # type:ignore
         )
-        self.cells = []
         for row_index, row in enumerate(results.data_rows.as_list()):  # type:ignore
-            self.cells.append([])
-            for col in row:  # type:ignore
-                self.cells[row_index].append(True if col == "O" else False)
+            for col_index, cell in enumerate(row):  # type:ignore
+                if cell == "O":
+                    self.cells.append((row_index, col_index))
         return self
 
     def __exit__(

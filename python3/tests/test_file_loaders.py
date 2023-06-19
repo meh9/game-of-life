@@ -82,8 +82,7 @@ OO........O...O.OO....O.O...........
         with create_loader("../data/glider.cells") as loader:
             assert loader.__class__ is PlainText
             assert loader.metadata  # type: ignore
-            assert loader.cells[0][0] is False
-            assert loader.cells[0][1] is True
+            assert loader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
             assert (
                 str(loader)
                 == """\
@@ -91,10 +90,9 @@ PlainText
 file: ../data/glider.cells
 metadata: [['Name: Glider'], ['Author: Richard K. Guy'], ['The smallest, most common, and first discovered spaceship.'], ['www.conwaylife.com/wiki/index.php?title=Glider']]
 cells:
-. ■
+. ■ .
 . . ■
-■ ■ ■
-"""
+■ ■ ■"""
             )
 
     def test_empty_data_rows(self) -> None:
@@ -109,19 +107,17 @@ PlainText
 file: ../data/empty_data_rows.cells
 metadata: []
 cells:
-. . . . . . . . . . . . ■ ■ . . . . . . . . . . . . . . . . . . . . . .
-
-
-. . . . . ■ .
-. . ■ . .
-
-. . .
-
-
-
-■
-
-."""
+. . . . . . . . . . . . ■ ■
+. . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+. . . . . ■ . . . . . . . .
+. . ■ . . . . . . . . . . .
+. . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+■ . . . . . . . . . . . . ."""
             )
 
 
@@ -135,11 +131,27 @@ class TestRunLengthEncoded:
         thrown in."""
         with create_loader("../data/no_metadata_test.rle") as loader:
             assert loader.metadata == []
-            assert loader.cells[0][0] is False
-            assert loader.cells[0][1] is True
-            assert loader.cells[0][2] is False
-            assert loader.cells[13][6] is False
-            assert loader.cells[13][7] is True
+            assert loader.cells == [
+                (0, 1),
+                (0, 3),
+                (0, 5),
+                (0, 7),
+                (2, 2),
+                (2, 3),
+                (2, 4),
+                (2, 5),
+                (2, 6),
+                (13, 0),
+                (13, 1),
+                (13, 2),
+                (13, 7),
+                (13, 8),
+                (13, 9),
+                (13, 10),
+                (13, 11),
+                (13, 12),
+                (13, 13),
+            ]
 
     def test_empty_row_data(self) -> None:
         """Specific test for testing data patterns like "7$" and "23$" which specifies a number of
@@ -150,14 +162,9 @@ class TestRunLengthEncoded:
             # 71b3o11b3o$70bo2bo10bo2bo$40b3o11b3o16bo4b3o6bo$40bo2bo10bo2bo15bo4bo
             # 2bo5bo$40bo6b3o4bo17bo4bo8bo$40bo5bo2bo4bo$41bo8bo4bo2$...
             # the skipped row is row index 7, so check it's all False
-            assert loader.cells[7] == [False for _ in range(218)]
-            # then check some random True
-            assert loader.cells[6][40] is False
-            assert loader.cells[6][41] is True
-            assert loader.cells[6][42] is False
-            assert loader.cells[8][71] is False
-            assert loader.cells[8][72] is True
-            assert loader.cells[8][73] is False
+            assert loader.cells[43] == (6, 55)
+            assert loader.cells[44] == (8, 72)
+            assert len(loader.cells) == 1186
 
     def test_run_length_encoded(self) -> None:
         """Test the RunLengthEncoded file type."""
@@ -168,8 +175,7 @@ class TestRunLengthEncoded:
             assert loader._cols  # type: ignore
             assert loader._rows  # type: ignore
             assert loader._rule  # type: ignore
-            assert loader.cells[0][0] is False
-            assert loader.cells[0][1] is True
+            assert loader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
             assert (
                 str(loader)
                 == """\

@@ -1,6 +1,7 @@
 """Import all the other sources and re-export them for easier importing elsewhere."""
 
 # pylint: disable=useless-import-alias
+from gameoflife.coordinate import Coordinate as Coordinate
 from gameoflife.fileloader import FileLoader as FileLoader
 from gameoflife.fileloader import FLContextManager as FLContextManager
 from gameoflife.createloader import create_loader as create_loader

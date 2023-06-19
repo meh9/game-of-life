@@ -43,7 +43,5 @@ class GameOfLife(ABC):
 
     def add_cells(self, loader: FileLoader) -> None:
         """Load cells from the given loader."""
-        for row_index, row in enumerate(loader.cells):
-            for col_index, cell in enumerate(row):
-                if cell:
-                    self.set_cell(row_index, col_index, cell)
+        for row, col in loader.cells:
+            self.set_cell(row, col, True)
