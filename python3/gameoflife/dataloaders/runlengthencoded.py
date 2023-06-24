@@ -67,7 +67,7 @@ class RunLengthEncoded(FLContextManager):
     # obo$10bo5bo7bo$11bo3bo$12b2o!
     _DATA_ROWS: pp.ParserElement = pp.OneOrMore(
         (
-            pp.OneOrMore(pp.Optional(_INT_NUMBER) + _CELL_STATES)
+            pp.ZeroOrMore(pp.Optional(_INT_NUMBER) + _CELL_STATES)
             + (
                 _INT_NUMBER + pp.Literal("$")
                 | pp.Literal("$").suppress()

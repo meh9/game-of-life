@@ -281,3 +281,12 @@ obo$10bo5bo7bo$11bo3bo$12b2o!
             "o",
         ]
         assert results.data_rows[8].as_list() == [12, "b", 2, "o"]  # type:ignore
+
+        # Specific test for data that starts with multiple newlines
+        results = RunLengthEncoded._DATA_ROWS.parse_string("32$8b3o$7bo3bo$6bo4b2o!")
+        assert results.data_rows.as_list() == [  # type:ignore
+            [32, "$"],
+            [8, "b", 3, "o"],
+            [7, "b", "o", 3, "b", "o"],
+            [6, "b", "o", 4, "b", 2, "o"],
+        ]
