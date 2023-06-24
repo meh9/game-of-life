@@ -74,7 +74,7 @@ class MainGame:
                     # print out the minimal game UI
                     self.print_ui()
                     self._header_loc = floor(self._t.width / 2)
-                    self.print_ui_update(False, self._gol.count_live_cells(), None)
+                    self.print_ui_update(False, self._gol.count_live_cells())
                     # init last edit location to be centre of view
                     row: int = (
                         floor(
@@ -144,6 +144,7 @@ class MainGame:
                         print(self._t.move_up(1), end="")
                     else:
                         self._origin_row -= 1
+                    self.print_ui_update(False, self._gol.count_live_cells())
                 case self._t.KEY_DOWN:
                     # check if we are at the bottom of the view and need to scroll instead
                     row = self._t.get_location()[0]
@@ -154,6 +155,7 @@ class MainGame:
                         print(self._t.move_down(1), end="")
                     else:
                         self._origin_row += 1
+                    self.print_ui_update(False, self._gol.count_live_cells())
                 case self._t.KEY_LEFT:
                     # check if we are at the left edge of the view and need to scroll instead
                     col: int = self._t.get_location()[1]
@@ -161,6 +163,7 @@ class MainGame:
                         print(self._t.move_left(2), end="")
                     else:
                         self._origin_col -= 1
+                    self.print_ui_update(False, self._gol.count_live_cells())
                 case self._t.KEY_RIGHT:
                     # check if we are at the right edge of the view and need to scroll instead
                     col = self._t.get_location()[1]
@@ -168,6 +171,7 @@ class MainGame:
                         print(self._t.move_right(2), end="")
                     else:
                         self._origin_col += 1
+                    self.print_ui_update(False, self._gol.count_live_cells())
                 case _:
                     pass  # do nothing with unrecognised keys
         else:
@@ -209,7 +213,7 @@ class MainGame:
                         # once we reach a low threshold just set it to 0
                         if self._sleep_time < 0.001:
                             self._sleep_time = 0
-                        self.print_ui_update(False, self._gol.count_live_cells(), None)
+                        self.print_ui_update(False, self._gol.count_live_cells())
                 case "-" | "[":
                     if not self._edit_mode:
                         self._sleep_time = (
@@ -219,7 +223,7 @@ class MainGame:
                             else 0.001953125
                         )
                         # self._sleep_time *= 2
-                        self.print_ui_update(False, self._gol.count_live_cells(), None)
+                        self.print_ui_update(False, self._gol.count_live_cells())
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
@@ -236,7 +240,7 @@ class MainGame:
     #                      p......h......  header_location = term.width - (len(name) / 2) = 46
 
     def print_ui_update(
-        self, progress: bool, live_count: int, last_gen_time: int | None
+        self, progress: bool, live_count: int, last_gen_time: int | None = None
     ) -> None:
         """Update things in the UI that needs updating; game name location, stats, etc."""
         # calculate moving header sectiong
@@ -265,15 +269,22 @@ class MainGame:
 
         footer_start_row: int = self._t.height - MainGame.FOOTER_ROWS
         with self._t.location(0, footer_start_row), self._t.hidden_cursor():
-            print(self._t.bold("Statistics/Info") + self._t.move_down)
+            print(self._t.bold("Info") + self._t.move_down)
             print(f"Generation:    {self._gol.generation}")
             print(f"Live cells:    {live_count}   ")
             # intentional space on the end of "seconds " below
             print(f"Frame delay:   {self._sleep_time*1000:.4g} ms    ")
-            if last_gen_time is not None:
-                print(f"Progress time: {round(last_gen_time / 1000)} µs   ", end="")
+            time_str: str = (
+                str(round(last_gen_time / 1000)) + " µs"
+                if last_gen_time is not None
+                else ""
+            )
+            print(f"Progress time: {time_str}   ")
+            print(
+                f"Coords:        row:{self._origin_row} col:{self._origin_col}  ",
+                end="",
+            )
             # future stats, max total of FOOTER_ROWS-2 due to current formatting
-            # print("")
             # print("", end="")
 
     def print_game(self) -> None:

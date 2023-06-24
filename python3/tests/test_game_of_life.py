@@ -241,11 +241,12 @@ class TestMainGame:
     PRINT_UI_UPDATE_OUTPUT = (
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
-        + "Statistics/Info\n"
+        + "Info\n"
         + "Generation:    0\n"
         + "Live cells:    5   \n"
         + "Frame delay:   250 ms    \n"
-        + "Progress time: 0 µs   "
+        + "Progress time: 0 µs   \n"
+        + "Coords:        row:0 col:0  "
     )
 
     PRINT_GAME_OUTPUT = """\
