@@ -40,7 +40,7 @@ def main() -> None:
         help="specify the number of columns to use when using --wrap - default is terminal width",
     )
     args: Namespace = parser.parse_args()
-    if not args.wrap and (args.rows or args.cols):
+    if not args.wrap and (args.rows[0] or args.cols[0]):
         raise ValueError("Do not specify --rows or --cols without --wrap")
     file: str = args.file[0] if args.file else ""
     print(f"{args.rows} {args.cols}")
