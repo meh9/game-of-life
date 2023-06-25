@@ -278,21 +278,21 @@ class TestMainGame:
     )
 
     PRINT_GAME_OUTPUT = """\
-. ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-■ ■ ■ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  ■                                                                            
+    ■                                                                          
+■ ■ ■                                                                          
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
 """
 
     @staticmethod
@@ -307,9 +307,15 @@ class TestMainGame:
         """Test that we can even run at all."""
         assert MainGame(False)
 
+    def test_initialise_wrap(self) -> None:
+        """Test that we load different class when wrapping."""
+        main: MainGame = MainGame(True)
+        assert main
+        assert main._gol.__class__.__name__ == GameOfLifeArrays(0, 0).__class__.__name__
+
     def test_load_rle_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of an RLE file."""
-        main: MainGame = MainGame(True, "../data/glider.rle")
+        main: MainGame = MainGame(False, "../data/glider.rle")
         main._run = False
         main.main()
         main.print_game()
@@ -318,7 +324,7 @@ class TestMainGame:
 
     def test_load_plain_text_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of a Plain Text file."""
-        main: MainGame = MainGame(True, "../data/glider.cells")
+        main: MainGame = MainGame(False, "../data/glider.cells")
         main._run = False
         main.main()
         main.print_game()

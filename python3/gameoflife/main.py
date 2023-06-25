@@ -19,6 +19,7 @@ class MainGame:
     ) -> None:
         """Initialise the game."""
         self._run: bool = True  # keep looping as long as this is true
+        self._wrap: bool = wrap
         self._automatic: bool = False  # loop automatically and continuously when true
         self._sleep_time: float = 0.25  # seconds to sleep between loops in automatic
         self._origin_row: int = 0  # top row of the game view of the universe
@@ -304,10 +305,11 @@ class MainGame:
                     cell: bool | None = self._gol.get_cell(
                         self._origin_row + view_row, self._origin_col + view_col
                     )
+                    dead_cell_str: str = "." if self._wrap else " "
                     if cell is None:
                         row_list.append(" ")
                     else:
-                        row_list.append("■" if cell else ".")
+                        row_list.append("■" if cell else dead_cell_str)
                         # □ ■ ▫ ◉ ○ ◌ ◎ ● ◯ ☉ ☐ ☻ ◦
                 print(" ".join(row_list))
                 row_list = []
