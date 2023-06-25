@@ -9,7 +9,7 @@ pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_dict_progress_large_file() -> None:
     """Performance test for the GameOfLifeDict().progress() method."""
     gol: GameOfLife = GameOfLifeDict()
@@ -38,8 +38,8 @@ def test_dict_progress_large_file() -> None:
 
 
 # @pytest.mark.skip
-def test_faster_dict_progress_large_file() -> None:
-    """Performance test for the GameOfLifeFasterDict().progress() method."""
+def test_set_progress_large_file() -> None:
+    """Performance test for the GameOfLifeSet().progress() method."""
     gol: GameOfLife = GameOfLifeSet()
     LOGGER.info("'create_loader(period59glidergun.rle)' starting...")
     start: int = perf_counter_ns()
