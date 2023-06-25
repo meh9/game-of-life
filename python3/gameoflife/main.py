@@ -5,7 +5,7 @@ from math import floor
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
 from blessed.keyboard import Keystroke  # type:ignore
-from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeDict, create_loader
+from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeSet, create_loader
 
 
 class MainGame:
@@ -36,7 +36,7 @@ class MainGame:
                 height, floor((self._t.width + 1) / 2)
             )
         else:
-            self._gol = GameOfLifeDict()
+            self._gol = GameOfLifeSet()
 
         if file:
             with create_loader(file) as loader:
