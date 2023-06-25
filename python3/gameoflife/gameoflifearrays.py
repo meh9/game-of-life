@@ -43,8 +43,15 @@ class GameOfLifeArrays(GameOfLife):
         return count
 
     def set_cell(self, row: int, col: int, live: bool) -> None:
-        """Set a cell in the array to the given live value."""
-        self._a_array[row][col] = live
+        """
+        Set a cell in the array to the given live value.
+
+        Cells outside of the boundaries of the array will wrap around as their coordinate will be
+        modulo the array height and width. For large patterns and small arrays (like the size of a
+        single monitor screen) this will usually simply mean that every cell in the array is set,
+        and on the first generation every cell will die.
+        """
+        self._a_array[row % len(self._a_array)][col % len(self._a_array[0])] = live
 
     def count_live_cells(self) -> int:
         """Count the total number of live cells in the GoL universe."""
