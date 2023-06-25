@@ -62,12 +62,14 @@ Further simplified Rules that are easier to program:
 1. Assign `B` to `A`, clear `tmp`.
 
 Negatives:
+1. only 2 states per cell - alive (coordinates present) or dead (coordinates not present)
 1. does a lot of set lookups:
     1. 8 lookups to find the neighbours of each live cell
     1. 1 lookup for each dead neighbour to see if it has already been checked
     1. for each of the dead neighbours that has not already been checked, another 8 lookups to see if it has enough live neighbours to come alive
 
 Positives:
+1. memory efficient as we only store coordinates, no other state
 1. able to create much larger universes compared to e.g. arrays or the map implementation - as long as the universe is sparsely populated
 1. no edge to the universe except for the languages maximum key value (e.g. in Java Integer.MAX) which gliders etc will eventually hit - could try to deal with this by using some implementation of e.g. BigInteger?
 1. not too hard to understand
