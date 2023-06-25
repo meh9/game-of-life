@@ -14,7 +14,9 @@ class MainGame:
     HEADER_ROWS: int = 2
     FOOTER_ROWS: int = 8
 
-    def __init__(self, wrap: bool, file: str = "") -> None:
+    def __init__(
+        self, wrap: bool, file: str = "", wrap_rows: int = 0, wrap_cols: int = 0
+    ) -> None:
         """Initialise the game."""
         self._run: bool = True  # keep looping as long as this is true
         self._automatic: bool = False  # loop automatically and continuously when true
@@ -31,10 +33,13 @@ class MainGame:
 
         # infinite or wrapping universe
         if wrap:
-            height: int = self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
-            self._gol: GameOfLife = GameOfLifeArrays(
-                height, floor((self._t.width + 1) / 2)
+            height: int = (
+                wrap_rows
+                if wrap_rows
+                else self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS
             )
+            width: int = wrap_cols if wrap_cols else floor((self._t.width + 1) / 2)
+            self._gol: GameOfLife = GameOfLifeArrays(height, width)
         else:
             self._gol = GameOfLifeSet()
 

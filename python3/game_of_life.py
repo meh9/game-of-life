@@ -1,8 +1,6 @@
 """Simple Conway's Game of Life implementation."""
 
 from argparse import ArgumentParser, Namespace
-
-# from sys import exit as sysexit
 from gameoflife import MainGame
 
 
@@ -13,7 +11,7 @@ def main() -> None:
         "-f",
         "--file",
         # don't use FileType here - we want a str to use a context manager with later
-        nargs="?",
+        nargs=1,
         help="specify a file to read initial cells from",
     )
     parser.add_argument(
@@ -25,25 +23,28 @@ def main() -> None:
         + "fixed size which wraps around the edges, the fixed size universe will default to the "
         + "size of the terminal on start and cannot be changed later",
     )
-    # mypy ignore below should work in next mypy version
-    # REMEMBER to remove --no-warn-unused-ignores from workspace config when fixed
-    # TODO: we don't need to add ability to load anything but RLE at this point
-    # group = parser.add_mutually_exclusive_group()  # type: ignore[unused-ignore]
-    # group.add_argument(
-    #     "-r",
-    #     "--rle",
-    #     action="store_true",
-    #     help="the specified file is of type Run Length Encoded (RLE)",
-    # )
+    parser.add_argument(
+        "-r",
+        "--rows",
+        default=[0],
+        type=int,
+        nargs=1,
+        help="specify the number of rows to use when using --wrap - default is terminal height",
+    )
+    parser.add_argument(
+        "-c",
+        "--cols",
+        default=[0],
+        type=int,
+        nargs=1,
+        help="specify the number of columns to use when using --wrap - default is terminal width",
+    )
     args: Namespace = parser.parse_args()
-
-    # is there a way to make argparse ensure we have exactly one type if we have a file arg?
-    # if args.file and not args.rle:
-    #     print("\nFilename specified but no file type argument given.\n")
-    #     parser.print_help()
-    #     sysexit(1)
-
-    MainGame(args.wrap, args.file).main()
+    if not args.wrap and (args.rows or args.cols):
+        raise ValueError("Do not specify --rows or --cols without --wrap")
+    file: str = args.file[0] if args.file else ""
+    print(f"{args.rows} {args.cols}")
+    MainGame(args.wrap, file, args.rows[0], args.cols[0]).main()
 
 
 if __name__ == "__main__":
