@@ -11,10 +11,10 @@ class GameOfLifeSet(GameOfLife):
         """Initialise the map."""
         super().__init__()
         self._cells: set[Coordinate] = set()
-        self._min_row: int = 0
-        self._max_row: int = 0
-        self._min_col: int = 0
-        self._max_col: int = 0
+        self._min_row: int
+        self._max_row: int
+        self._min_col: int
+        self._max_col: int
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
@@ -31,10 +31,6 @@ class GameOfLifeSet(GameOfLife):
 
     def progress(self) -> int:
         """Progress another generation."""
-        self._min_row = 0
-        self._max_row = 0
-        self._min_col = 0
-        self._max_col = 0
         old_gen: set[Coordinate] = self._cells
         self._cells = set()
         checked_dead_cells: set[Coordinate] = set()
@@ -54,12 +50,12 @@ class GameOfLifeSet(GameOfLife):
             match num_live_neighbours:
                 # 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case 2:
-                    self._cells.add(coords)
+                    self._set_cell(coords)
                     count += 1
                 # 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the
                 # next generation.
                 case 3:
-                    self._cells.add(coords)
+                    self._set_cell(coords)
                     count += 1
                 # 3. All other cells are dead in the next generation.
                 case _:
@@ -75,18 +71,20 @@ class GameOfLifeSet(GameOfLife):
                         if cell_coord in old_gen:
                             num_live_neighbours += 1
                     if num_live_neighbours == 3:
-                        self._cells.add(coords)
+                        self._set_cell(coords)
                         count += 1
                 checked_dead_cells.add(coords)
 
         self.generation += 1
         return count
 
+    def _set_cell(self, coord: Coordinate) -> None:
+        self.set_cell(coord[0], coord[1], True)
+
     def set_cell(self, row: int, col: int, live: bool) -> None:
         """Set a cell in the map to the given live value."""
         # only add the cell to the map if it is live
         if live:
-            self._cells.add((row, col))
             # track the min/max of cols
             if len(self._cells) == 0:  # just set them first time around
                 self._min_row = row
@@ -98,6 +96,7 @@ class GameOfLifeSet(GameOfLife):
                 self._max_row = row if row > self._max_row else self._max_row
                 self._min_col = col if col < self._min_col else self._min_col
                 self._max_col = col if col > self._max_col else self._max_col
+            self._cells.add((row, col))
 
     def count_live_cells(self) -> int:
         """Count the total number of live cells in the GoL universe."""

@@ -11,10 +11,10 @@ class GameOfLifeDict(GameOfLife):
         """Initialise the map."""
         super().__init__()
         self._cells: dict[Coordinate, bool] = {}
-        self._min_row: int = 0
-        self._max_row: int = 0
-        self._min_col: int = 0
-        self._max_col: int = 0
+        self._min_row: int
+        self._max_row: int
+        self._min_col: int
+        self._max_col: int
 
     def __str__(self) -> str:
         """Iterate over all the cells and return a human readable string."""
@@ -31,10 +31,6 @@ class GameOfLifeDict(GameOfLife):
 
     def progress(self) -> int:
         """Progress another generation."""
-        self._min_row = 0
-        self._max_row = 0
-        self._min_col = 0
-        self._max_col = 0
         old_gen: dict[Coordinate, bool] = self._cells
         self._cells = {}
         count: int = 0

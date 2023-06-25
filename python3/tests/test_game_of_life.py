@@ -35,12 +35,12 @@ def set_cell_and_assert(gol: GameOfLife, live: bool, num_live: int) -> None:
     assert gol.count_live_cells() == num_live
 
 
-class TestGameOfLifeFasterDict:
-    """Tests specifically for the class GameOfLifeSortedDict."""
+class TestGameOfLifeSet:
+    """Tests specifically for the class GameOfLifeSet."""
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
-        gol: GameOfLife = GameOfLifeDict()
+        gol: GameOfLife = GameOfLifeSet()
         MainGame.add_glider(gol)
         assert gol.count_live_cells() == 5
         for _ in range(1000):
@@ -55,15 +55,16 @@ class TestGameOfLifeFasterDict:
 
     def test_outofbounds(self) -> None:
         """Test that we get False when asking for a cell out of bounds."""
-        gol: GameOfLife = GameOfLifeDict()
+        gol: GameOfLife = GameOfLifeSet()
         gol.set_cell(10, 10, True)
         assert gol.get_cell(2, 2) is False
         assert gol.get_cell(10, 10) is True
 
     def test_str(self) -> None:
         """Test the str generation."""
-        gol: GameOfLife = GameOfLifeDict()
+        gol: GameOfLife = GameOfLifeSet()
         MainGame.add_glider(gol)
+        print(gol)
         for _ in range(100):
             gol.progress()
             assert gol.count_live_cells() == 5
@@ -72,11 +73,9 @@ class TestGameOfLifeFasterDict:
             str(gol)
             == """\
 Generation: 100
-  □ □ □   
-  □ ■ □ □ 
-□ □ □ ■ □ 
-□ ■ ■ ■ □ 
-□ □ □ □ □ """
+  ■   
+    ■ 
+■ ■ ■ """
         )  # note trailing spaces on all rows above
 
     def test_match_case2(self) -> None:
