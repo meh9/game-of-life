@@ -52,13 +52,13 @@ python3 game_of_life.py --help
 
 Collecting a few things TODO in here in no particular order:
 1. When loading data with `--wrap`, modulus all the coords with the width to "pack" in the cells in the available space.
-1. RunLengthEncoded or GameOfLifeDict is very memory hungry, see if we can do something about that.
 1. Python dependencies and transient dependencies license checker - possibility to check for license compatibility automatically?
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
 1. Use Sphinx with Google code guide: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 1. Configure pre-commit hooks for Mypy, Black, etc? https://composed.blog/python/pre-commit
 1. (Done) Show x/y coords on screen (top left?)
 1. (Done) Fix error loading `growing3c14piwaveship.rle`, looks like starting with `32$` is breaking parsing.
+1. (Done) RunLengthEncoded or GameOfLifeDict is very memory hungry, see if we can do something about that.
 1. (Done) Use argparse to parse command line args.
 1. (Done) Add some kind of curses capability for displaying better in a terminal.
 1. (Done) Use pytest to test things.
