@@ -27,6 +27,11 @@ def test_set_unset_set() -> None:
     set_cell_and_assert(gol, False, 0)
     set_cell_and_assert(gol, True, 1)
 
+    gol = GameOfLifeSet()
+    set_cell_and_assert(gol, True, 1)
+    set_cell_and_assert(gol, False, 0)
+    set_cell_and_assert(gol, True, 1)
+
 
 def set_cell_and_assert(gol: GameOfLife, live: bool, num_live: int) -> None:
     """Set a cell and assert it stuck."""

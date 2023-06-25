@@ -97,6 +97,8 @@ class GameOfLifeSet(GameOfLife):
                 self._min_col = col if col < self._min_col else self._min_col
                 self._max_col = col if col > self._max_col else self._max_col
             self._cells.add((row, col))
+        else:
+            self._cells.remove((row, col))
 
     def count_live_cells(self) -> int:
         """Count the total number of live cells in the GoL universe."""
