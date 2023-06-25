@@ -57,6 +57,7 @@ Collecting a few things TODO in here in no particular order:
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
 1. Use Sphinx with Google code guide: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 1. Configure pre-commit hooks for Mypy, Black, etc? https://composed.blog/python/pre-commit
+1. (Done) Test that array wrap of large patterns wrap correctly.
 1. (Done) Show x/y coords on screen (top left?)
 1. (Done) Fix error loading `growing3c14piwaveship.rle`, looks like starting with `32$` is breaking parsing.
 1. (Done) RunLengthEncoded or GameOfLifeDict is very memory hungry, see if we can do something about that.

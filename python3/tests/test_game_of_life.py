@@ -7,6 +7,7 @@ from gameoflife import (
     GameOfLifeArrays,
     GameOfLifeDict,
     GameOfLifeSet,
+    create_loader,
 )
 
 
@@ -98,6 +99,29 @@ Generation: 100
 
 class TestGameOfLifeArrays:
     """Tests specifically for the class GameOfLifeArrays."""
+
+    def test_modulo_wrap(self) -> None:
+        """Test that a patter larger than the array is wrapped correctly."""
+        gol: GameOfLife = GameOfLifeArrays(12, 10)
+        with create_loader("../data/test_wrap.cells") as loader:
+            gol.add_cells(loader)
+        assert (
+            str(gol)
+            == """\
+Generation: 0
+□ □ ■ □ □ ■ □ ■ □ □ 
+□ □ ■ □ □ □ ■ □ ■ □ 
+□ □ ■ □ □ □ □ ■ □ □ 
+□ □ □ □ □ □ □ □ ■ □ 
+□ □ □ □ □ □ □ □ □ ■ 
+■ □ □ □ □ □ □ □ □ □ 
+□ ■ □ □ □ □ □ □ □ □ 
+□ □ ■ □ □ □ □ □ □ □ 
+□ □ □ ■ □ □ □ □ □ □ 
+□ □ □ □ ■ □ □ □ □ □ 
+□ □ ■ □ □ ■ □ □ □ □ 
+□ □ ■ □ □ □ ■ □ □ □ """
+        )
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
