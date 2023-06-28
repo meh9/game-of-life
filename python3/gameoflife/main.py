@@ -1,6 +1,7 @@
 """The main game control and run loop."""
 
 # from sys import exit as sysexit
+from datetime import datetime
 from math import floor
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
@@ -138,6 +139,7 @@ class MainGame:
             self._t.inkey(0.1) if block else self._t.inkey(timeout=self._sleep_time)
         )
 
+        # TODO: break all these out into little functions
         # process any potential key
         if key.is_sequence:
             match key.code:
@@ -194,6 +196,9 @@ class MainGame:
                     else:
                         # progress the game a generation
                         return True
+                case "a":
+                    if not self._edit_mode:
+                        self._automatic = not self._automatic
                 case "e":
                     if self._edit_mode:
                         self._edit_mode = False
@@ -208,11 +213,27 @@ class MainGame:
                         # return to last edit location
                         print(self._t.move_x(self._last_edit_location[1]), end="")
                         print(self._t.move_y(self._last_edit_location[0]), end="")
-                case "a":
-                    if not self._edit_mode:
-                        self._automatic = not self._automatic
                 case "q":
                     self._run = False
+                case "s":
+                    self._automatic = False  # if we are running, stop
+                    # move down to the bottom of the screen
+                    with self._t.location(0, self._t.height - 1):
+                        print("Save RLE to path/filename: ", flush=True, end="")
+                        filename: str = ""
+                        stop: bool = False
+                        while not stop:
+                            save_key: Keystroke = self._t.inkey()
+                            if save_key.is_sequence:
+                                if int(self._t.KEY_ENTER) == save_key.code:
+                                    stop = True
+                            else:
+                                filename += save_key
+                                print(save_key, flush=True, end="")
+                    # TODO: save file happens here
+                    with self._t.location(0, self._t.height - 1):
+                        timestamp: str = datetime.now().strftime("%H:%M:%S")
+                        print(f"Saved game to file '{filename}' at {timestamp}", end="")
                 case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
                     if not self._edit_mode:
                         self._sleep_time /= 2
