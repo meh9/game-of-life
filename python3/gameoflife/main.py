@@ -65,7 +65,6 @@ class MainGame:
         # divide in half again because we only print every other col
         # self._origin_col = 0 - floor(self._t.width / 2 / 2)
 
-        # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game
         with self._t.fullscreen(), self._t.cbreak():  # , term.hidden_cursor():
             while self._run:  # pragma: no cover
@@ -74,36 +73,7 @@ class MainGame:
                     self._term_width != self._t.width
                     or self._term_height != self._t.height
                 ):
-                    self._term_width = self._t.width
-                    self._term_height = self._t.height
-                    # reset cursor and clear the screen
-                    print(self._t.home + self._t.clear, end="")
-                    # print out the minimal game UI
-                    self.print_ui()
-                    self._header_loc = floor(self._t.width / 2)
-                    self.print_ui_update(False, self._gol.count_live_cells())
-                    # init last edit location to be centre of view
-                    row: int = (
-                        floor(
-                            # calculate the number of game rows in the view
-                            (
-                                self._t.height
-                                - MainGame.HEADER_ROWS
-                                - MainGame.FOOTER_ROWS
-                            )
-                            # find the centre of the game rows
-                            / 2
-                        )
-                        # turn into 0-indexed terminal row
-                        - 1
-                        # offseet down by HEADER_ROWS
-                        + MainGame.HEADER_ROWS
-                    )
-                    # find the centre of the terminal view, turn into 0-index terminal col
-                    col: int = floor(self._t.width / 2) - 1
-                    # column has to be even number as we only print cells in even columns
-                    col = col if col % 2 == 0 else col - 1
-                    self._last_edit_location = (row, col)
+                    self.update_screen_size()
 
                 # print the game cells, taking care not to print over the bottom text
                 self.print_game()
@@ -125,6 +95,35 @@ class MainGame:
                         last_gen_time = perf_counter_ns() - start
                         # update the UI to reflect any changes
                         self.print_ui_update(True, live_count, last_gen_time)
+
+    def update_screen_size(self) -> None:
+        """Update the screen size on first run, or when the terminal size has changed."""
+        self._term_width = self._t.width
+        self._term_height = self._t.height
+        # reset cursor and clear the screen
+        print(self._t.home + self._t.clear, end="")
+        # print out the minimal game UI
+        self.print_ui()
+        self._header_loc = floor(self._t.width / 2)
+        self.print_ui_update(False, self._gol.count_live_cells())
+        # init last edit location to be centre of view
+        row: int = (
+            floor(
+                # calculate the number of game rows in the view
+                (self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS)
+                # find the centre of the game rows
+                / 2
+            )
+            # turn into 0-indexed terminal row
+            - 1
+            # offset down by HEADER_ROWS
+            + MainGame.HEADER_ROWS
+        )
+        # find the centre of the terminal view, turn into 0-index terminal col
+        col: int = floor(self._t.width / 2) - 1
+        # column has to be even number as we only print cells in even columns
+        col = col if col % 2 == 0 else col - 1
+        self._last_edit_location = (row, col)
 
     def process_keystroke(self, block: bool) -> bool:  # pragma: no cover
         """
