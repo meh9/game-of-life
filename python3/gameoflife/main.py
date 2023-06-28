@@ -176,7 +176,7 @@ class MainGame:
         return False
 
     def _move_left(self) -> None:
-        """Move left the view or edit cursor."""
+        """Move the view or edit cursor left."""
         # check if we are at the left edge of the view and need to scroll instead
         col: int = self._t.get_location()[1]
         if self._edit_mode and col > 0:
@@ -186,7 +186,7 @@ class MainGame:
         self.print_ui_update(False, self._gol.count_live_cells())
 
     def _move_right(self) -> None:
-        """Move right the view or edit cursor."""
+        """Move the view or edit cursor right."""
         # check if we are at the right edge of the view and need to scroll instead
         col = self._t.get_location()[1]
         if self._edit_mode and col + 2 < self._t.width:
@@ -196,7 +196,7 @@ class MainGame:
         self.print_ui_update(False, self._gol.count_live_cells())
 
     def _move_down(self) -> None:
-        """Move down the view or edit cursor."""
+        """Move the view or edit cursor down."""
         # check if we are at the bottom of the view and need to scroll instead
         row = self._t.get_location()[0]
         if self._edit_mode and row + 1 < self._t.height - MainGame.FOOTER_ROWS:
@@ -206,7 +206,7 @@ class MainGame:
         self.print_ui_update(False, self._gol.count_live_cells())
 
     def _move_up(self) -> None:
-        """Move up the view or edit cursor."""
+        """Move the view or edit cursor up."""
         # check if we are at the top of the view and need to scroll instead
         row: int = self._t.get_location()[0]
         if self._edit_mode and row > MainGame.HEADER_ROWS:
