@@ -324,22 +324,22 @@ class MainGame:
         with self._t.location(0, 0), self._t.hidden_cursor():
             # footer section
             print(self._t.move_xy(0, self._t.height - (MainGame.FOOTER_ROWS + 1)))
-            print(self._t.center(self._t.bold("Controls                   ")))
+            print(self._t.rjust(self._t.bold("Controls                   ")))
             print("=" * self._t.width)
             # intentional misalignment as some of these are wider on a terminal
-            print(self._t.center("(ノº益º)ノ彡┻━┻  q or ESC  "))
+            print(self._t.rjust("(ノº益º)ノ彡┻━┻  q or ESC  "))
             if self._edit_mode:
-                print(self._t.center("Exit edit mode:  e         "))
-                print(self._t.center("Live/dead cell:  <spacebar>"))
-                print(self._t.center("Move cursor:     ⇦⇧⇩⇨      "))
-                print(self._t.center("                           "))
-                print(self._t.center("                           "), end="")
+                print(self._t.rjust("Exit edit mode:  e         "))
+                print(self._t.rjust("Live/dead cell:  <spacebar>"))
+                print(self._t.rjust("Move cursor:     ⇦⇧⇩⇨      "))
+                print(self._t.rjust("                           "))
+                print(self._t.rjust("                           "), end="")
             else:
-                print(self._t.center("Edit cells:      e         "))
-                print(self._t.center("Step forward:    <spacebar>"))
-                print(self._t.center("Autorun On/Off:  a         "))
-                print(self._t.center("Speed up/down:   +/-       "))
-                print(self._t.center("Move the view:   ⇦⇧⇩⇨      "), end="")
+                print(self._t.rjust("Edit cells:      e         "))
+                print(self._t.rjust("Step forward:    <spacebar>"))
+                print(self._t.rjust("Autorun on/off:  a         "))
+                print(self._t.rjust("Speed up/down:   +/-       "))
+                print(self._t.rjust("Move the view:   ⇦⇧⇩⇨      "), end="")
             # don't forget to update MainGame.FOOTER_ROWS if making changes here!!!
 
     @staticmethod

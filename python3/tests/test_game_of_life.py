@@ -243,24 +243,25 @@ class TestMainGame:
     # use string concatenation to highlight necessary trailing spaces
     PRINT_UI_OUTPUT = (
         "\n"
-        + "                          Controls                                              \n"
+        + "                                                     Controls                   \n"
         + "================================================================================\n"
-        + "                          (ノº益º)ノ彡┻━┻  q or ESC                             \n"
-        + "                          Edit cells:      e                                    \n"
-        + "                          Step forward:    <spacebar>                           \n"
-        + "                          Autorun On/Off:  a                                    \n"
-        + "                          Speed up/down:   +/-                                  \n"
-        + "                          Move the view:   ⇦⇧⇩⇨                                 "
+        + "                                                     (ノº益º)ノ彡┻━┻  q or ESC  \n"
+        + "                                                     Edit cells:      e         \n"
+        + "                                                     Step forward:    <spacebar>\n"
+        + "                                                     Autorun on/off:  a         \n"
+        + "                                                     Speed up/down:   +/-       \n"
+        + "                                                     Move the view:   ⇦⇧⇩⇨      "
     )
 
     # use string concatenation to highlight necessary trailing spaces
     PRINT_UI_EDIT_MODE_OUTPUT = (
-        "\n                          Controls                                              \n"
+        "\n"
+        + "                                                     Controls                   \n"
         + "================================================================================\n"
-        + "                          (ノº益º)ノ彡┻━┻  q or ESC                             \n"
-        + "                          Exit edit mode:  e                                    \n"
-        + "                          Live/dead cell:  <spacebar>                           \n"
-        + "                          Move cursor:     ⇦⇧⇩⇨                                 \n"
+        + "                                                     (ノº益º)ノ彡┻━┻  q or ESC  \n"
+        + "                                                     Exit edit mode:  e         \n"
+        + "                                                     Live/dead cell:  <spacebar>\n"
+        + "                                                     Move cursor:     ⇦⇧⇩⇨      \n"
         + "                                                                                \n"
         + "                                                                                "
     )
