@@ -43,7 +43,6 @@ def main() -> None:
     if not args.wrap and (args.rows[0] or args.cols[0]):
         raise ValueError("Do not specify --rows or --cols without --wrap")
     file: str = args.file[0] if args.file else ""
-    print(f"{args.rows} {args.cols}")
     MainGame(args.wrap, file, args.rows[0], args.cols[0]).main()
 
 
