@@ -330,6 +330,16 @@ Progress time:
 Coords:        row:0 col:0  """
         )
 
+    def test_update_screen_size(self, capfd: CaptureFixture[str]) -> None:
+        """Test the update_screen_size function."""
+        main: MainGame = TestMainGame.create_main_game()
+        main.update_screen_size()
+        capfd.readouterr()
+        assert main._term_width == 80
+        assert main._term_height == 25
+        assert main._header_loc == 40
+        assert main._last_edit_location == (8, 38)
+
     def test_initialise(self) -> None:
         """Test that we can even run at all."""
         assert MainGame(False)
