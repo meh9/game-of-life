@@ -304,6 +304,32 @@ class TestMainGame:
         main.main()
         return main
 
+    def test_change_speed(self, capfd: CaptureFixture[str]) -> None:
+        """Test the keyboard input functions."""
+        main: MainGame = TestMainGame.create_main_game()
+        main._decrease_speed()
+        main._increase_speed()
+        out: str = capfd.readouterr()[0]
+        assert (
+            out
+            == """\
+ ■ Conways's Game of Life □ 
+ ========================== 
+Info
+Generation:    0
+Live cells:    5   
+Frame delay:   500 ms    
+Progress time:    
+Coords:        row:0 col:0   ■ Conways's Game of Life □ 
+ ========================== 
+Info
+Generation:    0
+Live cells:    5   
+Frame delay:   250 ms    
+Progress time:    
+Coords:        row:0 col:0  """
+        )
+
     def test_initialise(self) -> None:
         """Test that we can even run at all."""
         assert MainGame(False)
