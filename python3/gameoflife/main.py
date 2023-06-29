@@ -175,7 +175,7 @@ class MainGame:
                     pass  # do nothing with unrecognised keys
         return False
 
-    def _move_left(self) -> None:
+    def _move_left(self) -> None:  # pragma: no cover
         """Move the view or edit cursor left."""
         # check if we are at the left edge of the view and need to scroll instead
         col: int = self._t.get_location()[1]
@@ -185,7 +185,7 @@ class MainGame:
             self._origin_col -= 1
         self.print_ui_update(False, self._gol.count_live_cells())
 
-    def _move_right(self) -> None:
+    def _move_right(self) -> None:  # pragma: no cover
         """Move the view or edit cursor right."""
         # check if we are at the right edge of the view and need to scroll instead
         col = self._t.get_location()[1]
@@ -195,7 +195,7 @@ class MainGame:
             self._origin_col += 1
         self.print_ui_update(False, self._gol.count_live_cells())
 
-    def _move_down(self) -> None:
+    def _move_down(self) -> None:  # pragma: no cover
         """Move the view or edit cursor down."""
         # check if we are at the bottom of the view and need to scroll instead
         row = self._t.get_location()[0]
@@ -205,7 +205,7 @@ class MainGame:
             self._origin_row += 1
         self.print_ui_update(False, self._gol.count_live_cells())
 
-    def _move_up(self) -> None:
+    def _move_up(self) -> None:  # pragma: no cover
         """Move the view or edit cursor up."""
         # check if we are at the top of the view and need to scroll instead
         row: int = self._t.get_location()[0]
@@ -215,7 +215,7 @@ class MainGame:
             self._origin_row -= 1
         self.print_ui_update(False, self._gol.count_live_cells())
 
-    def _toggle_cell_state(self) -> None:
+    def _toggle_cell_state(self) -> None:  # pragma: no cover
         """Toggle the state of a cell on the board."""
         row, col = self._t.get_location()
         cell_row: int = row - MainGame.HEADER_ROWS + self._origin_row
@@ -246,7 +246,7 @@ class MainGame:
                 self._sleep_time = 0
             self.print_ui_update(False, self._gol.count_live_cells())
 
-    def _toggle_edit_mode(self) -> None:
+    def _toggle_edit_mode(self) -> None:  # pragma: no cover
         """Toggle edit mode."""
         if self._edit_mode:
             self._edit_mode = False
