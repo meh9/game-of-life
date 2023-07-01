@@ -153,7 +153,6 @@ Generation: 0
         for _ in range(100):
             gol.progress()
             assert gol.count_live_cells() == 5
-        print(gol)
         assert (
             str(gol)
             == """\
@@ -205,7 +204,6 @@ class TestGameOfLifeDict:
         for _ in range(100):
             gol.progress()
             assert gol.count_live_cells() == 5
-        print(gol)
         assert (
             str(gol)
             == """\
@@ -307,28 +305,26 @@ class TestMainGame:
     def test_change_speed(self, capfd: CaptureFixture[str]) -> None:
         """Test the keyboard input functions."""
         main: MainGame = TestMainGame.create_main_game()
-        main._decrease_speed()
+        # increasing speed shorts circuits to 0
+        for _ in range(7):
+            main._increase_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 0.001953125
         main._increase_speed()
-        out: str = capfd.readouterr()[0]
-        assert (
-            out
-            == """\
- ■ Conways's Game of Life □ 
- ========================== 
-Info
-Generation:    0
-Live cells:    5   
-Frame delay:   500 ms    
-Progress time:    
-Coords:        row:0 col:0   ■ Conways's Game of Life □ 
- ========================== 
-Info
-Generation:    0
-Live cells:    5   
-Frame delay:   250 ms    
-Progress time:    
-Coords:        row:0 col:0  """
-        )
+        capfd.readouterr()
+        assert main._sleep_time == 0
+
+        # decreasing speed goes back to 250 ms
+        for _ in range(8):
+            main._decrease_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 0.25
+
+        # decreasing speed goes to 64
+        for _ in range(8):
+            main._decrease_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 64
 
     def test_update_screen_size(self, capfd: CaptureFixture[str]) -> None:
         """Test the update_screen_size function."""
