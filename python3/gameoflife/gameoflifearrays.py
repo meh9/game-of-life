@@ -1,6 +1,6 @@
 """Game of Life array based implementation."""
 
-from gameoflife import GameOfLife
+from gameoflife import GameOfLife, Coordinate
 
 
 class GameOfLifeArrays(GameOfLife):
@@ -73,6 +73,15 @@ class GameOfLifeArrays(GameOfLife):
             return self._a_array[row][col]
         else:
             return None
+
+    def get_live_cells(self) -> list[Coordinate]:
+        """Return a list of the Coordinates of all the live cells."""
+        live_cells: list[Coordinate] = []
+        for row_index, row in enumerate(self._a_array):
+            for col_index, cell in enumerate(row):
+                if cell:
+                    live_cells.append((row_index, col_index))
+        return live_cells
 
     def _count_neighbours(self, row: int, col: int) -> int:
         """Count how many of the 8 neighbours of this cell are alive."""

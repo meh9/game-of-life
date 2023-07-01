@@ -93,6 +93,13 @@ class TestGameOfLifeSet:
 class TestGameOfLifeArrays:
     """Tests specifically for the class GameOfLifeArrays."""
 
+    def test_get_live_cells(self) -> None:
+        """Test the get_live_cells method."""
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        MainGame.add_glider(gol)
+        assert gol.count_live_cells() == 5
+        assert gol.get_live_cells() == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+
     def test_modulo_wrap(self) -> None:
         """Test that a patter larger than the array is wrapped correctly."""
         gol: GameOfLife = GameOfLifeArrays(12, 10)

@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from gameoflife.dataio.fileloader import FileLoader
+from .coordinate import Coordinate
 
 
 class GameOfLife(ABC):
@@ -45,3 +46,7 @@ class GameOfLife(ABC):
         """Load cells from the given loader."""
         for row, col in loader.cells:
             self.set_cell(row, col, True)
+
+    @abstractmethod
+    def get_live_cells(self) -> list[Coordinate]:
+        """Return a list of the Coordinates of all the live cells."""
