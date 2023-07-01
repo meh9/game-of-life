@@ -75,14 +75,7 @@ class TestGameOfLifeSet:
             gol.progress()
             assert gol.count_live_cells() == 5
         print(gol)
-        assert (
-            str(gol)
-            == """\
-Generation: 100
-  ■   
-    ■ 
-■ ■ ■ """
-        )  # note trailing spaces on all rows above
+        assert str(gol) == "Generation: 100\n  ■   \n    ■ \n■ ■ ■ "
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
@@ -107,20 +100,19 @@ class TestGameOfLifeArrays:
             gol.add_cells(loader)
         assert (
             str(gol)
-            == """\
-Generation: 0
-□ □ ■ □ □ ■ □ ■ □ □ 
-□ □ ■ □ □ □ ■ □ ■ □ 
-□ □ ■ □ □ □ □ ■ □ □ 
-□ □ □ □ □ □ □ □ ■ □ 
-□ □ □ □ □ □ □ □ □ ■ 
-■ □ □ □ □ □ □ □ □ □ 
-□ ■ □ □ □ □ □ □ □ □ 
-□ □ ■ □ □ □ □ □ □ □ 
-□ □ □ ■ □ □ □ □ □ □ 
-□ □ □ □ ■ □ □ □ □ □ 
-□ □ ■ □ □ ■ □ □ □ □ 
-□ □ ■ □ □ □ ■ □ □ □ """
+            == "Generation: 0\n"
+            + "□ □ ■ □ □ ■ □ ■ □ □ \n"
+            + "□ □ ■ □ □ □ ■ □ ■ □ \n"
+            + "□ □ ■ □ □ □ □ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ ■ □ \n"
+            + "□ □ □ □ □ □ □ □ □ ■ \n"
+            + "■ □ □ □ □ □ □ □ □ □ \n"
+            + "□ ■ □ □ □ □ □ □ □ □ \n"
+            + "□ □ ■ □ □ □ □ □ □ □ \n"
+            + "□ □ □ ■ □ □ □ □ □ □ \n"
+            + "□ □ □ □ ■ □ □ □ □ □ \n"
+            + "□ □ ■ □ □ ■ □ □ □ □ \n"
+            + "□ □ ■ □ □ □ ■ □ □ □ "
         )
 
     def test_glider(self) -> None:
@@ -155,21 +147,20 @@ Generation: 0
             assert gol.count_live_cells() == 5
         assert (
             str(gol)
-            == """\
-Generation: 100
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ 
-□ □ □ □ □ □ □ □ □ □ ■ ■ ■ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ """
-        )  # note trailing spaces on all rows above
+            == "Generation: 100\n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ ■ ■ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ "
+        )
 
 
 class TestGameOfLifeDict:
@@ -206,14 +197,13 @@ class TestGameOfLifeDict:
             assert gol.count_live_cells() == 5
         assert (
             str(gol)
-            == """\
-Generation: 100
-  □ □ □   
-  □ ■ □ □ 
-□ □ □ ■ □ 
-□ ■ ■ ■ □ 
-□ □ □ □ □ """
-        )  # note trailing spaces on all rows above
+            == "Generation: 100\n"
+            + "  □ □ □   \n"
+            + "  □ ■ □ □ \n"
+            + "□ □ □ ■ □ \n"
+            + "□ ■ ■ ■ □ \n"
+            + "□ □ □ □ □ "
+        )
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
@@ -239,7 +229,7 @@ class TestMainGame:
     """
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_OUTPUT = (
+    PRINT_UI_OUTPUT: str = (
         "\n"
         + "                                                     Controls                   \n"
         + "================================================================================\n"
@@ -252,7 +242,7 @@ class TestMainGame:
     )
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_EDIT_MODE_OUTPUT = (
+    PRINT_UI_EDIT_MODE_OUTPUT: str = (
         "\n"
         + "                                                     Controls                   \n"
         + "================================================================================\n"
@@ -265,7 +255,7 @@ class TestMainGame:
     )
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_UPDATE_OUTPUT = (
+    PRINT_UI_UPDATE_OUTPUT: str = (
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
         + "Info\n"
@@ -276,23 +266,23 @@ class TestMainGame:
         + "Coords:        row:0 col:0  "
     )
 
-    PRINT_GAME_OUTPUT = """\
-  ■                                                                            
-    ■                                                                          
-■ ■ ■                                                                          
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-"""
+    PRINT_GAME_OUTPUT: str = (
+        "  ■                                                                            \n"
+        + "    ■                                                                          \n"
+        + "■ ■ ■                                                                          \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+    )
 
     @staticmethod
     def create_main_game() -> MainGame:
