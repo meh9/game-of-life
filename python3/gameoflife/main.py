@@ -64,7 +64,6 @@ class MainGame:
         # divide in half again because we only print every other col
         # self._origin_col = 0 - floor(self._t.width / 2 / 2)
 
-        # TODO: this is getting complicated and hard to manage, can we simplify it significantly?
         # run the game
         with self._t.fullscreen(), self._t.cbreak():  # , term.hidden_cursor():
             while self._run:  # pragma: no cover
@@ -73,36 +72,7 @@ class MainGame:
                     self._term_width != self._t.width
                     or self._term_height != self._t.height
                 ):
-                    self._term_width = self._t.width
-                    self._term_height = self._t.height
-                    # reset cursor and clear the screen
-                    print(self._t.home + self._t.clear, end="")
-                    # print out the minimal game UI
-                    self.print_ui()
-                    self._header_loc = floor(self._t.width / 2)
-                    self.print_ui_update(False, self._gol.count_live_cells())
-                    # init last edit location to be centre of view
-                    row: int = (
-                        floor(
-                            # calculate the number of game rows in the view
-                            (
-                                self._t.height
-                                - MainGame.HEADER_ROWS
-                                - MainGame.FOOTER_ROWS
-                            )
-                            # find the centre of the game rows
-                            / 2
-                        )
-                        # turn into 0-indexed terminal row
-                        - 1
-                        # offseet down by HEADER_ROWS
-                        + MainGame.HEADER_ROWS
-                    )
-                    # find the centre of the terminal view, turn into 0-index terminal col
-                    col: int = floor(self._t.width / 2) - 1
-                    # column has to be even number as we only print cells in even columns
-                    col = col if col % 2 == 0 else col - 1
-                    self._last_edit_location = (row, col)
+                    self.update_screen_size()
 
                 # print the game cells, taking care not to print over the bottom text
                 self.print_game()
@@ -125,6 +95,35 @@ class MainGame:
                         # update the UI to reflect any changes
                         self.print_ui_update(True, live_count, last_gen_time)
 
+    def update_screen_size(self) -> None:
+        """Update the screen size on first run, or when the terminal size has changed."""
+        self._term_width = self._t.width
+        self._term_height = self._t.height
+        # reset cursor and clear the screen
+        print(self._t.home + self._t.clear, end="")
+        # print out the minimal game UI
+        self.print_ui()
+        self._header_loc = floor(self._t.width / 2)
+        self.print_ui_update(False, self._gol.count_live_cells())
+        # init last edit location to be centre of view
+        row: int = (
+            floor(
+                # calculate the number of game rows in the view
+                (self._t.height - MainGame.HEADER_ROWS - MainGame.FOOTER_ROWS)
+                # find the centre of the game rows
+                / 2
+            )
+            # turn into 0-indexed terminal row
+            - 1
+            # offset down by HEADER_ROWS
+            + MainGame.HEADER_ROWS
+        )
+        # find the centre of the terminal view, turn into 0-index terminal col
+        col: int = floor(self._t.width / 2) - 1
+        # column has to be even number as we only print cells in even columns
+        col = col if col % 2 == 0 else col - 1
+        self._last_edit_location = (row, col)
+
     def process_keystroke(self, block: bool) -> bool:  # pragma: no cover
         """
         Wait for a keystroke (with optional timeout) and process it.
@@ -144,95 +143,122 @@ class MainGame:
                 case self._t.KEY_ESCAPE:
                     self._run = False
                 case self._t.KEY_UP:
-                    # check if we are at the top of the view and need to scroll instead
-                    row: int = self._t.get_location()[0]
-                    if self._edit_mode and row > MainGame.HEADER_ROWS:
-                        print(self._t.move_up(1), end="")
-                    else:
-                        self._origin_row -= 1
-                    self.print_ui_update(False, self._gol.count_live_cells())
+                    self._move_up()
                 case self._t.KEY_DOWN:
-                    # check if we are at the bottom of the view and need to scroll instead
-                    row = self._t.get_location()[0]
-                    if (
-                        self._edit_mode
-                        and row + 1 < self._t.height - MainGame.FOOTER_ROWS
-                    ):
-                        print(self._t.move_down(1), end="")
-                    else:
-                        self._origin_row += 1
-                    self.print_ui_update(False, self._gol.count_live_cells())
+                    self._move_down()
                 case self._t.KEY_LEFT:
-                    # check if we are at the left edge of the view and need to scroll instead
-                    col: int = self._t.get_location()[1]
-                    if self._edit_mode and col > 0:
-                        print(self._t.move_left(2), end="")
-                    else:
-                        self._origin_col -= 1
-                    self.print_ui_update(False, self._gol.count_live_cells())
+                    self._move_left()
                 case self._t.KEY_RIGHT:
-                    # check if we are at the right edge of the view and need to scroll instead
-                    col = self._t.get_location()[1]
-                    if self._edit_mode and col + 2 < self._t.width:
-                        print(self._t.move_right(2), end="")
-                    else:
-                        self._origin_col += 1
-                    self.print_ui_update(False, self._gol.count_live_cells())
+                    self._move_right()
                 case _:
                     pass  # do nothing with unrecognised keys
         else:
             match key:
                 case " ":
                     if self._edit_mode:
-                        row, col = self._t.get_location()
-                        cell_row: int = row - MainGame.HEADER_ROWS + self._origin_row
-                        cell_col: int = floor(col / 2) + self._origin_col
-                        cell_state: bool | None = self._gol.get_cell(cell_row, cell_col)
-                        if cell_state is not None:
-                            self._gol.set_cell(cell_row, cell_col, not cell_state)
-                        self.print_game()
+                        self._toggle_cell_state()
                     else:
                         # progress the game a generation
                         return True
                 case "e":
-                    if self._edit_mode:
-                        self._edit_mode = False
-                        # save where the last edit mode was so we can return there
-                        self._last_edit_location = self._t.get_location()
-                        print(self._t.move_xy(0, 0), end="")
-                        self.print_ui()
-                    else:
-                        self._automatic = False  # if we are running, stop
-                        self._edit_mode = True
-                        self.print_ui()
-                        # return to last edit location
-                        print(self._t.move_x(self._last_edit_location[1]), end="")
-                        print(self._t.move_y(self._last_edit_location[0]), end="")
+                    self._toggle_edit_mode()
                 case "a":
                     if not self._edit_mode:
                         self._automatic = not self._automatic
                 case "q":
                     self._run = False
                 case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
-                    if not self._edit_mode:
-                        self._sleep_time /= 2
-                        # once we reach a low threshold just set it to 0
-                        if self._sleep_time < 0.001:
-                            self._sleep_time = 0
-                        self.print_ui_update(False, self._gol.count_live_cells())
+                    self._increase_speed()
                 case "-" | "[":
-                    if not self._edit_mode:
-                        self._sleep_time = (
-                            self._sleep_time * 2
-                            if self._sleep_time > 0
-                            # 250ms (the default) / 128, i.e. you have to push the + key 7 times
-                            else 0.001953125
-                        )
-                        # self._sleep_time *= 2
-                        self.print_ui_update(False, self._gol.count_live_cells())
+                    self._decrease_speed()
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
+
+    def _move_left(self) -> None:  # pragma: no cover
+        """Move the view or edit cursor left."""
+        # check if we are at the left edge of the view and need to scroll instead
+        col: int = self._t.get_location()[1]
+        if self._edit_mode and col > 0:
+            print(self._t.move_left(2), end="")
+        else:
+            self._origin_col -= 1
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _move_right(self) -> None:  # pragma: no cover
+        """Move the view or edit cursor right."""
+        # check if we are at the right edge of the view and need to scroll instead
+        col = self._t.get_location()[1]
+        if self._edit_mode and col + 2 < self._t.width:
+            print(self._t.move_right(2), end="")
+        else:
+            self._origin_col += 1
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _move_down(self) -> None:  # pragma: no cover
+        """Move the view or edit cursor down."""
+        # check if we are at the bottom of the view and need to scroll instead
+        row = self._t.get_location()[0]
+        if self._edit_mode and row + 1 < self._t.height - MainGame.FOOTER_ROWS:
+            print(self._t.move_down(1), end="")
+        else:
+            self._origin_row += 1
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _move_up(self) -> None:  # pragma: no cover
+        """Move the view or edit cursor up."""
+        # check if we are at the top of the view and need to scroll instead
+        row: int = self._t.get_location()[0]
+        if self._edit_mode and row > MainGame.HEADER_ROWS:
+            print(self._t.move_up(1), end="")
+        else:
+            self._origin_row -= 1
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _toggle_cell_state(self) -> None:  # pragma: no cover
+        """Toggle the state of a cell on the board."""
+        row, col = self._t.get_location()
+        cell_row: int = row - MainGame.HEADER_ROWS + self._origin_row
+        cell_col: int = floor(col / 2) + self._origin_col
+        cell_state: bool | None = self._gol.get_cell(cell_row, cell_col)
+        if cell_state is not None:
+            self._gol.set_cell(cell_row, cell_col, not cell_state)
+        self.print_game()
+
+    def _decrease_speed(self) -> None:
+        """Decrease speed."""
+        self._sleep_time = (
+            self._sleep_time * 2
+            if self._sleep_time > 0
+            # 250ms (the default) / 128, i.e. you have to push the + key 7 times
+            else 0.001953125
+        )
+        # self._sleep_time *= 2
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _increase_speed(self) -> None:
+        """Increase speed."""
+        self._sleep_time /= 2
+        # once we reach a low threshold just set it to 0
+        if self._sleep_time < 0.001:
+            self._sleep_time = 0
+        self.print_ui_update(False, self._gol.count_live_cells())
+
+    def _toggle_edit_mode(self) -> None:  # pragma: no cover
+        """Toggle edit mode."""
+        if self._edit_mode:
+            self._edit_mode = False
+            # save where the last edit mode was so we can return there
+            self._last_edit_location = self._t.get_location()
+            print(self._t.move_xy(0, 0), end="")
+            self.print_ui()
+        else:
+            self._automatic = False  # if we are running, stop
+            self._edit_mode = True
+            self.print_ui()
+            # return to last edit location
+            print(self._t.move_x(self._last_edit_location[1]), end="")
+            print(self._t.move_y(self._last_edit_location[0]), end="")
 
     # layout model for UI top header moving text
     # |---------------------------------|  term.width = 50

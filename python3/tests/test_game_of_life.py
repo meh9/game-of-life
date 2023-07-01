@@ -75,14 +75,7 @@ class TestGameOfLifeSet:
             gol.progress()
             assert gol.count_live_cells() == 5
         print(gol)
-        assert (
-            str(gol)
-            == """\
-Generation: 100
-  ■   
-    ■ 
-■ ■ ■ """
-        )  # note trailing spaces on all rows above
+        assert str(gol) == "Generation: 100\n  ■   \n    ■ \n■ ■ ■ "
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
@@ -107,20 +100,19 @@ class TestGameOfLifeArrays:
             gol.add_cells(loader)
         assert (
             str(gol)
-            == """\
-Generation: 0
-□ □ ■ □ □ ■ □ ■ □ □ 
-□ □ ■ □ □ □ ■ □ ■ □ 
-□ □ ■ □ □ □ □ ■ □ □ 
-□ □ □ □ □ □ □ □ ■ □ 
-□ □ □ □ □ □ □ □ □ ■ 
-■ □ □ □ □ □ □ □ □ □ 
-□ ■ □ □ □ □ □ □ □ □ 
-□ □ ■ □ □ □ □ □ □ □ 
-□ □ □ ■ □ □ □ □ □ □ 
-□ □ □ □ ■ □ □ □ □ □ 
-□ □ ■ □ □ ■ □ □ □ □ 
-□ □ ■ □ □ □ ■ □ □ □ """
+            == "Generation: 0\n"
+            + "□ □ ■ □ □ ■ □ ■ □ □ \n"
+            + "□ □ ■ □ □ □ ■ □ ■ □ \n"
+            + "□ □ ■ □ □ □ □ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ ■ □ \n"
+            + "□ □ □ □ □ □ □ □ □ ■ \n"
+            + "■ □ □ □ □ □ □ □ □ □ \n"
+            + "□ ■ □ □ □ □ □ □ □ □ \n"
+            + "□ □ ■ □ □ □ □ □ □ □ \n"
+            + "□ □ □ ■ □ □ □ □ □ □ \n"
+            + "□ □ □ □ ■ □ □ □ □ □ \n"
+            + "□ □ ■ □ □ ■ □ □ □ □ \n"
+            + "□ □ ■ □ □ □ ■ □ □ □ "
         )
 
     def test_glider(self) -> None:
@@ -153,24 +145,22 @@ Generation: 0
         for _ in range(100):
             gol.progress()
             assert gol.count_live_cells() == 5
-        print(gol)
         assert (
             str(gol)
-            == """\
-Generation: 100
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ 
-□ □ □ □ □ □ □ □ □ □ ■ ■ ■ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ 
-□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ """
-        )  # note trailing spaces on all rows above
+            == "Generation: 100\n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ ■ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ ■ ■ ■ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ \n"
+            + "□ □ □ □ □ □ □ □ □ □ □ □ □ □ □ "
+        )
 
 
 class TestGameOfLifeDict:
@@ -205,17 +195,15 @@ class TestGameOfLifeDict:
         for _ in range(100):
             gol.progress()
             assert gol.count_live_cells() == 5
-        print(gol)
         assert (
             str(gol)
-            == """\
-Generation: 100
-  □ □ □   
-  □ ■ □ □ 
-□ □ □ ■ □ 
-□ ■ ■ ■ □ 
-□ □ □ □ □ """
-        )  # note trailing spaces on all rows above
+            == "Generation: 100\n"
+            + "  □ □ □   \n"
+            + "  □ ■ □ □ \n"
+            + "□ □ □ ■ □ \n"
+            + "□ ■ ■ ■ □ \n"
+            + "□ □ □ □ □ "
+        )
 
     def test_match_case2(self) -> None:
         """Test a live cell with exactly 2 neighbours."""
@@ -241,7 +229,7 @@ class TestMainGame:
     """
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_OUTPUT = (
+    PRINT_UI_OUTPUT: str = (
         "\n"
         + "                                                     Controls                   \n"
         + "================================================================================\n"
@@ -254,7 +242,7 @@ class TestMainGame:
     )
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_EDIT_MODE_OUTPUT = (
+    PRINT_UI_EDIT_MODE_OUTPUT: str = (
         "\n"
         + "                                                     Controls                   \n"
         + "================================================================================\n"
@@ -267,7 +255,7 @@ class TestMainGame:
     )
 
     # use string concatenation to highlight necessary trailing spaces
-    PRINT_UI_UPDATE_OUTPUT = (
+    PRINT_UI_UPDATE_OUTPUT: str = (
         " ■ Conways's Game of Life □ \n"
         + " ========================== \n"
         + "Info\n"
@@ -278,23 +266,23 @@ class TestMainGame:
         + "Coords:        row:0 col:0  "
     )
 
-    PRINT_GAME_OUTPUT = """\
-  ■                                                                            
-    ■                                                                          
-■ ■ ■                                                                          
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-"""
+    PRINT_GAME_OUTPUT: str = (
+        "  ■                                                                            \n"
+        + "    ■                                                                          \n"
+        + "■ ■ ■                                                                          \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+        + "                                                                               \n"
+    )
 
     @staticmethod
     def create_main_game() -> MainGame:
@@ -303,6 +291,40 @@ class TestMainGame:
         main._run = False
         main.main()
         return main
+
+    def test_change_speed(self, capfd: CaptureFixture[str]) -> None:
+        """Test the keyboard input functions."""
+        main: MainGame = TestMainGame.create_main_game()
+        # increasing speed shorts circuits to 0
+        for _ in range(7):
+            main._increase_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 0.001953125
+        main._increase_speed()
+        capfd.readouterr()
+        assert main._sleep_time == 0
+
+        # decreasing speed goes back to 250 ms
+        for _ in range(8):
+            main._decrease_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 0.25
+
+        # decreasing speed goes to 64
+        for _ in range(8):
+            main._decrease_speed()
+            capfd.readouterr()
+        assert main._sleep_time == 64
+
+    def test_update_screen_size(self, capfd: CaptureFixture[str]) -> None:
+        """Test the update_screen_size function."""
+        main: MainGame = TestMainGame.create_main_game()
+        main.update_screen_size()
+        capfd.readouterr()
+        assert main._term_width == 80
+        assert main._term_height == 25
+        assert main._header_loc == 40
+        assert main._last_edit_location == (8, 38)
 
     def test_initialise(self) -> None:
         """Test that we can even run at all."""
@@ -325,12 +347,30 @@ class TestMainGame:
 
     def test_load_plain_text_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of a Plain Text file."""
-        main: MainGame = MainGame(False, "../data/glider.cells")
+        main: MainGame = MainGame(True, "../data/glider.cells", 15, 4)
         main._run = False
         main.main()
+        main._origin_col = -4
         main.print_game()
         out: str = capfd.readouterr()[0]
-        assert out == TestMainGame.PRINT_GAME_OUTPUT
+        assert (
+            out
+            == "        . ■ . .                                                                \n"
+            + "        . . ■ .                                                                \n"
+            + "        ■ ■ ■ .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+        )
 
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
@@ -359,17 +399,21 @@ class TestMainGame:
         main: MainGame = TestMainGame.create_main_game()
 
         # test left edge turnaround
-        main._header_loc = 13
+        main._header_loc = 15
         main._header_dir_left = True
+        main.print_ui_update(True, main._gol.count_live_cells(), 0)
+        capfd.readouterr()
+        assert main._header_loc == 14
+        assert main._header_dir_left is True
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
         out: str = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
-        assert main._header_loc == 14
+        assert main._header_loc == 15
         assert main._header_dir_left is False
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
-        assert main._header_loc == 15
+        assert main._header_loc == 16
         assert main._header_dir_left is False
 
         # test right edge turnaround
