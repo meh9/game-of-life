@@ -138,7 +138,6 @@ class MainGame:
             self._t.inkey(0.1) if block else self._t.inkey(timeout=self._sleep_time)
         )
 
-        # TODO: break all these out into little functions
         # process any potential key
         if key.is_sequence:
             match key.code:
