@@ -357,12 +357,30 @@ class TestMainGame:
 
     def test_load_plain_text_file(self, capfd: CaptureFixture[str]) -> None:
         """Test the loading of a Plain Text file."""
-        main: MainGame = MainGame(False, "../data/glider.cells")
+        main: MainGame = MainGame(True, "../data/glider.cells", 15, 4)
         main._run = False
         main.main()
+        main._origin_col = -4
         main.print_game()
         out: str = capfd.readouterr()[0]
-        assert out == TestMainGame.PRINT_GAME_OUTPUT
+        assert (
+            out
+            == "        . ■ . .                                                                \n"
+            + "        . . ■ .                                                                \n"
+            + "        ■ ■ ■ .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+            + "        . . . .                                                                \n"
+        )
 
     def test_print_ui(self, capfd: CaptureFixture[str]) -> None:
         """Test the print_ui method."""
