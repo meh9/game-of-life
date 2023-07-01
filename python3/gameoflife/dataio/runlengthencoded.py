@@ -1,11 +1,9 @@
 """File Loader for Run Length Encoded file types."""
 
 from io import TextIOWrapper
-
-# from time import perf_counter_ns
 from types import TracebackType
-from gameoflife import FileLoader, FLContextManager
 import pyparsing as pp
+from .fileloader import FileLoader, FLContextManager
 
 
 # pylint: disable=pointless-string-statement

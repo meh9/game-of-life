@@ -3,8 +3,9 @@ Simple function to create the different FileLoaders.
 
 Using separate file to avoid module import issues.
 """
-from gameoflife import FLContextManager
-from gameoflife.dataio import RunLengthEncoded, PlainText
+from .fileloader import FLContextManager
+from .runlengthencoded import RunLengthEncoded
+from .plaintext import PlainText
 
 
 def create_loader(file: str) -> FLContextManager:

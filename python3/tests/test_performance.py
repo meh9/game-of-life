@@ -3,7 +3,8 @@
 import logging
 from time import perf_counter_ns
 import pytest
-from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet, create_loader
+from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet
+from gameoflife.dataio.createloader import create_loader
 
 pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)

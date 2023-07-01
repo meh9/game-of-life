@@ -2,9 +2,6 @@
 
 # pylint: disable=useless-import-alias
 from gameoflife.coordinate import Coordinate as Coordinate
-from gameoflife.fileloader import FileLoader as FileLoader
-from gameoflife.fileloader import FLContextManager as FLContextManager
-from gameoflife.createloader import create_loader as create_loader
 from gameoflife.gameoflifeabc import GameOfLife as GameOfLife
 from gameoflife.gameoflifearrays import GameOfLifeArrays as GameOfLifeArrays
 from gameoflife.gameoflifedict import GameOfLifeDict as GameOfLifeDict

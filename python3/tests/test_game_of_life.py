@@ -7,8 +7,8 @@ from gameoflife import (
     GameOfLifeArrays,
     GameOfLifeDict,
     GameOfLifeSet,
-    create_loader,
 )
+from gameoflife.dataio.createloader import create_loader
 
 
 def test_set_unset_set() -> None:
