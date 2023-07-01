@@ -227,24 +227,22 @@ class MainGame:
 
     def _decrease_speed(self) -> None:
         """Decrease speed."""
-        if not self._edit_mode:
-            self._sleep_time = (
-                self._sleep_time * 2
-                if self._sleep_time > 0
-                # 250ms (the default) / 128, i.e. you have to push the + key 7 times
-                else 0.001953125
-            )
-            # self._sleep_time *= 2
-            self.print_ui_update(False, self._gol.count_live_cells())
+        self._sleep_time = (
+            self._sleep_time * 2
+            if self._sleep_time > 0
+            # 250ms (the default) / 128, i.e. you have to push the + key 7 times
+            else 0.001953125
+        )
+        # self._sleep_time *= 2
+        self.print_ui_update(False, self._gol.count_live_cells())
 
     def _increase_speed(self) -> None:
         """Increase speed."""
-        if not self._edit_mode:
-            self._sleep_time /= 2
-            # once we reach a low threshold just set it to 0
-            if self._sleep_time < 0.001:
-                self._sleep_time = 0
-            self.print_ui_update(False, self._gol.count_live_cells())
+        self._sleep_time /= 2
+        # once we reach a low threshold just set it to 0
+        if self._sleep_time < 0.001:
+            self._sleep_time = 0
+        self.print_ui_update(False, self._gol.count_live_cells())
 
     def _toggle_edit_mode(self) -> None:  # pragma: no cover
         """Toggle edit mode."""
