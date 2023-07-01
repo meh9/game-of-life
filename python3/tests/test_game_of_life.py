@@ -409,17 +409,21 @@ class TestMainGame:
         main: MainGame = TestMainGame.create_main_game()
 
         # test left edge turnaround
-        main._header_loc = 13
+        main._header_loc = 15
         main._header_dir_left = True
+        main.print_ui_update(True, main._gol.count_live_cells(), 0)
+        capfd.readouterr()
+        assert main._header_loc == 14
+        assert main._header_dir_left is True
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
         out: str = capfd.readouterr()[0]
         # the output is identical to the previos test_print_ui because term control characters
         # are not printed
         assert out == TestMainGame.PRINT_UI_UPDATE_OUTPUT
-        assert main._header_loc == 14
+        assert main._header_loc == 15
         assert main._header_dir_left is False
         main.print_ui_update(True, main._gol.count_live_cells(), 0)
-        assert main._header_loc == 15
+        assert main._header_loc == 16
         assert main._header_dir_left is False
 
         # test right edge turnaround
