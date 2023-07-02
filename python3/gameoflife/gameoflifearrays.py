@@ -75,7 +75,11 @@ class GameOfLifeArrays(GameOfLife):
             return None
 
     def get_live_cells(self) -> list[Coordinate]:
-        """Return a list of the Coordinates of all the live cells."""
+        """
+        Return a list of the Coordinates of all the live cells.
+
+        The list must be sorted by row top to bottom and then in the row from left to right.
+        """
         live_cells: list[Coordinate] = []
         for row_index, row in enumerate(self._a_array):
             for col_index, cell in enumerate(row):
