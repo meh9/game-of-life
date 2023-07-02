@@ -118,7 +118,7 @@ class GameOfLifeSet(GameOfLife):
 
         The list must be sorted by row top to bottom and then in the row from left to right.
         """
-        return list(self._cells)
+        return sorted(self._cells)
 
     @staticmethod
     def _compute_neighbours(row: int, col: int) -> list[Coordinate]:
