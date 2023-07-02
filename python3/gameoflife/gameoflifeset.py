@@ -113,9 +113,12 @@ class GameOfLifeSet(GameOfLife):
         return (row, col) in self._cells
 
     def get_live_cells(self) -> list[Coordinate]:
-        """Return a list of the Coordinates of all the live cells."""
-        # TODO: finish this
-        raise NotImplementedError
+        """
+        Return a list of the Coordinates of all the live cells.
+
+        The list must be sorted by row top to bottom and then in the row from left to right.
+        """
+        return list(self._cells)
 
     @staticmethod
     def _compute_neighbours(row: int, col: int) -> list[Coordinate]:
