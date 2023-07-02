@@ -181,7 +181,7 @@ class MainGame:
                     pass  # do nothing with unrecognised keys
         return False
 
-    def _save_game(self) -> None:
+    def _save_game(self) -> None:  # pragma: no cover
         """Save the game to a file."""
         self._automatic = False  # if we are running, stop
         # move down to the bottom of the screen
@@ -197,7 +197,8 @@ class MainGame:
                 else:
                     filename += save_key
                     print(save_key, flush=True, end="")
-        # TODO: save file happens here
+        # TODO: save data to file
+        self._gol.get_live_cells()
         with self._t.location(0, self._t.height - 1):
             timestamp: str = datetime.now().strftime("%H:%M:%S")
             print(f"Saved game to file '{filename}' at {timestamp}", end="")
