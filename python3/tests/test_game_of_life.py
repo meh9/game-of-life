@@ -8,7 +8,7 @@ from gameoflife import (
     GameOfLifeDict,
     GameOfLifeSet,
 )
-from gameoflife.dataio.create_reader import create_reader
+from gameoflife.dataio.create_io import create_reader
 
 
 def test_set_unset_set() -> None:

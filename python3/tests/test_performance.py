@@ -4,7 +4,7 @@ import logging
 from time import perf_counter_ns
 import pytest
 from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet
-from gameoflife.dataio.create_reader import create_reader
+from gameoflife.dataio.create_io import create_reader
 
 pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)

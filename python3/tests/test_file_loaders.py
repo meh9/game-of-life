@@ -1,7 +1,7 @@
 """Tests for all the FileLoader implementations."""
 
 from pytest import raises
-from gameoflife.dataio.create_reader import create_reader
+from gameoflife.dataio.create_io import create_reader
 from gameoflife.dataio.file_reader import FileReader
 from gameoflife.dataio.runlengthencoded_reader import RunLengthEncodedReader
 from gameoflife.dataio.plaintext_reader import PlainTextReader
