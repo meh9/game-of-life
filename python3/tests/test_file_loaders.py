@@ -1,4 +1,4 @@
-"""Tests for all the FileLoader implementations."""
+"""Tests for all the FileReader implementations."""
 
 from pytest import raises
 from gameoflife.dataio.create_io import create_reader

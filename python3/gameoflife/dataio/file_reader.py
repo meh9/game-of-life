@@ -67,7 +67,7 @@ class FileReader(ABC):
 
 
 class FileReaderContextManager(FileReader):
-    """ABC for adding context management to FileLoaders."""
+    """ABC for adding context management to FileReaders."""
 
     @abstractmethod
     def __enter__(self) -> FileReader:
