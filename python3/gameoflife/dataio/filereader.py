@@ -1,4 +1,4 @@
-"""File loader abstract class specifying the interface for loading cells from a file."""
+"""File reader abstract class specifying the interface for loading cells from a file."""
 
 from abc import ABC, abstractmethod
 from functools import reduce

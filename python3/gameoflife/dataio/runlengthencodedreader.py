@@ -77,7 +77,7 @@ class RunLengthEncodedReader(FRContextManager):
     _PARSER: pp.ParserElement = _METADATA_LINE + _HEADER + _RULE + _DATA_ROWS
 
     def __init__(self, file: str) -> None:
-        """Initialise the loader."""
+        """Initialise the reader."""
         super().__init__(file)
         self._file: TextIOWrapper
         self._cols: int

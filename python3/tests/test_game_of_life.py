@@ -110,8 +110,8 @@ class TestGameOfLifeArrays:
     def test_modulo_wrap(self) -> None:
         """Test that a patter larger than the array is wrapped correctly."""
         gol: GameOfLife = GameOfLifeArrays(12, 10)
-        with create_reader("../data/test_wrap.cells") as loader:
-            gol.add_cells(loader)
+        with create_reader("../data/test_wrap.cells") as reader:
+            gol.add_cells(reader)
         assert (
             str(gol)
             == "Generation: 0\n"

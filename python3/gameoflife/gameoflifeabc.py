@@ -42,9 +42,9 @@ class GameOfLife(ABC):
         """Return the current generation of the game."""
         self._generation = gen
 
-    def add_cells(self, loader: FileReader) -> None:
-        """Load cells from the given loader."""
-        for row, col in loader.cells:
+    def add_cells(self, reader: FileReader) -> None:
+        """Load cells from the given reader."""
+        for row, col in reader.cells:
             self.set_cell(row, col, True)
 
     @abstractmethod
