@@ -66,7 +66,7 @@ class FileReader(ABC):
     # placing the centre of the pattern at the origin.
 
 
-class FRContextManager(FileReader):
+class FileReaderContextManager(FileReader):
     """ABC for adding context management to FileLoaders."""
 
     @abstractmethod

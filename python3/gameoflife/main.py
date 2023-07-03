@@ -6,10 +6,10 @@ from math import floor
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
 from blessed.keyboard import Keystroke  # type:ignore
-from .gameoflifeabc import GameOfLife
-from .gameoflifearrays import GameOfLifeArrays
-from .gameoflifeset import GameOfLifeSet
-from .dataio.createreader import create_reader
+from .gol_abc import GameOfLife
+from .gol_arrays import GameOfLifeArrays
+from .gol_set import GameOfLifeSet
+from .dataio.create_reader import create_reader
 
 
 class MainGame:

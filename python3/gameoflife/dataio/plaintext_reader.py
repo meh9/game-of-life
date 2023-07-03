@@ -3,7 +3,7 @@
 from io import TextIOWrapper
 from types import TracebackType
 import pyparsing as pp
-from .filereader import FileReader, FRContextManager
+from .file_reader import FileReader, FileReaderContextManager
 
 
 # pylint: disable=pointless-string-statement
@@ -18,7 +18,7 @@ OOO
 """
 
 
-class PlainTextReader(FRContextManager):
+class PlainTextReader(FileReaderContextManager):
     """Implements loading Plain Text data from files."""
 
     # !Name: Glider

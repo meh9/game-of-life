@@ -3,12 +3,12 @@ Simple function to create the different FileLoaders.
 
 Using separate file to avoid module import issues.
 """
-from .filereader import FRContextManager
-from .runlengthencodedreader import RunLengthEncodedReader
-from .plaintextreader import PlainTextReader
+from .file_reader import FileReaderContextManager
+from .runlengthencoded_reader import RunLengthEncodedReader
+from .plaintext_reader import PlainTextReader
 
 
-def create_reader(file: str) -> FRContextManager:
+def create_reader(file: str) -> FileReaderContextManager:
     """Create and return the correct FileLoader."""
     match file.lower().split(".")[-1]:
         case "rle":

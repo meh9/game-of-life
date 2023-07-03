@@ -3,7 +3,7 @@
 from io import TextIOWrapper
 from types import TracebackType
 import pyparsing as pp
-from .filereader import FileReader, FRContextManager
+from .file_reader import FileReader, FileReaderContextManager
 
 
 # pylint: disable=pointless-string-statement
@@ -17,7 +17,7 @@ bob$2bo$3o!
 """
 
 
-class RunLengthEncodedReader(FRContextManager):
+class RunLengthEncodedReader(FileReaderContextManager):
     """Implements loading Run Length Encoded data from files."""
 
     _INT_NUMBER: pp.ParserElement = pp.Word(pp.nums).set_parse_action(  # type:ignore

@@ -1,7 +1,7 @@
 """Game of Life abstract class specifying the interface."""
 
 from abc import ABC, abstractmethod
-from gameoflife.dataio.filereader import FileReader
+from gameoflife.dataio.file_reader import FileReader
 from .coordinate import Coordinate
 
 
