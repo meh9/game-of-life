@@ -9,7 +9,7 @@ from blessed.keyboard import Keystroke  # type:ignore
 from .gameoflifeabc import GameOfLife
 from .gameoflifearrays import GameOfLifeArrays
 from .gameoflifeset import GameOfLifeSet
-from .dataio.createloader import create_loader
+from .dataio.createreader import create_reader
 
 
 class MainGame:
@@ -49,8 +49,8 @@ class MainGame:
             self._gol = GameOfLifeSet()
 
         if file:
-            with create_loader(file) as loader:
-                self._gol.add_cells(loader)
+            with create_reader(file) as reader:
+                self._gol.add_cells(reader)
 
     def main(self) -> None:
         """Run the main game loop."""

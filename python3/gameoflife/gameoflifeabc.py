@@ -1,7 +1,7 @@
 """Game of Life abstract class specifying the interface."""
 
 from abc import ABC, abstractmethod
-from gameoflife.dataio.fileloader import FileLoader
+from gameoflife.dataio.filereader import FileReader
 from .coordinate import Coordinate
 
 
@@ -42,7 +42,7 @@ class GameOfLife(ABC):
         """Return the current generation of the game."""
         self._generation = gen
 
-    def add_cells(self, loader: FileLoader) -> None:
+    def add_cells(self, loader: FileReader) -> None:
         """Load cells from the given loader."""
         for row, col in loader.cells:
             self.set_cell(row, col, True)

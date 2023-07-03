@@ -1,21 +1,21 @@
 """Tests for all the FileLoader implementations."""
 
 from pytest import raises
-from gameoflife.dataio.createloader import create_loader
-from gameoflife.dataio.fileloader import FileLoader
-from gameoflife.dataio.runlengthencoded import RunLengthEncoded
-from gameoflife.dataio.plaintext import PlainText
+from gameoflife.dataio.createreader import create_reader
+from gameoflife.dataio.filereader import FileReader
+from gameoflife.dataio.runlengthencodedreader import RunLengthEncodedReader
+from gameoflife.dataio.plaintextreader import PlainTextReader
 import pyparsing as pp
 
 
-def test_create_loader() -> None:
-    """Test the create_loader function."""
-    loader: FileLoader = create_loader("file.rle")
-    assert loader.__class__ is RunLengthEncoded
-    loader = create_loader("file.cells")
-    assert loader.__class__ is PlainText
+def test_create_reader() -> None:
+    """Test the create_reader function."""
+    reader: FileReader = create_reader("file.rle")
+    assert reader.__class__ is RunLengthEncodedReader
+    reader = create_reader("file.cells")
+    assert reader.__class__ is PlainTextReader
     with raises(ValueError):
-        create_loader("foo.bar")
+        create_reader("foo.bar")
 
 
 # pylint: disable=protected-access
@@ -25,7 +25,7 @@ class TestPlainText:
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
-        results: pp.ParseResults = PlainText._METADATA_LINE.parse_string(
+        results: pp.ParseResults = PlainTextReader._METADATA_LINE.parse_string(
             """\
 !Name: Glider
 !Author: Richard K. Guy
@@ -45,7 +45,7 @@ OOO
 
     def test_data_rows_parser(self) -> None:
         """Test the CELL_ROWS parser."""
-        results: pp.ParseResults = PlainText._DATA_ROWS.parse_string(
+        results: pp.ParseResults = PlainTextReader._DATA_ROWS.parse_string(
             """\
 .O
 ..O
@@ -59,7 +59,7 @@ OOO
             [],
         ]
 
-        results = PlainText._DATA_ROWS.parse_string(
+        results = PlainTextReader._DATA_ROWS.parse_string(
             """\
 ........................O...........
 ......................O.O...........
@@ -81,14 +81,14 @@ OO........O...O.OO....O.O...........
 
     def test_plain_text(self) -> None:
         """Test the PlainText file type."""
-        with create_loader("../data/glider.cells") as loader:
-            assert loader.__class__ is PlainText
-            assert loader.metadata  # type: ignore
-            assert loader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+        with create_reader("../data/glider.cells") as reader:
+            assert reader.__class__ is PlainTextReader
+            assert reader.metadata  # type: ignore
+            assert reader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
             assert (
-                str(loader)
+                str(reader)
                 == """\
-PlainText
+PlainTextReader
 file: ../data/glider.cells
 metadata: [['Name: Glider'], ['Author: Richard K. Guy'], ['The smallest, most common, and first discovered spaceship.'], ['www.conwaylife.com/wiki/index.php?title=Glider']]
 cells:
@@ -99,13 +99,13 @@ cells:
 
     def test_empty_data_rows(self) -> None:
         """Test the PlainText file type."""
-        with create_loader("../data/empty_data_rows.cells") as loader:
-            assert loader.__class__ is PlainText
-            assert loader.metadata == []  # type: ignore
+        with create_reader("../data/empty_data_rows.cells") as reader:
+            assert reader.__class__ is PlainTextReader
+            assert reader.metadata == []  # type: ignore
             assert (
-                str(loader)
+                str(reader)
                 == """\
-PlainText
+PlainTextReader
 file: ../data/empty_data_rows.cells
 metadata: []
 cells:
@@ -131,9 +131,9 @@ class TestRunLengthEncoded:
     def test_no_metadata(self) -> None:
         """Specific test for an RLE file with no metadata rows, and some other interesting things
         thrown in."""
-        with create_loader("../data/no_metadata_test.rle") as loader:
-            assert loader.metadata == []
-            assert loader.cells == [
+        with create_reader("../data/no_metadata_test.rle") as reader:
+            assert reader.metadata == []
+            assert reader.cells == [
                 (0, 1),
                 (0, 3),
                 (0, 5),
@@ -158,30 +158,30 @@ class TestRunLengthEncoded:
     def test_empty_row_data(self) -> None:
         """Specific test for testing data patterns like "7$" and "23$" which specifies a number of
         empty rows."""
-        with create_loader("../data/t1point5infinitegrowth2.rle") as loader:
+        with create_reader("../data/t1point5infinitegrowth2.rle") as reader:
             # first two rows of data is (note "2$" at the end which skips a row of cells):
             #
             # 71b3o11b3o$70bo2bo10bo2bo$40b3o11b3o16bo4b3o6bo$40bo2bo10bo2bo15bo4bo
             # 2bo5bo$40bo6b3o4bo17bo4bo8bo$40bo5bo2bo4bo$41bo8bo4bo2$...
             # the skipped row is row index 7, so check it's all False
-            assert loader.cells[43] == (6, 55)
-            assert loader.cells[44] == (8, 72)
-            assert len(loader.cells) == 1186
+            assert reader.cells[43] == (6, 55)
+            assert reader.cells[44] == (8, 72)
+            assert len(reader.cells) == 1186
 
     def test_run_length_encoded(self) -> None:
         """Test the RunLengthEncoded file type."""
-        # with create_loader("../data/Gosper_glider_gun.rle") as loader:
-        with create_loader("../data/glider.rle") as loader:
-            assert loader.__class__ is RunLengthEncoded
-            assert loader.metadata  # type: ignore
-            assert loader._cols  # type: ignore
-            assert loader._rows  # type: ignore
-            assert loader._rule  # type: ignore
-            assert loader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+        # with create_reader("../data/Gosper_glider_gun.rle") as reader:
+        with create_reader("../data/glider.rle") as reader:
+            assert reader.__class__ is RunLengthEncodedReader
+            assert reader.metadata  # type: ignore
+            assert reader._cols  # type: ignore
+            assert reader._rows  # type: ignore
+            assert reader._rule  # type: ignore
+            assert reader.cells == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
             assert (
-                str(loader)
+                str(reader)
                 == """\
-RunLengthEncoded
+RunLengthEncodedReader
 file: ../data/glider.rle
 metadata: [['N', 'Glider'], ['O', 'Richard K. Guy'], ['C', \
 'The smallest, most common, and first discovered spaceship. Diagonal, has period 4 and speed \
@@ -196,7 +196,7 @@ rule: B3/S23"""
 
     def test_metadata_no_content(self) -> None:
         """Test the METADATA parser."""
-        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
+        results: pp.ParseResults = RunLengthEncodedReader._METADATA_LINE.parse_string(
             """\
 #N next row has trailing space
 #O 
@@ -217,7 +217,7 @@ bob$2bo$3o!
 
     def test_metadata_parser(self) -> None:
         """Test the METADATA parser."""
-        results: pp.ParseResults = RunLengthEncoded._METADATA_LINE.parse_string(
+        results: pp.ParseResults = RunLengthEncodedReader._METADATA_LINE.parse_string(
             """\
 #N Glider
 #O Richard K. Guy
@@ -241,20 +241,20 @@ bob$2bo$3o!
     def test_header_rule_parser(self) -> None:
         """Test the HEADER parser."""
         results: pp.ParseResults = (
-            RunLengthEncoded._HEADER + RunLengthEncoded._RULE
+            RunLengthEncodedReader._HEADER + RunLengthEncodedReader._RULE
         ).parse_string("x = 4, y = 5, rule = B3/S23")
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert results.rule.as_list() == ["B3/S23"]  # type:ignore
 
-        results = (RunLengthEncoded._HEADER + RunLengthEncoded._RULE).parse_string(
-            "x = 4, y = 5"
-        )
+        results = (
+            RunLengthEncodedReader._HEADER + RunLengthEncodedReader._RULE
+        ).parse_string("x = 4, y = 5")
         assert results.header.as_list() == [["x", 4], ["y", 5]]  # type:ignore
         assert len(results.rule) == 0  # type:ignore
 
     def test_data_rows_parser(self) -> None:
         """Test the CELL_ROWS parser."""
-        results: pp.ParseResults = RunLengthEncoded._DATA_ROWS.parse_string(
+        results: pp.ParseResults = RunLengthEncodedReader._DATA_ROWS.parse_string(
             "bob$2bo$3o!"
         )
         assert results.data_rows.as_list() == [  # type:ignore
@@ -263,7 +263,7 @@ bob$2bo$3o!
             [3, "o"],
         ]
 
-        results = RunLengthEncoded._DATA_ROWS.parse_string(
+        results = RunLengthEncodedReader._DATA_ROWS.parse_string(
             """\
 24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
 obo$10bo5bo7bo$11bo3bo$12b2o!
@@ -285,7 +285,9 @@ obo$10bo5bo7bo$11bo3bo$12b2o!
         assert results.data_rows[8].as_list() == [12, "b", 2, "o"]  # type:ignore
 
         # Specific test for data that starts with multiple newlines
-        results = RunLengthEncoded._DATA_ROWS.parse_string("32$8b3o$7bo3bo$6bo4b2o!")
+        results = RunLengthEncodedReader._DATA_ROWS.parse_string(
+            "32$8b3o$7bo3bo$6bo4b2o!"
+        )
         assert results.data_rows.as_list() == [  # type:ignore
             [32, "$"],
             [8, "b", 3, "o"],

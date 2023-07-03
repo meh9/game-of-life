@@ -3,7 +3,7 @@
 from io import TextIOWrapper
 from types import TracebackType
 import pyparsing as pp
-from .fileloader import FileLoader, FLContextManager
+from .filereader import FileReader, FRContextManager
 
 
 # pylint: disable=pointless-string-statement
@@ -18,7 +18,7 @@ OOO
 """
 
 
-class PlainText(FLContextManager):
+class PlainTextReader(FRContextManager):
     """Implements loading Plain Text data from files."""
 
     # !Name: Glider
@@ -52,10 +52,10 @@ class PlainText(FLContextManager):
         super().__init__(file)
         self._file: TextIOWrapper
 
-    def __enter__(self) -> FileLoader:
+    def __enter__(self) -> FileReader:
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
-        results: pp.ParseResults = PlainText._PARSER.parse_file(self._file)
+        results: pp.ParseResults = PlainTextReader._PARSER.parse_file(self._file)
         self.metadata = (
             results.metadata.as_list() if results.metadata else []  # type:ignore
         )

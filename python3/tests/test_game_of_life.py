@@ -8,7 +8,7 @@ from gameoflife import (
     GameOfLifeDict,
     GameOfLifeSet,
 )
-from gameoflife.dataio.createloader import create_loader
+from gameoflife.dataio.createreader import create_reader
 
 
 def test_set_unset_set() -> None:
@@ -110,7 +110,7 @@ class TestGameOfLifeArrays:
     def test_modulo_wrap(self) -> None:
         """Test that a patter larger than the array is wrapped correctly."""
         gol: GameOfLife = GameOfLifeArrays(12, 10)
-        with create_loader("../data/test_wrap.cells") as loader:
+        with create_reader("../data/test_wrap.cells") as loader:
             gol.add_cells(loader)
         assert (
             str(gol)
