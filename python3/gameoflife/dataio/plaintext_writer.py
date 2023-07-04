@@ -2,6 +2,7 @@
 
 from io import TextIOWrapper
 from types import TracebackType
+from gameoflife import Coordinate
 from .file_writer import FileWriter, FileWriterContextManager
 
 
@@ -27,6 +28,7 @@ class PlainTextWriter(FileWriterContextManager):
 
     def __enter__(self) -> FileWriter:
         """Enter context manager which causes the file to be parsed immediately."""
+        # TODO: check if file exists?
         self._file = open(self._filename, "w", encoding="UTF-8")
         return self
 
@@ -38,3 +40,8 @@ class PlainTextWriter(FileWriterContextManager):
     ) -> None:
         """Exit context manager."""
         self._file.close()
+
+    def write(self, metadata: list[str], cells: list[Coordinate]) -> None:
+        """Write the Game of Life data to the file."""
+        for data in metadata:
+            self._file.write(f"!{data}\n")

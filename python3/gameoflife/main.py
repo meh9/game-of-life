@@ -9,7 +9,7 @@ from blessed.keyboard import Keystroke  # type:ignore
 from .gol_abc import GameOfLife
 from .gol_arrays import GameOfLifeArrays
 from .gol_set import GameOfLifeSet
-from .dataio.create_io import create_reader
+from .dataio.create_io import create_reader, create_writer
 
 
 class MainGame:
@@ -198,7 +198,8 @@ class MainGame:
                     filename += save_key
                     print(save_key, flush=True, end="")
         # TODO: save data to file
-        self._gol.get_live_cells()
+        with create_writer(filename) as writer:
+            writer.write(["test", "foobar"], self._gol.get_live_cells())
         with self._t.location(0, self._t.height - 1):
             timestamp: str = datetime.now().strftime("%H:%M:%S")
             print(f"Saved game to file '{filename}' at {timestamp}", end="")

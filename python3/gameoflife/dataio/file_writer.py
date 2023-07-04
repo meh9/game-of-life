@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from types import TracebackType
+from gameoflife import Coordinate
 
 
 class FileWriter(ABC):
@@ -11,15 +12,9 @@ class FileWriter(ABC):
         """Initialise."""
         self._filename: str = file
 
-    def __str__(self) -> str:
-        """
-        To str method default implementation.
-
-        Sublasses might want to replace or augment this output.
-
-        WARNING: for large patterns this will run out of memory as it tries to print a matrix.
-        """
-        raise NotImplementedError
+    @abstractmethod
+    def write(self, metadata: list[str], cells: list[Coordinate]) -> None:
+        """Write the Game of Life data to the file."""
 
 
 class FileWriterContextManager(FileWriter):
