@@ -184,12 +184,15 @@ class MainGame:
 
     def _save_game(self) -> None:  # pragma: no cover
         """Save the game to a file."""
+        # clear any previous status message; it's a nasty hack to just clear a fixed width...
+        with self._t.location(0, self._t.height - 1):
+            print(" " * 80, end="")
         self._automatic = False  # if we are running, stop
         filename: str = self._prompt("Save game to path/filename: ")
         if filename:
             if isfile(filename):
                 if "y" != self._prompt(
-                    "File {filename} already exists, overwrite? (y/n): "
+                    f"File {filename} already exists, overwrite? (y/n): "
                 ):
                     return
             with create_writer(filename) as writer:
