@@ -184,10 +184,19 @@ class MainGame:
     def _save_game(self) -> None:  # pragma: no cover
         """Save the game to a file."""
         self._automatic = False  # if we are running, stop
+        filename: str = self._prompt("Save game to path/filename: ")
+        with create_writer(filename) as writer:
+            writer.write([], self._gol.get_live_cells())
+        with self._t.location(0, self._t.height - 1):
+            timestamp: str = datetime.now().strftime("%H:%M:%S")
+            print(f"Saved game to file '{filename}' at {timestamp}", end="")
+
+    def _prompt(self, message: str) -> str:
+        """Prompt the user for input and return their input."""
+        response: str = ""
         # move down to the bottom of the screen
         with self._t.location(0, self._t.height - 1):
-            print("Save game to path/filename: ", flush=True, end="")
-            filename: str = ""
+            print(message, flush=True, end="")
             stop: bool = False
             while not stop:
                 save_key: Keystroke = self._t.inkey()
@@ -195,13 +204,10 @@ class MainGame:
                     if int(self._t.KEY_ENTER) == save_key.code:
                         stop = True
                 else:
-                    filename += save_key
+                    response += save_key
                     print(save_key, flush=True, end="")
-        with create_writer(filename) as writer:
-            writer.write([], self._gol.get_live_cells())
-        with self._t.location(0, self._t.height - 1):
-            timestamp: str = datetime.now().strftime("%H:%M:%S")
-            print(f"Saved game to file '{filename}' at {timestamp}", end="")
+            print(self._t.clear_bol, end="")
+        return response
 
     def _move_left(self) -> None:  # pragma: no cover
         """Move the view or edit cursor left."""
