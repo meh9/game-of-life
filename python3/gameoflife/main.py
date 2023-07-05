@@ -211,8 +211,19 @@ class MainGame:
             while not stop:
                 save_key: Keystroke = self._t.inkey()
                 if save_key.is_sequence:
-                    if int(self._t.KEY_ENTER) == save_key.code:
-                        stop = True
+                    match save_key.code:
+                        case self._t.KEY_ENTER:
+                            stop = True
+                        case self._t.KEY_BACKSPACE | self._t.KEY_DELETE:
+                            if response:
+                                print(
+                                    self._t.move_left + " " + self._t.move_left,
+                                    flush=True,
+                                    end="",
+                                )
+                                response = response[:-1]
+                        case _:
+                            pass  # do nothing with unrecognised keys
                 else:
                     response += save_key
                     print(save_key, flush=True, end="")
