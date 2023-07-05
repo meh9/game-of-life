@@ -195,11 +195,16 @@ class MainGame:
                     f"File {filename} already exists, overwrite? (y/n): "
                 ):
                     return
-            with create_writer(filename) as writer:
-                writer.write([], self._gol.get_live_cells())
-            with self._t.location(0, self._t.height - 1):
+            outcome: str
+            try:
+                with create_writer(filename) as writer:
+                    writer.write([], self._gol.get_live_cells())
                 timestamp: str = datetime.now().strftime("%H:%M:%S")
-                print(f"Saved game to file '{filename}' at {timestamp}", end="")
+                outcome = f"Saved game to file '{filename}' at {timestamp}"
+            except ValueError as _:
+                outcome = "Incorrect file extension - please use '.cells'"
+            with self._t.location(0, self._t.height - 1):
+                print(outcome, end="")
 
     def _prompt(self, message: str) -> str:
         """Prompt the user for input and return their input."""
