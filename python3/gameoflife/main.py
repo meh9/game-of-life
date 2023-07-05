@@ -186,7 +186,7 @@ class MainGame:
         self._automatic = False  # if we are running, stop
         # move down to the bottom of the screen
         with self._t.location(0, self._t.height - 1):
-            print("Save RLE to path/filename: ", flush=True, end="")
+            print("Save game to path/filename: ", flush=True, end="")
             filename: str = ""
             stop: bool = False
             while not stop:
@@ -197,9 +197,8 @@ class MainGame:
                 else:
                     filename += save_key
                     print(save_key, flush=True, end="")
-        # TODO: save data to file
         with create_writer(filename) as writer:
-            writer.write(["test", "foobar"], self._gol.get_live_cells())
+            writer.write([], self._gol.get_live_cells())
         with self._t.location(0, self._t.height - 1):
             timestamp: str = datetime.now().strftime("%H:%M:%S")
             print(f"Saved game to file '{filename}' at {timestamp}", end="")
