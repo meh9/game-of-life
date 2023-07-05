@@ -206,7 +206,7 @@ class MainGame:
             with self._t.location(0, self._t.height - 1):
                 print(outcome, end="")
 
-    def _prompt(self, message: str) -> str:
+    def _prompt(self, message: str) -> str:  # pragma: no cover
         """Prompt the user for input and return their input."""
         response: str = ""
         # move down to the bottom of the screen
