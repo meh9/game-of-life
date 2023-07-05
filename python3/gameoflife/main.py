@@ -3,6 +3,7 @@
 # from sys import exit as sysexit
 from datetime import datetime
 from math import floor
+from os.path import isfile
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
 from blessed.keyboard import Keystroke  # type:ignore
@@ -186,6 +187,11 @@ class MainGame:
         self._automatic = False  # if we are running, stop
         filename: str = self._prompt("Save game to path/filename: ")
         if filename:
+            if isfile(filename):
+                if "y" != self._prompt(
+                    "File {filename} already exists, overwrite? (y/n): "
+                ):
+                    return
             with create_writer(filename) as writer:
                 writer.write([], self._gol.get_live_cells())
             with self._t.location(0, self._t.height - 1):
