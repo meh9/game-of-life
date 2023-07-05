@@ -1,4 +1,4 @@
-"""File loader abstract class specifying the interface for loading cells from a file."""
+"""File reader abstract class specifying the interface for loading cells from a file."""
 
 from abc import ABC, abstractmethod
 from functools import reduce
@@ -6,7 +6,7 @@ from types import TracebackType
 from gameoflife import Coordinate
 
 
-class FileLoader(ABC):
+class FileReader(ABC):
     """ABC for the interface of different file encoding types for cells for Game of Life."""
 
     def __init__(self, file: str) -> None:
@@ -37,7 +37,7 @@ class FileLoader(ABC):
         """
         # make a more human readable list of the cell values
         # first get the max row and col
-        max_coords: Coordinate = reduce(FileLoader._coord_max, self.cells, (0, 0))
+        max_coords: Coordinate = reduce(FileReader._coord_max, self.cells, (0, 0))
         # then initialise a 2d list of that size
         cell_matrix: list[list[bool]] = [
             [False for _ in range(max_coords[1] + 1)] for _ in range(max_coords[0] + 1)
@@ -66,11 +66,11 @@ class FileLoader(ABC):
     # placing the centre of the pattern at the origin.
 
 
-class FLContextManager(FileLoader):
-    """ABC for adding context management to FileLoaders."""
+class FileReaderContextManager(FileReader):
+    """ABC for adding context management to FileReaders."""
 
     @abstractmethod
-    def __enter__(self) -> FileLoader:
+    def __enter__(self) -> FileReader:
         """Enter context manager."""
 
     @abstractmethod

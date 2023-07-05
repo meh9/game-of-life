@@ -1,7 +1,8 @@
 """Game of Life abstract class specifying the interface."""
 
 from abc import ABC, abstractmethod
-from gameoflife import FileLoader
+from gameoflife.dataio.file_reader import FileReader
+from .coordinate import Coordinate
 
 
 class GameOfLife(ABC):
@@ -41,7 +42,15 @@ class GameOfLife(ABC):
         """Return the current generation of the game."""
         self._generation = gen
 
-    def add_cells(self, loader: FileLoader) -> None:
-        """Load cells from the given loader."""
-        for row, col in loader.cells:
+    def add_cells(self, reader: FileReader) -> None:
+        """Load cells from the given reader."""
+        for row, col in reader.cells:
             self.set_cell(row, col, True)
+
+    @abstractmethod
+    def get_live_cells(self) -> list[Coordinate]:
+        """
+        Return a list of the Coordinates of all the live cells.
+
+        The list must be sorted by row top to bottom and then in the row from left to right.
+        """

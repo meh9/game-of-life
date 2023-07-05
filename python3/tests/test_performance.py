@@ -3,7 +3,8 @@
 import logging
 from time import perf_counter_ns
 import pytest
-from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet, create_loader
+from gameoflife import GameOfLife, GameOfLifeDict, GameOfLifeSet
+from gameoflife.dataio.create_io import create_reader
 
 pytestmark: pytest.MarkDecorator = pytest.mark.performance
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -13,13 +14,13 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 def test_dict_progress_large_file() -> None:
     """Performance test for the GameOfLifeDict().progress() method."""
     gol: GameOfLife = GameOfLifeDict()
-    LOGGER.info("'create_loader(period59glidergun.rle)' starting...")
+    LOGGER.info("'create_reader(period59glidergun.rle)' starting...")
     start: int = perf_counter_ns()
-    with create_loader("../data/period59glidergun.rle") as loader:
-        gol.add_cells(loader)
+    with create_reader("../data/period59glidergun.rle") as reader:
+        gol.add_cells(reader)
     last_gen_time: int = perf_counter_ns() - start
     LOGGER.info(
-        "'create_loader(...)' time: %s µs",
+        "'create_reader(...)' time: %s µs",
         round(last_gen_time / 1000),
     )
 
@@ -41,13 +42,13 @@ def test_dict_progress_large_file() -> None:
 def test_set_progress_large_file() -> None:
     """Performance test for the GameOfLifeSet().progress() method."""
     gol: GameOfLife = GameOfLifeSet()
-    LOGGER.info("'create_loader(period59glidergun.rle)' starting...")
+    LOGGER.info("'create_reader(period59glidergun.rle)' starting...")
     start: int = perf_counter_ns()
-    with create_loader("../data/period59glidergun.rle") as loader:
-        gol.add_cells(loader)
+    with create_reader("../data/period59glidergun.rle") as reader:
+        gol.add_cells(reader)
     last_gen_time: int = perf_counter_ns() - start
     LOGGER.info(
-        "'create_loader(...)' time: %s µs",
+        "'create_reader(...)' time: %s µs",
         round(last_gen_time / 1000),
     )
 

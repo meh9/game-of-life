@@ -1,11 +1,9 @@
 """File Loader for Run Length Encoded file types."""
 
 from io import TextIOWrapper
-
-# from time import perf_counter_ns
 from types import TracebackType
-from gameoflife import FileLoader, FLContextManager
 import pyparsing as pp
+from .file_reader import FileReader, FileReaderContextManager
 
 
 # pylint: disable=pointless-string-statement
@@ -19,7 +17,7 @@ bob$2bo$3o!
 """
 
 
-class RunLengthEncoded(FLContextManager):
+class RunLengthEncodedReader(FileReaderContextManager):
     """Implements loading Run Length Encoded data from files."""
 
     _INT_NUMBER: pp.ParserElement = pp.Word(pp.nums).set_parse_action(  # type:ignore
@@ -79,18 +77,18 @@ class RunLengthEncoded(FLContextManager):
     _PARSER: pp.ParserElement = _METADATA_LINE + _HEADER + _RULE + _DATA_ROWS
 
     def __init__(self, file: str) -> None:
-        """Initialise the loader."""
+        """Initialise the reader."""
         super().__init__(file)
         self._file: TextIOWrapper
         self._cols: int
         self._rows: int
         self._rule: str
 
-    def __enter__(self) -> FileLoader:
+    def __enter__(self) -> FileReader:
         """Enter context manager which causes the file to be parsed immediately."""
         self._file = open(self._filename, "r", encoding="UTF-8")
         # start: int = perf_counter_ns()
-        results: pp.ParseResults = RunLengthEncoded._PARSER.parse_file(self._file)
+        results: pp.ParseResults = RunLengthEncodedReader._PARSER.parse_file(self._file)
         # last_gen_time: int = perf_counter_ns() - start
         # print(f"Parsing finished in {round(last_gen_time / 1000)} µs")
         self.metadata = (

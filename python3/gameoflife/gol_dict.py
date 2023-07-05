@@ -98,6 +98,11 @@ class GameOfLifeDict(GameOfLife):
             return False
         return live
 
+    def get_live_cells(self) -> list[Coordinate]:
+        """Return a list of the Coordinates of all the live cells."""
+        # TODO: finish this some day
+        raise NotImplementedError
+
     @staticmethod
     def _live_neighbours(cell_map: dict[Coordinate, bool], coords: Coordinate) -> int:
         """Count the number of live neighbours the cell at the given coords has."""

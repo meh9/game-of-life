@@ -1,14 +1,14 @@
 """Tests for all the Conway's Game of Life implementations."""
 
-from pytest import CaptureFixture
+from pytest import CaptureFixture, raises
 from gameoflife import (
     MainGame,
     GameOfLife,
     GameOfLifeArrays,
     GameOfLifeDict,
     GameOfLifeSet,
-    create_loader,
 )
+from gameoflife.dataio.create_io import create_reader
 
 
 def test_set_unset_set() -> None:
@@ -43,6 +43,13 @@ def set_cell_and_assert(gol: GameOfLife, live: bool, num_live: int) -> None:
 
 class TestGameOfLifeSet:
     """Tests specifically for the class GameOfLifeSet."""
+
+    def test_get_live_cells(self) -> None:
+        """Test the get_live_cells method."""
+        gol: GameOfLife = GameOfLifeSet()
+        MainGame.add_glider(gol)
+        assert gol.count_live_cells() == 5
+        assert gol.get_live_cells() == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""
@@ -93,11 +100,18 @@ class TestGameOfLifeSet:
 class TestGameOfLifeArrays:
     """Tests specifically for the class GameOfLifeArrays."""
 
+    def test_get_live_cells(self) -> None:
+        """Test the get_live_cells method."""
+        gol: GameOfLife = GameOfLifeArrays(12, 15)
+        MainGame.add_glider(gol)
+        assert gol.count_live_cells() == 5
+        assert gol.get_live_cells() == [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+
     def test_modulo_wrap(self) -> None:
         """Test that a patter larger than the array is wrapped correctly."""
         gol: GameOfLife = GameOfLifeArrays(12, 10)
-        with create_loader("../data/test_wrap.cells") as loader:
-            gol.add_cells(loader)
+        with create_reader("../data/test_wrap.cells") as reader:
+            gol.add_cells(reader)
         assert (
             str(gol)
             == "Generation: 0\n"
@@ -165,6 +179,14 @@ class TestGameOfLifeArrays:
 
 class TestGameOfLifeDict:
     """Tests specifically for the class GameOfLifeSortedDict."""
+
+    def test_get_live_cells(self) -> None:
+        """Test the get_live_cells method."""
+        gol: GameOfLife = GameOfLifeDict()
+        MainGame.add_glider(gol)
+        assert gol.count_live_cells() == 5
+        with raises(NotImplementedError):
+            gol.get_live_cells()
 
     def test_glider(self) -> None:
         """Test that a simple glider progresses as expected."""

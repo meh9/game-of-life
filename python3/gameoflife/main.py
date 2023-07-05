@@ -1,11 +1,16 @@
 """The main game control and run loop."""
 
 # from sys import exit as sysexit
+from datetime import datetime
 from math import floor
+from os.path import isfile
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
 from blessed.keyboard import Keystroke  # type:ignore
-from gameoflife import GameOfLife, GameOfLifeArrays, GameOfLifeSet, create_loader
+from .gol_abc import GameOfLife
+from .gol_arrays import GameOfLifeArrays
+from .gol_set import GameOfLifeSet
+from .dataio.create_io import create_reader, create_writer
 
 
 class MainGame:
@@ -45,8 +50,8 @@ class MainGame:
             self._gol = GameOfLifeSet()
 
         if file:
-            with create_loader(file) as loader:
-                self._gol.add_cells(loader)
+            with create_reader(file) as reader:
+                self._gol.add_cells(reader)
 
     def main(self) -> None:
         """Run the main game loop."""
@@ -160,13 +165,15 @@ class MainGame:
                     else:
                         # progress the game a generation
                         return True
-                case "e":
-                    self._toggle_edit_mode()
                 case "a":
                     if not self._edit_mode:
                         self._automatic = not self._automatic
+                case "e":
+                    self._toggle_edit_mode()
                 case "q":
                     self._run = False
+                case "s":
+                    self._save_game()
                 case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
                     self._increase_speed()
                 case "-" | "[":
@@ -174,6 +181,59 @@ class MainGame:
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
+
+    def _save_game(self) -> None:  # pragma: no cover
+        """Save the game to a file."""
+        # clear any previous status message; it's a nasty hack to just clear a fixed width...
+        with self._t.location(0, self._t.height - 1):
+            print(" " * 80, end="")
+        self._automatic = False  # if we are running, stop
+        filename: str = self._prompt("Save game to path/filename: ")
+        if filename:
+            if isfile(filename):
+                if "y" != self._prompt(
+                    f"File {filename} already exists, overwrite? (y/n): "
+                ):
+                    return
+            outcome: str
+            try:
+                with create_writer(filename) as writer:
+                    writer.write([], self._gol.get_live_cells())
+                timestamp: str = datetime.now().strftime("%H:%M:%S")
+                outcome = f"Saved game to file '{filename}' at {timestamp}"
+            except ValueError as _:
+                outcome = "Incorrect file extension - please use '.cells'"
+            with self._t.location(0, self._t.height - 1):
+                print(outcome, end="")
+
+    def _prompt(self, message: str) -> str:  # pragma: no cover
+        """Prompt the user for input and return their input."""
+        response: str = ""
+        # move down to the bottom of the screen
+        with self._t.location(0, self._t.height - 1):
+            print(message, flush=True, end="")
+            stop: bool = False
+            while not stop:
+                save_key: Keystroke = self._t.inkey()
+                if save_key.is_sequence:
+                    match save_key.code:
+                        case self._t.KEY_ENTER:
+                            stop = True
+                        case self._t.KEY_BACKSPACE | self._t.KEY_DELETE:
+                            if response:
+                                print(
+                                    self._t.move_left + " " + self._t.move_left,
+                                    flush=True,
+                                    end="",
+                                )
+                                response = response[:-1]
+                        case _:
+                            pass  # do nothing with unrecognised keys
+                else:
+                    response += save_key
+                    print(save_key, flush=True, end="")
+            print(self._t.clear_bol, end="")
+        return response
 
     def _move_left(self) -> None:  # pragma: no cover
         """Move the view or edit cursor left."""
