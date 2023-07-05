@@ -28,7 +28,6 @@ class PlainTextWriter(FileWriterContextManager):
 
     def __enter__(self) -> FileWriter:
         """Enter context manager which causes the file to be parsed immediately."""
-        # TODO: check if file exists?
         self._file = open(self._filename, "w", encoding="UTF-8")
         return self
 

@@ -58,7 +58,7 @@ def _test_load_write(file_to_load: str, saved_file_size: int) -> None:
     # print(f"new:  {gol.get_live_cells()}")
     assert gol.get_live_cells() == orig_cells
 
-    # TODO: if the test fails then cleanup doesn't happen and the file is left in the filesystem...
+    # if the test fails then cleanup doesn't happen and the file is left in the filesystem...
     remove(test_file_name)
 
 
@@ -69,5 +69,5 @@ def test_no_cells() -> None:
         writer.write(["This is a comment.", "And another!", "!", ""], [])
     assert isfile(test_file_name)
     assert stat(test_file_name).st_size == 39
-    # TODO: if the test fails then cleanup doesn't happen and the file is left in the filesystem...
+    # if the test fails then cleanup doesn't happen and the file is left in the filesystem...
     remove(test_file_name)
