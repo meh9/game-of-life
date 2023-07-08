@@ -1,7 +1,6 @@
 """Game of Life set implementation."""
 
-from gameoflife import GameOfLife
-from gameoflife import Coordinate
+from gameoflife import Coordinate, GameOfLife
 
 
 class GameOfLifeSet(GameOfLife):

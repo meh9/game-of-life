@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from gameoflife.dataio.file_reader import FileReader
-from .coordinate import Coordinate
+from gameoflife import Coordinate
 
 
 class GameOfLife(ABC):

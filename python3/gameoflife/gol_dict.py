@@ -1,7 +1,6 @@
 """Game of Life dict implementation."""
 
-from gameoflife import GameOfLife
-from gameoflife import Coordinate
+from gameoflife import Coordinate, GameOfLife
 
 
 class GameOfLifeDict(GameOfLife):

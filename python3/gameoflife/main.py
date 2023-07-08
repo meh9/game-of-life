@@ -7,10 +7,8 @@ from os.path import isfile
 from time import perf_counter_ns
 from blessed import Terminal  # type:ignore
 from blessed.keyboard import Keystroke  # type:ignore
-from .gol_abc import GameOfLife
-from .gol_arrays import GameOfLifeArrays
-from .gol_set import GameOfLifeSet
-from .dataio.create_io import create_reader, create_writer
+from gameoflife import GameOfLife, GameOfLifeSet, GameOfLifeArrays
+from gameoflife.dataio.create_io import create_reader, create_writer
 
 
 class MainGame:
