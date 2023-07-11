@@ -51,6 +51,7 @@ python3 game_of_life.py --help
 ## TODO:
 
 Collecting a few things TODO in here in no particular order:
+1. For `--wrap` instead of showing `.` for a dead cell, show nothing and instead display a border around the board?
 1. Show some form of Help "popup" showing all controls, any other info?
 1. Python dependencies and transient dependencies license checker - possibility to check for license compatibility automatically?
 1. Setup script? https://docs.python.org/3/distutils/setupscript.html
