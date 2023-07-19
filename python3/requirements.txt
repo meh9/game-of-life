@@ -1,7 +1,7 @@
 astroid==2.15.6
 black==23.7.0
 blessed==1.20.0
-click==8.1.5
+click==8.1.6
 coverage==7.2.7
 dill==0.3.6
 iniconfig==2.0.0
