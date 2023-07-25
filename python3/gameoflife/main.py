@@ -168,17 +168,29 @@ class MainGame:
                         self._automatic = not self._automatic
                 case "e":
                     self._toggle_edit_mode()
+                case "h":
+                    self._print_help()
                 case "q":
                     self._run = False
                 case "s":
                     self._save_game()
-                case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
+                case "+" | "=" | "]":  # also accept "=" so we don't have to use shift all the time
                     self._increase_speed()
                 case "-" | "[":
                     self._decrease_speed()
                 case _:
                     pass  # do nothing with unrecognised keys
         return False
+
+    def _print_help(self) -> None:
+        """Print a help screen showing keyboard commands."""
+        # if we're already in print_help mode
+        # exit print_help
+        # print normal game screen
+        # else
+        # set print_help mode
+        # clear screen
+        # print help
 
     def _save_game(self) -> None:  # pragma: no cover
         """Save the game to a file."""
