@@ -172,7 +172,9 @@ class MainGame:
                     self._run = False
                 case "s":
                     self._save_game()
-                case "+" | "=" | "]":  # also accept "=" so we don't have use shift all the time
+                case (
+                    "+" | "=" | "]"
+                ):  # also accept "=" so we don't have use shift all the time
                     self._increase_speed()
                 case "-" | "[":
                     self._decrease_speed()

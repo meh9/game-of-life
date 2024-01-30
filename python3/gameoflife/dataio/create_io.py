@@ -3,6 +3,7 @@ Simple function to create the different FileReaders and FileWriters.
 
 Using separate file to avoid module import issues.
 """
+
 from .file_reader import FileReaderContextManager
 from .runlengthencoded_reader import RunLengthEncodedReader
 from .plaintext_reader import PlainTextReader
