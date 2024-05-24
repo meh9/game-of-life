@@ -23,6 +23,6 @@ pytest-explicit==1.0.1
 six==1.16.0
 snowballstemmer==2.2.0
 tomlkit==0.12.5
-typing_extensions==4.11.0
+typing_extensions==4.12.0
 wcwidth==0.2.13
 wrapt==1.16.0
