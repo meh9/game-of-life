@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     // Use TestNG framework, also requires calling test.useTestNG() below
-    testImplementation("org.testng:testng:7.10.2")
+    testImplementation("org.testng:testng:7.11.0")
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:33.4.0-jre")
