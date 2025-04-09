@@ -21,7 +21,7 @@ dependencies {
     testImplementation("org.testng:testng:7.11.0")
 
     // This dependency is used by the application.
-    implementation("com.google.guava:guava:33.4.6-jre")
+    implementation("com.google.guava:guava:33.4.7-jre")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
