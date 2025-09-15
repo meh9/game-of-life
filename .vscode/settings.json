@@ -1,22 +1,11 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
-    "python.formatting.provider": "black",
-    "python.analysis.inlayHints.functionReturnTypes": true,
-    "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.typeCheckingMode": "strict",
-    "python.linting.pylintEnabled": true,
-    "python.linting.mypyArgs": [
-        "--strict",
-        "--no-warn-unused-ignores"
-    ],
-    "python.linting.mypyEnabled": true,
-    "python.linting.pydocstyleEnabled": true,
+    "redhat.telemetry.enabled": false,
     "editor.formatOnSave": true,
     "java.saveActions.organizeImports": true,
-    "java.cleanup.actionsOnSave": [
+    "[java]": {
+        "editor.defaultFormatter": "redhat.java"
+    },
+    "java.cleanup.actions": [
         "addOverride",
         "addDeprecated",
         "stringConcatToTextBlock",
@@ -27,18 +16,12 @@
         "switchExpression",
         "tryWithResource"
     ],
-    "python.linting.mypyCategorySeverity.error": "Warning",
-    "python.linting.pycodestyleCategorySeverity.E": "Warning",
-    "python.linting.pylintCategorySeverity.error": "Warning",
-    "python.analysis.autoImportCompletions": true,
-    "python.linting.pylintCategorySeverity.fatal": "Warning",
-    "python.analysis.stubPath": "python3/typings",
-    "python.testing.pytestEnabled": true,
-    "python.analysis.inlayHints.pytestParameters": true,
-    "python.testing.unittestEnabled": false,
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "python.testing.cwd": "",
-    "github-actions.workflows.pinned.workflows": [
-        ".github/workflows/python-app.yml"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cSpell.words": [
+        "hashtable",
+        "lookups",
+        "msopenjdk",
+        "underpopulation",
+        "unstarted"
     ]
 }
