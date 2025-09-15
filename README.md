@@ -5,6 +5,7 @@
 ## Just playing around, this is in no way complete and likely never will be. :)
 
 Plans:
+
 1. Java implementation: This was the first implementation. The game logic is complete, but no work on user interface.
 1. Python implementation: This is currently the most progressed, and has a simple terminal user interface.
 1. TypeScript in NodeJS implementation: Planned, currently unstarted.
@@ -12,6 +13,7 @@ Plans:
 1. C# implementation: Maybe.
 
 TODO:
+
 1. Some form of different UI allowing different zoom levels? (Preferably not a web interface...)
 1. Add ability to use different rules.
 1. Ability to get RLE and other formats directly from (popular?) GoL sites on the internet.
@@ -25,31 +27,33 @@ TODO:
 1. (Done in Java, Python) Add GitHub Dependabot.
 1. (Done in Java, Python) Add tests.
 1. (Done in Java, Python) Implement game logic.
-1. (Done in Java, Python) Use languange appropriate build management tools.
-
+1. (Done in Java, Python) Use language appropriate build management tools.
 
 ## Conway's Game of Life rules
 
 Original Rules:
+
 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
 2. Any live cell with two or three live neighbours lives on to the next generation.
 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 Condensed Rules:
+
 1. Any live cell with two or three live neighbours survives.
 2. Any dead cell with three live neighbours becomes a live cell.
 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
 Further simplified Rules that are easier to program:
+
 1. Any cell, dead or alive, with exactly 3 neighbours is alive in the next generation.
 2. A live cell with exactly 2 neighbours is alive in the next generation.
 3. All other cells are dead in the next generation.
 
-
 ## Approaches
 
 ### Set based simple implementation
+
 1. Create new Set<int, int>, `A`. This set simply records the coordinates as (row,col) of live cells. By being in the set it's a live cell. We don't record dead cells, so it is a very sparse data structure.
 1. Create new set `B` for next generation.
 1. Create a new ephemeral set for recording dead cells that have been checked this generation, `tmp`.
@@ -64,6 +68,7 @@ Further simplified Rules that are easier to program:
 1. Assign `B` to `A`, clear `tmp`.
 
 Negatives:
+
 1. only 2 states per cell - alive (coordinates present) or dead (coordinates not present)
 1. does a lot of set lookups:
     1. 8 lookups to find the neighbours of each live cell
@@ -71,13 +76,14 @@ Negatives:
     1. for each of the dead neighbours that has not already been checked, another 8 lookups to see if it has enough live neighbours to come alive
 
 Positives:
+
 1. memory efficient as we only store coordinates, no other state
 1. able to create much larger universes compared to e.g. arrays or the map implementation - as long as the universe is sparsely populated
 1. no edge to the universe except for the languages maximum key value (e.g. in Java Integer.MAX) which gliders etc will eventually hit - could try to deal with this by using some implementation of e.g. BigInteger?
 1. not too hard to understand
 
-
 ### 2D arrays
+
 1. `A[rows][columns]` array created at init
 1. Set each individual live cell in `A`
 1. Create parallel `B` array set to same size but all cells are dead
@@ -88,18 +94,20 @@ Positives:
 1. Print `A`
 
 Negatives:
+
 1. need `rows*columns*2` of memory, which limits max size
 1. we test each element so `O(rows*columns)`, also limits max size
 
 Positives:
+
 1. it's fast for small sized boards
 1. no hashtable lookups
 1. simple to understand
 
+### TreeMap simple implementation - actually scratch that, the Python version now uses a normal map/dict for better performance
 
-### TreeMap simple implementation - actually scratch that, the Python version now uses a normal map/dict for better performance.
-1. Create new TreeMap<int[], Cell>, A. 
-    1. The key is the int[row,col] of the Cell. 
+1. Create new TreeMap<int[], Cell>, A.
+    1. The key is the int[row,col] of the Cell.
     1. We rely on the ordering of the keys when later iterating to create an "array view" for display.
         1. Funnily enough the way the python version was implemented this is not actually true and we _do not_ rely on the ordering. Changing to a normal dict resulted in an immediate 30% performance increase.
         1. Revisit this in the Java version some time.
@@ -117,9 +125,11 @@ Positives:
 1. Assign B to A.
 
 Negatives:
+
 1. does a lot of map lookups
 
 Positives:
+
 1. able to create much larger universes compared to arrays - as long as the universe is sparsely populated
 1. no edge to the universe except for Integer.MAX for keys which gliders etc will eventually hit - could try to deal with this by using BigInteger?
 1. not too hard to understand
