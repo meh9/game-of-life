@@ -1,27 +1,17 @@
 {
-    "redhat.telemetry.enabled": false,
     "editor.formatOnSave": true,
-    "java.saveActions.organizeImports": true,
     "[java]": {
         "editor.defaultFormatter": "redhat.java"
     },
-    "java.cleanup.actions": [
-        "addOverride",
-        "addDeprecated",
-        "stringConcatToTextBlock",
-        "invertEquals",
-        "addFinalModifier",
-        "instanceofPatternMatch",
-        "lambdaExpression",
-        "switchExpression",
-        "tryWithResource"
-    ],
-    "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
+        "foojay",
+        "gameoflife",
         "hashtable",
         "lookups",
         "msopenjdk",
+        "testng",
         "underpopulation",
-        "unstarted"
-    ]
+        "unstarted",
+        "zakalwe"
+    ],
 }
