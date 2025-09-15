@@ -26,4 +26,4 @@ snowballstemmer==3.0.1
 tomlkit==0.13.2
 typing_extensions==4.13.2
 wcwidth==0.2.13
-wrapt==1.17.2
+wrapt==1.17.3
