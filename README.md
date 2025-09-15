@@ -1,6 +1,6 @@
 # Conway's Game of Life implementations
 
-<img width="500" alt="gameplay" src="https://raw.githubusercontent.com/meh9/game-of-life/main/gameplay.gif">
+![gameplay](https://raw.githubusercontent.com/meh9/game-of-life/main/gameplay.gif)
 
 ## Just playing around, this is in no way complete and likely never will be. :)
 
