@@ -41,12 +41,12 @@ public class GameOfLifeArrays implements GameOfLife {
                     b[row][col] = true;
                 }
                 // 2. A live cell with exactly 2 neighbours is alive in the next generation.
-                else if (a[row][col] == true && numNeighbours == 2) {
+                else if (a[row][col] && numNeighbours == 2) {
                     b[row][col] = true;
                 }
                 // 3. All other cells are dead in the next generation.
                 else {
-                    continue; // just being explicit
+                    continue; // NOSONAR just being explicit
                 }
             }
         }

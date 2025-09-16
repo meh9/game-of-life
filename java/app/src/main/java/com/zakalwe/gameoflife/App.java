@@ -7,15 +7,12 @@ import com.zakalwe.gameoflife.collection.GameOfLifeCollection;
  */
 public final class App {
 
-    /** Do nothing constructor */
-    public App() {
-    }
-
     /**
      * Main
      * 
      * @param args arguments
      */
+    @SuppressWarnings("java:S106") // allow using System.out.println
     public static final void main(final String[] args) {
         final int rows = 10;
         final int cols = 10;

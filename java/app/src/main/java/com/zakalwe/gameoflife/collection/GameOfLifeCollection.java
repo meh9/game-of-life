@@ -27,10 +27,6 @@ public class GameOfLifeCollection implements GameOfLife {
     private int minCol = Integer.MAX_VALUE;
     private int maxCol = Integer.MIN_VALUE;
 
-    /** Default constructor */
-    public GameOfLifeCollection() {
-    }
-
     /** Progresses the game one turn. */
     @Override
     public void progress() {
@@ -48,7 +44,7 @@ public class GameOfLifeCollection implements GameOfLife {
             switch (neighbours) {
                 // 2. A live cell with exactly 2 neighbours is alive in the next generation.
                 case TWO:
-                    if (alive) {
+                    if (alive) { // NOSONAR
                         setCell(rowCol, true, b);
                     }
                     break;
