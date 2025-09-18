@@ -1,0 +1,58 @@
+{
+    "name": "game-of-life (Java 21)",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "runArgs": [
+        "--name=gol-J21"
+    ],
+    "remoteUser": "vscode",
+    "remoteEnv": {
+        "HOST_PROJECT_PATH": "${localWorkspaceFolder}",
+        "NEXT_TELEMETRY_DISABLED": "1"
+    },
+    "postCreateCommand": "java -version && lsb_release -a",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
+                "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current",
+                "java.configuration.updateBuildConfiguration": "interactive",
+                "editor.rulers": [
+                    88,
+                    120
+                ],
+                "[json]": {
+                    "editor.defaultFormatter": "vscode.json-language-features"
+                },
+                "[jsonc]": {
+                    "editor.defaultFormatter": "vscode.json-language-features"
+                },
+                "cSpell.language": "en-au",
+                "telemetry.enableTelemetry": false,
+                "telemetry.telemetryLevel": "off",
+                "code-runner.enableAppInsights": false,
+                "extensions.autoUpdate": false,
+                "extensions.ignoreRecommendations": true,
+                "update.channel": "none",
+                "chat.agent.enabled": true,
+                "coverage-gutters.coverageFileNames": [
+                    "coverage.xml"
+                ],
+                "coverage-gutters.coverageReportFileName": "*/htmlreport/index.html",
+                "coverage-gutters.coverageBaseDir": "coverage"
+            },
+            "extensions": [
+                "streetsidesoftware.code-spell-checker",
+                "streetsidesoftware.code-spell-checker-australian-english",
+                "oderwat.indent-rainbow",
+                "davidanson.vscode-markdownlint",
+                "ryanluker.vscode-coverage-gutters",
+                "aaron-bond.better-comments",
+                "usernamehw.errorlens",
+                "sonarsource.sonarlint-vscode"
+            ]
+        }
+    }
+}
