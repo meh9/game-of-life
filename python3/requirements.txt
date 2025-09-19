@@ -1,6 +1,6 @@
 ## The following requirements were added by pip freeze:
 astroid==3.3.11
-black==25.1.0
+black==25.9.0
 blessed==1.22.0
 click==8.2.1
 coverage==7.10.6
