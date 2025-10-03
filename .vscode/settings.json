@@ -9,6 +9,7 @@
         "hashtable",
         "lookups",
         "msopenjdk",
+        "NOSONAR",
         "testng",
         "underpopulation",
         "unstarted",
