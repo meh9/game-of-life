@@ -170,8 +170,12 @@ public class GameOfLifeCollection implements GameOfLife {
         final StringBuilder sb = new StringBuilder();
         sb.append("Generation: ").append(generation);
         sb.append(", Live cells: ").append(countLiveCells());
-        sb.append(", All cells: ").append(countAllCells());
-        sb.append(", 2D array equiv. elements: ").append((maxRow - minRow + 1) * (maxCol - minCol + 1)).append("\n");
+        final int allCells = countAllCells();
+        sb.append(", All cells: ").append(allCells);
+        final int squareArray = (maxRow - minRow + 1) * (maxCol - minCol + 1);
+        final int percentSaved = Math.round(((squareArray - allCells) / (float) squareArray) * 100);
+        sb.append(", 2D array equiv. elements: ").append(squareArray);
+        sb.append(", saved " + percentSaved + "%").append("\n");
 
         for (int row = minRow; row <= maxRow; row++) {
             for (int col = minCol; col <= maxCol; col++) {
