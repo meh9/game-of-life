@@ -51,7 +51,10 @@
                 "ryanluker.vscode-coverage-gutters",
                 "aaron-bond.better-comments",
                 "usernamehw.errorlens",
-                "sonarsource.sonarlint-vscode"
+                "sonarsource.sonarlint-vscode",
+                "Vue.volar",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
             ]
         }
     }
