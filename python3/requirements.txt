@@ -1,5 +1,5 @@
 ## The following requirements were added by pip freeze:
-astroid==3.3.11
+astroid==4.0.2
 black==25.9.0
 blessed==1.22.0
 click==8.3.0
